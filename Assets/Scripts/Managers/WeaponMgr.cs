@@ -6,6 +6,11 @@ public class WeaponMgr : MonoBehaviour
 {
 
     public static WeaponMgr inst;
+    private void Awake()
+    {
+        inst = this;
+    }
+
 
     public List<Weapon> allWeapons;
     public List<Weapon> currWeapons;

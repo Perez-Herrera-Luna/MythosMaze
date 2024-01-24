@@ -5,6 +5,11 @@ using UnityEngine;
 public class InventoryMgr : MonoBehaviour
 {
     public static InventoryMgr inst;
+    private void Awake()
+    {
+        inst = this;
+    }
+
 
     private WeaponMgr weaponManager;
     private ArmorMgr armorManager;

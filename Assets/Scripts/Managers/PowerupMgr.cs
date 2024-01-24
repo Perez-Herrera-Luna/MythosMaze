@@ -5,6 +5,11 @@ using UnityEngine;
 public class PowerupMgr : MonoBehaviour
 {
     public static PowerupMgr inst;
+    private void Awake()
+    {
+        inst = this;
+    }
+
 
     public List<PowerUp> allPowerups;
     public List<PowerUp> inventoryPowerups;

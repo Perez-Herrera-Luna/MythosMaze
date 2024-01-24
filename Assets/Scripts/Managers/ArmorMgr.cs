@@ -5,6 +5,11 @@ using UnityEngine;
 public class ArmorMgr : MonoBehaviour
 {
     public static ArmorMgr inst;
+    private void Awake()
+    {
+        inst = this;
+    }
+
 
     public List<Armor> allArmorPieces;
     public List<Armor> equipedArmor;
