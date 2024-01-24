@@ -5,7 +5,6 @@ using UnityEngine;
 public class SceneMgr : MonoBehaviour
 {
     // Start is called before the first frame update
-    // Testing initial git commit
     void Start()
     {
         
