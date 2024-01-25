@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
@@ -29,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 moveDirection;
     Rigidbody rb;
-    
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -41,13 +42,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Raycast to detect if the player is on the ground
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight + 0.5f, whatIsGround);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput(); // Get player input
         SpeedControl(); // Limit player's speed
 
         // Apply drag when on the ground
-        if(isGrounded)
+        if (isGrounded)
         {
             rb.drag = groundDrag;
         }
@@ -67,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if(Input.GetKeyDown(jumpKey) && isGrounded && canJump)
+        if (Input.GetKey(jumpKey) && isGrounded && canJump)
         {
             canJump = false;
             Jump();
@@ -80,11 +81,11 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // Apply force to the player. Variable airMultiplier is used to reduce the player's speed in the air
-        if(isGrounded)
+        if (isGrounded)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
-        else if(!isGrounded)
+        else if (!isGrounded)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
@@ -95,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if(flatVelocity.magnitude > moveSpeed)
+        if (flatVelocity.magnitude > moveSpeed)
         {
             Vector3 limitedVelocity = flatVelocity.normalized * moveSpeed;
             rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
@@ -109,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        rb.AddForce(Vector3.down * 200f, ForceMode.Force); // Apply downward force to the player to make the jump feel more responsive
+        //rb.AddForce(Vector3.down * 200f, ForceMode.Force); // Apply downward force to the player to make the jump feel more responsive
     }
 
     private void ResetJump()

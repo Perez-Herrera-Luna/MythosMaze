@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerCamera : MonoBehaviour
 {
     public float sensitvityX; // X-axis sensitivity
@@ -21,8 +22,8 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * sensitvityX * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitvityY * Time.deltaTime;
+        float mouseX = Input.GetAxisRaw("Mouse X") * sensitvityX;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitvityY;
 
         yRotation += mouseX;
         xRotation -= mouseY;
