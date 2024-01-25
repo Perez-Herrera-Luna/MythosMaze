@@ -1046,6 +1046,8 @@ GameObject:
   - component: {fileID: 1043635014}
   - component: {fileID: 1043635013}
   - component: {fileID: 1043635012}
+  - component: {fileID: 1043635016}
+  - component: {fileID: 1043635017}
   m_Layer: 0
   m_Name: TestEnemy1
   m_TagString: Untagged
@@ -1060,7 +1062,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1043635011}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 671df95d8b7b3a84287293942bb06c0f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1141,6 +1143,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1043635016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043635011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78003bb647359d940b71ee6f89dec9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  player: {fileID: 366597263}
+  wanderSpeed: 0
+  chaseSpeed: 0
+  groundDrag: 0
+  enemyHeight: 0
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  orientation: {fileID: 0}
+  walkPoint: {x: 0, y: 0, z: 0}
+  walkRange: 0
+  attackCoolDown: 0
+  sightRange: 0
+  attackRange: 0
+  playerInSight: 0
+  playerAttackable: 0
+--- !u!54 &1043635017
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043635011}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1057215184
 GameObject:
   m_ObjectHideFlags: 0
