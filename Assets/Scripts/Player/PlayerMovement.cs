@@ -110,7 +110,6 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        //rb.AddForce(Vector3.down * 200f, ForceMode.Force); // Apply downward force to the player to make the jump feel more responsive
     }
 
     private void ResetJump()
