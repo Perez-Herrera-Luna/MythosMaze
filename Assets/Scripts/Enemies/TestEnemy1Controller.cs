@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 //Based heavily on a tutorial created by "Dave / Game Developement" : 3D Enemy AI
 
 public class TestEnemy1Controller : MonoBehaviour
 {
     //AI navMesh
-    public NavMeshAgent agent;
+    public UnityEngine.AI.NavMeshAgent agent;
 
     public Transform player;
 
@@ -21,6 +20,7 @@ public class TestEnemy1Controller : MonoBehaviour
     public float chaseSpeed; // enemy's run speed
 
     public float groundDrag; // enemy's drag when on the ground
+    public float airMultiplier; //enemy's speed multiplier in air
 
     [Header("Ground Detection")]
     public float enemyHeight; // enemy's height. Used for length of raycast to detect ground
@@ -50,7 +50,7 @@ public class TestEnemy1Controller : MonoBehaviour
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
 
     // Start is called before the first frame update
@@ -97,6 +97,7 @@ public class TestEnemy1Controller : MonoBehaviour
 
     private void wandering()
     {
+        Debug.Log("enemy wandering");
         //determine what point to walk to
         if(!pointChosen)
         {
@@ -104,7 +105,7 @@ public class TestEnemy1Controller : MonoBehaviour
         }
         else
         {
-            agent.SetDestination(walkPoint);
+            moveEnemy(walkPoint, 0);
         }
 
         //check if enemy reached desired point
@@ -132,12 +133,14 @@ public class TestEnemy1Controller : MonoBehaviour
 
     private void chasing()
     {
-        agent.SetDestination(player.position);
+         Debug.Log("enemy chasing");
+        moveEnemy(player.position, 1);
     }
 
     private void attacking()
     {
-        agent.SetDestination(transform.position); //stop enemy movement
+         Debug.Log("enemy attacking");
+        moveEnemy(transform.position, 1); //stop enemy movement
 
         transform.LookAt(player); // have enemy face the player
 
@@ -154,5 +157,28 @@ public class TestEnemy1Controller : MonoBehaviour
     private void ResetAttack()
     {
         hasAttacked = false;
+    }
+
+    private void moveEnemy(Vector3 target, int mode)
+    {
+        float moveSpeed;
+        if(mode == 0)
+        {
+            moveSpeed = wanderSpeed;
+        }
+        else
+        {
+            moveSpeed = chaseSpeed;
+        }
+
+        // Apply force to the enemy. Variable airMultiplier is used to reduce the enemy's speed in the air
+        if (isGrounded)
+        {
+            rb.AddForce(target.normalized * moveSpeed * 10f, ForceMode.Force);
+        }
+        else if (!isGrounded)
+        {
+            rb.AddForce(target.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        }
     }
 }
