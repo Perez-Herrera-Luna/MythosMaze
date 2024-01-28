@@ -1,25 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
-public class PowerUp : MonoBehaviour
+public class Powerup : MonoBehaviour
 {
-    public GameObject powerupObj;
-    public Sprite powerupSprite;
+    public float buffAmount;
+    object[] buffObjectArray = new object[1];
+    public string buffMethodName;
 
-    public string powerupName;
-    public int powerupLevel;  // the earliest game level it can appear in
-    public PowerupTypes powerupType;
+    PlayerManager playerMgr;
+    Type playerMgrClassType;
+    MethodInfo methodReference;
 
     // Start is called before the first frame update
     void Start()
     {
-        powerupObj.GetComponent<UnityEngine.UI.Image>().sprite = powerupSprite;
+        float[] buff = {buffAmount};
+        Array.Copy(buff, buffObjectArray, buff.Length);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+    }
 
+    void OnTriggerEnter(Collider hit)
+    {
+        if(hit.gameObject.CompareTag("player"))
+        {
+            playerMgrClassType = playerMgr.GetType();
+            methodReference = playerMgrClassType.GetMethod(buffMethodName);
+            methodReference.Invoke(playerMgr, buffObjectArray);
+        }
     }
 }

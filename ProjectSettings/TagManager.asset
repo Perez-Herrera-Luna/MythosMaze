@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - player
+  - enemy
+  - wall
+  - powerup
+  - item
+  - shootingWeapon
+  - throwingWeapon
+  - character
   layers:
   - Default
   - TransparentFX
@@ -14,13 +22,13 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - whatIsGround
+  - Walls
+  - Ground
   - Player
-  - 
-  - 
-  - 
-  - 
+  - Projectiles
+  - Pickups
+  - Enemies
+  - Quests
   - 
   - 
   - 
