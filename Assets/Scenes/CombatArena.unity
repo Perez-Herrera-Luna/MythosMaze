@@ -797,6 +797,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 120bf9b9f45903a4a91ac580a487090b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponManager: {fileID: 0}
+  armorManager: {fileID: 0}
+  powerupManager: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,8 +1209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 163d9b36539d99a45b54a488a708d326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitvityX: 3
-  sensitvityY: 3
+  sensitivityX: 0
+  sensitivityY: 0
   orientation: {fileID: 1620618775}
 --- !u!1 &989260929
 GameObject:
@@ -1393,11 +1396,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78003bb647359d940b71ee6f89dec9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
   player: {fileID: 347097387}
-  wanderSpeed: 0.01
-  chaseSpeed: 2
-  groundDrag: 0.5
+  wanderSpeed: 1
+  chaseSpeed: 3
+  groundDrag: 1
   airMultiplier: 1
   enemyHeight: 1
   whatIsGround:
@@ -1408,10 +1410,10 @@ MonoBehaviour:
     m_Bits: 2048
   orientation: {fileID: 0}
   walkPoint: {x: 0, y: 0, z: 0}
-  walkRange: 0
+  walkRange: 5
   attackCoolDown: 5
-  sightRange: 20
-  attackRange: 2
+  sightRange: 15
+  attackRange: 3
   playerInSight: 0
   playerAttackable: 0
 --- !u!1 &1057215184

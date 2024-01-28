@@ -8,7 +8,7 @@ using UnityEngine;
 public class TestEnemy1Controller : MonoBehaviour
 {
     //AI navMesh
-    public UnityEngine.AI.NavMeshAgent agent;
+    //public UnityEngine.AI.NavMeshAgent agent;
 
     public Transform player;
 
@@ -35,13 +35,13 @@ public class TestEnemy1Controller : MonoBehaviour
     Rigidbody rb;
 
     //wandering
-    public Vector3 walkPoint;
-    bool pointChosen;
-    public float walkRange;
+    public Vector3 walkPoint; //point on the ground to walk to
+    bool pointChosen;   //true if a new walkpoint is set
+    public float walkRange; //range from current position the walkpoints can be set to
 
     //Attack
-    public float attackCoolDown;
-    bool hasAttacked;
+    public float attackCoolDown; //time between attacks
+    bool hasAttacked;   //true if currently executing an attack
 
     //states
     public float sightRange, attackRange;
@@ -50,7 +50,6 @@ public class TestEnemy1Controller : MonoBehaviour
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
-        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
 
     // Start is called before the first frame update
@@ -77,9 +76,25 @@ public class TestEnemy1Controller : MonoBehaviour
             rb.drag = 0f;
         }
 
+        
         //check if player is within sight/attack range
-        playerInSight = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
-        playerAttackable = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+
+        float distance = Vector3.Distance (transform.position, player.position);
+        if(distance < sightRange && distance > attackRange)
+        {
+            playerInSight = true;
+            playerAttackable = false;
+        }
+        if(distance < sightRange && distance < attackRange)
+        {
+            playerAttackable = true;
+            playerInSight = true;
+        }
+        if(distance > sightRange)
+        {
+            playerInSight = false;
+            playerAttackable = false;
+        }
 
         if(!playerInSight && !playerAttackable)
         {
@@ -133,14 +148,14 @@ public class TestEnemy1Controller : MonoBehaviour
 
     private void chasing()
     {
-         Debug.Log("enemy chasing");
+        Debug.Log("enemy chasing");
         moveEnemy(player.position, 1);
     }
 
     private void attacking()
     {
-         Debug.Log("enemy attacking");
-        moveEnemy(transform.position, 1); //stop enemy movement
+        Debug.Log("enemy attacking");
+        moveEnemy(transform.position, 2); //stop enemy movement
 
         transform.LookAt(player); // have enemy face the player
 
@@ -166,19 +181,32 @@ public class TestEnemy1Controller : MonoBehaviour
         {
             moveSpeed = wanderSpeed;
         }
-        else
+        else if(mode == 1)
         {
             moveSpeed = chaseSpeed;
+        }
+        else
+        {
+            moveSpeed = 0;
         }
 
         // Apply force to the enemy. Variable airMultiplier is used to reduce the enemy's speed in the air
         if (isGrounded)
         {
-            rb.AddForce(target.normalized * moveSpeed * 10f, ForceMode.Force);
+            //rotate to look at the player
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), Time.deltaTime);
+
+            //move towards the player
+            transform.position += transform.forward * Time.deltaTime * moveSpeed;
+
         }
         else if (!isGrounded)
         {
-            rb.AddForce(target.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+             //rotate to look at the player
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), Time.deltaTime);
+
+            //move towards the player
+            transform.position += transform.forward * Time.deltaTime * moveSpeed * airMultiplier;
         }
     }
 }
