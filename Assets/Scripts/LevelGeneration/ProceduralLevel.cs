@@ -17,6 +17,7 @@ public class ProceduralLevel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        LoadLevel();
         
     }
 
@@ -24,5 +25,30 @@ public class ProceduralLevel : MonoBehaviour
     void Update()
     {
         
+    }
+
+    // Function to initially load 
+    void LoadLevel()
+    {
+        // procedurally generate arena locations
+
+
+        // for prototype level, for now just generates one combat arena in center of map
+        LoadCombatArena();
+    }
+
+    void LoadCombatArena()
+    {
+        GameObject arenaInstance;
+        Arena arenaScript;
+        arenaInstance = Instantiate(arenaPrefab, gameObject.transform);
+        // need to add error checking if instantiated correctly
+
+        arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
+
+        // set arena values (isEmpty, isBossLevel, hasCharacter, arenaLevel, numDoors)
+        arenaScript.SetInitialValues(false, false, false, currLevel, 1);
+
+        // if instantiated correctly add to list of arenas in level? 
     }
 }
