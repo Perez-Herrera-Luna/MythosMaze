@@ -7,20 +7,30 @@ using UnityEngine;
 
 public class TestEnemy1Controller : MonoBehaviour
 {
-    //AI navMesh
-    //public UnityEngine.AI.NavMeshAgent agent;
+    [Header("Enemy Stats")]
+    //enemy type
+    public string enemyType;
+    public float moveSpeed; //enemy's move speed
+    public float health;
 
-    public Transform player;
+    //Attack
+    public float attackCoolDown; //time between attacks
+    bool hasAttacked;   //true if currently executing an attack
 
-    private float moveSpeed; //enemy's move speed
-
-    [Header("Movement")]
+    //states
+    public float sightRange, attackRange;
+    bool playerInSight, playerAttackable;
 
     public float wanderSpeed; // enemy's wandering speed
     public float chaseSpeed; // enemy's run speed
 
     public float groundDrag; // enemy's drag when on the ground
     public float airMultiplier; //enemy's speed multiplier in air
+    public float walkRange; //range from current position the walkpoints can be set to
+
+    [Header("Transforms")]
+    public Transform player;
+    public Transform orientation;
 
     [Header("Ground Detection")]
     public float enemyHeight; // enemy's height. Used for length of raycast to detect ground
@@ -29,23 +39,12 @@ public class TestEnemy1Controller : MonoBehaviour
 
     public LayerMask whatIsPlayer; //Layermask for player detection
 
-    public Transform orientation;
-
     Vector3 moveDirection;
     Rigidbody rb;
 
     //wandering
     public Vector3 walkPoint; //point on the ground to walk to
     bool pointChosen;   //true if a new walkpoint is set
-    public float walkRange; //range from current position the walkpoints can be set to
-
-    //Attack
-    public float attackCoolDown; //time between attacks
-    bool hasAttacked;   //true if currently executing an attack
-
-    //states
-    public float sightRange, attackRange;
-    public bool playerInSight, playerAttackable;
 
     private void Awake()
     {
