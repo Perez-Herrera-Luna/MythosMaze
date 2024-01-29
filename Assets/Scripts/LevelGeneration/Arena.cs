@@ -73,7 +73,7 @@ public class Arena : MonoBehaviour
         // for initial prototype just spawn one type of pickup at set locations
         for(int powerupNum = 0; powerupNum < arenaLevel.maxPowerups; powerupNum++)
         {
-            Instantiate(powerupPrefabs[0], gameObject.transform);
+            Instantiate(powerupPrefabs[powerupNum], gameObject.transform);
         }
     }
 
