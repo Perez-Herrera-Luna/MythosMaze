@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -658,8 +658,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d46470d5eeb3314ca1a9986ba3df623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allArmorPieces: []
-  equipedArmor: []
 --- !u!1 &659535207
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,9 +795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 120bf9b9f45903a4a91ac580a487090b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponManager: {fileID: 0}
-  armorManager: {fileID: 0}
-  powerupManager: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,8 +1204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 163d9b36539d99a45b54a488a708d326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivityX: 0
-  sensitivityY: 0
+  sensitivityX: 3
+  sensitivityY: 3
   orientation: {fileID: 1620618775}
 --- !u!1 &989260929
 GameObject:
@@ -1565,8 +1560,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4351bf61b5d5bcd47874cdcc0acd1a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allPowerups: []
-  inventoryPowerups: []
 --- !u!1 &1144423064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1828,8 +1821,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 271907706c5b9764a9fe8d65228fc703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allWeapons: []
-  currWeapons: []
 --- !u!1 &1391594690
 GameObject:
   m_ObjectHideFlags: 0
