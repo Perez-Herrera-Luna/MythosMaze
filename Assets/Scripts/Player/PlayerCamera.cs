@@ -5,8 +5,8 @@ using UnityEngine;
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerCamera : MonoBehaviour
 {
-    public float sensitivityX; // X-axis sensitivity
-    public float sensitivityY; // Y-axis sensitivity
+    public float sensitivityX = 3f; // X-axis sensitivity
+    public float sensitivityY = 3f; // Y-axis sensitivity
 
     public Transform orientation;
 
