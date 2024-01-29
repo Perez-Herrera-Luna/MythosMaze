@@ -15,4 +15,4 @@ MonoBehaviour:
   level: 0
   maxEnemies: 0
   maxEnemyPower: 20
-  maxPowerups: 2
+  maxPowerups: 3
