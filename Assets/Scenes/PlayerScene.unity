@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -203,9 +203,10 @@ GameObject:
   - component: {fileID: 366597266}
   - component: {fileID: 366597265}
   - component: {fileID: 366597264}
+  - component: {fileID: 366597267}
   m_Layer: 11
   m_Name: Player
-  m_TagString: Player
+  m_TagString: player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -298,6 +299,33 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366597262}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &366597267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366597262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4adcdbddae39567498d03c4c52133512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0
+  groundDrag: 0
+  jumpForce: 0
+  jumpCooldown: 0
+  airMultiplier: 0
+  attackSpeed: 0
+  attackDamage: 0
+  numWeapons: 0
+  activeWeapon: 0
+  weapons:
+  - {fileID: 0}
+  - {fileID: 0}
+  weaponDamageBuff: 0
+  weaponSpeedBuff: 0
+  weaponCooldownReduction: 0
 --- !u!1 &659535207
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +337,6 @@ GameObject:
   - component: {fileID: 659535208}
   - component: {fileID: 659535209}
   - component: {fileID: 659535210}
-  - component: {fileID: 659535211}
   m_Layer: 11
   m_Name: Player
   m_TagString: player
@@ -392,33 +419,6 @@ MonoBehaviour:
   maxSlopeAngle: 40
   orientation: {fileID: 1620618775}
   state: 0
---- !u!114 &659535211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 659535207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4adcdbddae39567498d03c4c52133512, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 0
-  groundDrag: 0
-  jumpForce: 0
-  jumpCooldown: 0
-  airMultiplier: 0
-  attackSpeed: 0
-  attackDamage: 0
-  numWeapons: 0
-  activeWeapon: 0
-  weapons:
-  - {fileID: 0}
-  - {fileID: 0}
-  weaponDamageBuff: 0
-  weaponSpeedBuff: 0
-  weaponCooldownReduction: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,8 +524,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 163d9b36539d99a45b54a488a708d326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivityX: 0
-  sensitivityY: 0
+  sensitivityX: 3
+  sensitivityY: 3
   orientation: {fileID: 1620618775}
 --- !u!1 &1476767071
 GameObject:

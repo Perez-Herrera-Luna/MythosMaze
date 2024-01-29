@@ -83,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Debug
-        Debug.Log(isGrounded);
+        // Debug.Log(isGrounded);
 
         MyInput(); // Get player input
         SpeedControl(); // Limit player's speed

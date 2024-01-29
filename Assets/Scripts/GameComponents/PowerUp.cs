@@ -31,9 +31,15 @@ public class Powerup : MonoBehaviour
     {
         if(hit.gameObject.CompareTag("player"))
         {
+            // Invokes method with name "buffMethodName" within PlayerManager class using System.Reflection
+            playerMgr = hit.gameObject.GetComponent<PlayerManager>();
             playerMgrClassType = playerMgr.GetType();
             methodReference = playerMgrClassType.GetMethod(buffMethodName);
             methodReference.Invoke(playerMgr, buffObjectArray);
+
+            Debug.Log(buffMethodName + "(" + buffAmount + ")");
+
+            Destroy(gameObject);
         }
     }
 }
