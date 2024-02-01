@@ -5,39 +5,100 @@ using UnityEngine;
 public class ProceduralLevel : MonoBehaviour
 {
     public LevelData currLevel;
-    
-    public int numCombatArenas;
-
+    public int numArenas = 0;
+    public GameObject bossArenaPrefab;
     public GameObject arenaPrefab;
     public GameObject questCharPrefab;
 
-    // Not implemented yet: actual procedural path generation
-        // instantiate level (grid of arenaPrefabs assiged differing attributes)
+    public ArenaData bossArenaData;
+    public List<ArenaData> arenasData;
+    float maxCollisionRadius;
+
+    private LevelGrid levelGrid;
+    private LevelGraph levelGraph;
+
+    // arena generation attributes
+    Vector2Int currArenaLocation;
+    List<Vector2Int> currArenaDistances;
+
+
+    // walker algorithm attributes
+    bool isInitialPath;
+    int pathLength;
+    List<Vector2Int> currPath;
+    Vector2Int currWalkerLoc, targetLoc;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        LoadLevel();
-        
+        // call necessary functions for procedural level generation
+
+        InitialSetup();
+        GenerateArenas();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    // initialize grid and graph according to levelData
+    private void InitialSetup()
     {
-        
+        levelGrid = new LevelGrid(currLevel.gridRows, currLevel.gridCols);
+        levelGraph = new LevelGraph(currLevel.maxNumArenas);
+
+        CalculateMaxCollisionRadius();
     }
 
-    // Function to initially load 
-    void LoadLevel()
+    // helper function
+    private void CalculateMaxCollisionRadius()
     {
-        // procedurally generate arena locations
+        float maxCollisionRadius = 0;
+        foreach(ArenaData arena in arenasData){
+            int arenaRows = arenasData[0].height / levelGrid.GridScale;
+            int arenaCols = arenasData[0].width / levelGrid.GridScale;
 
-
-        // for prototype level, for now just generates one combat arena in center of map
-        LoadCombatArena();
+            Vector2Int arenaDimensions = new Vector2Int(arenaRows, arenaCols);
+            arena.collisionRadius = arenaDimensions.magnitude;
+            maxCollisionRadius = arena.collisionRadius > maxCollisionRadius ? arena.collisionRadius : maxCollisionRadius;
+        }
     }
 
-    void LoadCombatArena()
+    // given available arenaData, calculate max dimension of all arenas
+
+    // randomly generate arenas (< maxNumberArenas) in grid
+    private void GenerateArenas()
+    {
+        // set boss arena: center of grid, 1 door
+        AddArena(levelGrid.GridCenter, bossArenaData);
+
+        // loop for each arena (until success or maxNumTries)
+            // reset currArenaLocation
+            // success = GenerateArenaLocation()		// randomly generates arena location, checks if is valid, retries limited # of times
+            // if success, AddArena()
+    }
+
+    // after collecting arenaData and generating valid arena location, add arena to grid and graph datastructures
+    private bool AddArena(Vector2Int location, ArenaData arena)
+    {
+        bool success = false;
+
+        // add arena to grid
+        success = levelGrid.AddArena(location, arena.height, arena.width);
+        if(!success){
+            Debug.Log("error adding arena to grid");
+            return false;
+        }
+
+        // add arena to graph
+        success = levelGraph.AddArena(location);
+        if(!success){
+            Debug.Log("error adding arena to grid");
+            return false;
+        }
+
+        return success;
+    }
+
+    /*void LoadCombatArena()
     {
         GameObject arenaInstance;
         Arena arenaScript;
@@ -50,5 +111,5 @@ public class ProceduralLevel : MonoBehaviour
         arenaScript.SetInitialValues(false, false, false, currLevel, 1);
 
         // if instantiated correctly add to list of arenas in level? 
-    }
+    }*/
 }

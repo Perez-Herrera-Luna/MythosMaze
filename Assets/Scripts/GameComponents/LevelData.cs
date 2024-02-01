@@ -4,7 +4,16 @@ using UnityEngine;
 public class LevelData : ScriptableObject
 {
     public int level;
-    public int maxEnemies;
-    public float maxEnemyPower;
-    public int maxPowerups;
+
+    // level procedural generation data
+    public int gridRows;
+    public int gridCols;
+    
+    // hold radius of inner, middle, and outer rings used in determining arena door count
+    public float[] gridRings = new float[3];    
+
+    public int maxNumArenas;
+    public int maxAttemptsGenArena;
+    public int maxAttemptsGenLoc;
+    public int maxPathLength;
 }
