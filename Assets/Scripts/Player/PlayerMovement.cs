@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-// TODO: Preform slide only if the player is sprinting
-// TODO: Add a slide cooldown (can't slide again for a short time after sliding)
 // TODO: Add camera rotation when sliding
 // TODO: Interpolate between sliding and crouching
-// TODO: Add sprint stamina
 // TODO: Handle jumping out of a slide or crouch properly
 // TODO: Add a wall jump
-// TODO: Replace dash delay with a coroutine
-// TODO: Interpolate end of dash movement
 // TODO: Obtain orientation at runtime
 // TODO: Have camera reference assigned at runtime
 // TODO: Allow dashing during start of jump
-// TODO: Change dash to be on right click
-// Consider whether the air state is necessary
+// TODO: Prevent entering crouch while in air
+// TODO: Handle dashing off or into a slope
 
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerMovement : MonoBehaviour
@@ -25,10 +20,16 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement")]
 
-    public float walkSpeed = 7f; // Player's walk speed
-    public float sprintSpeed = 10f; // Player's run speed
-    public float dashSpeed = 15f; // Player's dash speed
+    public float walkSpeed = 10f; // Player's walk speed
+    public float dashSpeed = 18f; // Player's dash speed
     public float groundDrag = 5f; // Player's drag when on the ground
+    private float maxYSpeed;
+
+    private float desiredMoveSpeed; // Player's desired speed
+    private float lastDesiredMoveSpeed; // Player's last desired speed
+    private MovementState lastState; // Player's last movement state
+    private bool keepMomemtum; // Used to keep player's momentum when changing movement state
+    private float speedChangeFactor; // Used to change player's speed
 
     [Header("Jumping")]
 
@@ -44,14 +45,12 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space; // Keybind for jumping. Hardcoded to spacebar for now
-    public KeyCode sprintKey = KeyCode.LeftShift; // Keybind for sprinting. Hardcoded to left shift for now
     public KeyCode crouchKey = KeyCode.LeftControl; // Keybind for crouching. Hardcoded to left control for now
-    public KeyCode dashKey = KeyCode.LeftAlt; // Keybind for dashing. Hardcoded to left alt for now
+    public KeyCode dashKey = KeyCode.LeftShift; // Keybind for dashing. Hardcoded to left shift for now
 
     [Header("Ground Detection")]
     public float playerHeight = 2f; // Player's height. Used for length of raycast to detect ground
     public LayerMask whatIsGround; // Layermask for ground detection
-    bool isGrounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle = 40f; // Maximum angle of slope the player can walk on
@@ -65,19 +64,33 @@ public class PlayerMovement : MonoBehaviour
     private bool isSliding; // Used to track if the player is sliding
 
     [Header("Dashing")]
-    public float dashForce = 15f;
+    public float dashForce = 18f;
     public float dashUpwardForce;
     public float dashDuration = 0.25f;
     public float dashCooldown = 1.5f;
+    public float dashSpeedChangeFactor = 50f;
+    public float maxDashYSpeed = 18f;
     private float dashCooldownTimer;
     private bool isDashing;
 
+    public bool useCameraForward = false;
+    public bool allowAllDirections = true;
+    public bool disableGravity = true;
+    public bool resetVelocity = true;
+
+    [Header("CameraEffects")]
+    public float playerFov = 85f; // Player's default field of view
+    public float changeDuration = 0.25f; // Duration of camera effect
+    public float dashFov = 95f; // Field of view when dashing
+
     [Header("References")]
+    public PlayerCamera cam; // Reference to the player's camera
     public Transform orientation; // Holds the player's orientation
 
     [Header("Debug")]
     public MovementState state; // Player's movement state. To be made private later
     public float currentSpeed; // Player's current speed. To be made private later
+    public bool isGrounded; // Is the player on the ground?
 
     float horizontalInput; // Player's horizontal input
     float verticalInput; // Player's vertical input
@@ -88,17 +101,16 @@ public class PlayerMovement : MonoBehaviour
     public enum MovementState
     {
         walking,
-        sprinting,
         crouching,
         sliding,
         dashing,
-        air
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // Freeze player's rotation
+        ChangeFov(playerFov, 0f); // Set player's default field of view
         canJump = true;
         startYScale = transform.localScale.y; // Set player's starting height
     }
@@ -107,11 +119,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (state == MovementState.crouching || state == MovementState.sliding) // If the player is crouching or sliding, use a shorter raycast for ground detection
         {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.25f + 0.3f, whatIsGround);
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.25f + 0.2f, whatIsGround);
         }
         else // Otherwise, use regular raycast for ground detection
         {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         }
 
         MyInput(); // Get player input
@@ -119,11 +131,11 @@ public class PlayerMovement : MonoBehaviour
         StateHandler(); // Handle player's movement state
         MeasureSpeed(); // Measure player's speed
 
-        if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching || state == MovementState.sliding) // Apply drag when on the ground
+        if (isGrounded && !isDashing) // Apply drag when on the ground and not dashing
         {
             rb.drag = groundDrag;
         }
-        else // Remove drag when in the air
+        else // Remove drag when in the air or dashing
         {
             rb.drag = 0f;
         }
@@ -187,36 +199,56 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing) // Dashing
         {
             state = MovementState.dashing;
-            moveSpeed = dashSpeed;
+            desiredMoveSpeed = dashSpeed;
+            speedChangeFactor = dashSpeedChangeFactor;
         }
         else if (isSliding) // Sliding
         {
             state = MovementState.sliding;
+            desiredMoveSpeed = walkSpeed;
         }
         else if (Input.GetKey(crouchKey) && !isSliding) // Crouching
         {
             state = MovementState.crouching;
-            moveSpeed = crouchSpeed;
-        }
-        else if (isGrounded && Input.GetKey(sprintKey)) // Sprinting
-        {
-            state = MovementState.sprinting;
-            moveSpeed = sprintSpeed;
+            desiredMoveSpeed = crouchSpeed;
         }
         else if (isGrounded) // Walking
         {
             state = MovementState.walking;
-            moveSpeed = walkSpeed;
+            desiredMoveSpeed = walkSpeed;
         }
-        else // In the air. Only occurs if the player is walking or sprinting and jumps
+
+        if (lastState == MovementState.dashing)
         {
-            state = MovementState.air; // State not actually used for anything, but could be useful for future features
+            keepMomemtum = true;
         }
+
+        if (desiredMoveSpeed != lastDesiredMoveSpeed)
+        {
+            if (keepMomemtum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(LerpMoveSpeed());
+            }
+            else
+            {
+                StopAllCoroutines();
+                moveSpeed = desiredMoveSpeed;
+            }
+        }
+
+        lastDesiredMoveSpeed = desiredMoveSpeed;
+        lastState = state;
     }
 
     // Move the player based on their movement state
     private void MovePlayer()
     {
+        if (state == MovementState.dashing)
+        {
+            return;
+        }
+
         moveDirection = InputDirection(); // Get player's movement direction
 
         if (OnSlope() && !exitingSlope) // Move the player on a slope
@@ -259,6 +291,11 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 limitedVelocity = flatVelocity.normalized * moveSpeed;
                 rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
             }
+        }
+
+        if (maxYSpeed != 0 && rb.velocity.y > maxYSpeed) // Limiting vertical speed
+        {
+            rb.velocity = new Vector3(rb.velocity.x, maxYSpeed, rb.velocity.z);
         }
     }
 
@@ -360,6 +397,30 @@ public class PlayerMovement : MonoBehaviour
         currentSpeed = rb.velocity.magnitude;
     }
 
+    private Vector3 GetDashDirection(Transform forwardT)
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        Vector3 direction = new Vector3();
+
+        if (allowAllDirections)
+        {
+            direction = forwardT.forward * vertical + forwardT.right * horizontal;
+        }
+        else
+        {
+            direction = forwardT.forward;
+        }
+
+        if (vertical == 0 && horizontal == 0)
+        {
+            direction = forwardT.forward;
+        }
+
+        return direction.normalized;
+    }
+
     private void Dash()
     {
         if (dashCooldownTimer > 0)
@@ -372,8 +433,29 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isDashing = true;
+        maxYSpeed = maxDashYSpeed;
 
-        Vector3 forceToApply = orientation.forward * dashForce + orientation.up * dashUpwardForce;
+        ChangeFov(dashFov, changeDuration);
+
+        Transform forwardT;
+
+        if (useCameraForward)
+        {
+            forwardT = cam.transform;
+        }
+        else
+        {
+            forwardT = orientation;
+        }
+
+        Vector3 direction = GetDashDirection(forwardT);
+
+        Vector3 forceToApply = direction * dashForce + orientation.up * dashUpwardForce;
+
+        if (disableGravity)
+        {
+            rb.useGravity = false;
+        }
 
         delayedForceToApply = forceToApply;
         Invoke(nameof(DelayedDashForce), 0.025f);
@@ -385,11 +467,48 @@ public class PlayerMovement : MonoBehaviour
 
     private void DelayedDashForce()
     {
+        if (resetVelocity)
+        {
+            rb.velocity = Vector3.zero;
+        }
+
         rb.AddForce(delayedForceToApply, ForceMode.Impulse);
     }
 
     private void ResetDash()
     {
         isDashing = false;
+        maxYSpeed = 0;
+
+        ChangeFov(playerFov, changeDuration);
+
+        if (disableGravity)
+        {
+            rb.useGravity = true;
+        }
+    }
+
+    private IEnumerator LerpMoveSpeed()
+    {
+        float time = 0;
+        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
+        float startSpeed = moveSpeed;
+        float changeFactor = speedChangeFactor;
+
+        while (time < difference)
+        {
+            moveSpeed = Mathf.Lerp(startSpeed, desiredMoveSpeed, time / difference);
+            time += Time.deltaTime * changeFactor;
+            yield return null;
+        }
+
+        moveSpeed = desiredMoveSpeed;
+        speedChangeFactor = 1f;
+        keepMomemtum = false;
+    }
+
+    private void ChangeFov(float targetFov, float duration)
+    {
+        cam.SmoothFovChange(targetFov, duration);
     }
 }
