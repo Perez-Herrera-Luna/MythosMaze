@@ -12,8 +12,6 @@ public class ProceduralLevel : MonoBehaviour
 
     public ArenaData bossArenaData;
     public List<ArenaData> arenasData;
-    float maxCollisionRadius;
-
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
 
@@ -30,12 +28,18 @@ public class ProceduralLevel : MonoBehaviour
 
 
     // Start is called before the first frame update
+    // calls necessary functions for procedural level generation
     void Start()
     {
-        // call necessary functions for procedural level generation
-
         InitialSetup();
         GenerateArenas();
+
+        // run dijkstras on generated graph
+        levelGraph.GenerateShortestPathTree();
+
+        // GeneratePaths();
+
+        LoadLevel();
 
     }
 
@@ -43,18 +47,17 @@ public class ProceduralLevel : MonoBehaviour
     private void InitialSetup()
     {
         levelGrid = new LevelGrid(currLevel.gridRows, currLevel.gridCols);
-        levelGraph = new LevelGraph(currLevel.maxNumArenas);
-
-        CalculateMaxCollisionRadius();
+        levelGraph = new LevelGraph(currLevel);
     }
 
     // helper function
+    // given available arenaData, calculate max dimension of all arenas
     private void CalculateMaxCollisionRadius()
     {
         float maxCollisionRadius = 0;
         foreach(ArenaData arena in arenasData){
-            int arenaRows = arenasData[0].height / levelGrid.GridScale;
-            int arenaCols = arenasData[0].width / levelGrid.GridScale;
+            int arenaRows = arena.height / levelGrid.GridScale;
+            int arenaCols = arena.width / levelGrid.GridScale;
 
             Vector2Int arenaDimensions = new Vector2Int(arenaRows, arenaCols);
             arena.collisionRadius = arenaDimensions.magnitude;
@@ -62,40 +65,78 @@ public class ProceduralLevel : MonoBehaviour
         }
     }
 
-    // given available arenaData, calculate max dimension of all arenas
-
     // randomly generate arenas (< maxNumberArenas) in grid
     private void GenerateArenas()
-    {
+    {        
         // set boss arena: center of grid, 1 door
-        AddArena(levelGrid.GridCenter, bossArenaData);
+        levelGraph.AddArena(bossArenaData, levelGrid.GridCenter, levelGrid.GridScale);
+        levelGrid.AddArena(levelGrid.GridCenter, bossArenaData.height, bossArenaData.width);
+        numArenas++;
+
+        Vector2Int arenaLocation;
+        int numTriesArena = 0;
+        int numTriesLoc = 0;
+        bool validLoc = false, success = false;
 
         // loop for each arena (until success or maxNumTries)
-            // reset currArenaLocation
-            // success = GenerateArenaLocation()		// randomly generates arena location, checks if is valid, retries limited # of times
-            // if success, AddArena()
+        while((numArenas < currLevel.maxNumArenas) & (numTriesArena++ < currLevel.maxTriesGenArena))
+        {
+            numTriesLoc = 0;
+            validLoc = false;
+            do{
+                // currently only using one type of arena prefab
+                arenaLocation = levelGrid.GenerateArenaLocation(arenasData[0]);
+
+                // try adding arena node to graph (checks if far enough distance from other arenas)
+                validLoc = levelGraph.AddArena(arenasData[0], arenaLocation, levelGrid.GridScale);
+            } while (!validLoc & (numTriesLoc++ < currLevel.maxTriesGenLoc));
+
+            if(numTriesLoc > currLevel.maxTriesGenLoc){
+                Debug.Log("Reached maxNumTries while trying to generate valid arena location");
+            }
+
+            // if managed to generate a valid location (within bounds, far enough from other arenas)
+            if(validLoc){
+                // try adding arena representation to grid
+                success = levelGrid.AddArena(arenaLocation, arenasData[0].height, arenasData[0].width);
+                if(!success){
+                    Debug.Log("error adding arena to grid");
+                    return;
+                }
+
+                numArenas++;
+                numTriesArena = 0;
+            }
+        }
+
+        if(numTriesArena > currLevel.maxTriesGenArena){
+            Debug.Log("Reached maxNumTries while trying to generate new arena");
+        }
     }
 
-    // after collecting arenaData and generating valid arena location, add arena to grid and graph datastructures
-    private bool AddArena(Vector2Int location, ArenaData arena)
+    // function which makes necessary calls to instantiate all arenas and paths in the level
+    private void LoadLevel()
     {
-        bool success = false;
+        LoadArenas();
 
-        // add arena to grid
-        success = levelGrid.AddArena(location, arena.height, arena.width);
-        if(!success){
-            Debug.Log("error adding arena to grid");
-            return false;
+        // LoadPaths();
+    }
+
+    // function which loads all arenas in scene according to their locations in grid
+    private void LoadArenas()
+    {
+        GameObject arenaInstance;
+        Arena arenaScript;
+        Vector3 arenaLocation;
+
+        for(int i = 0; i < levelGraph.NumArenas; i++){
+            arenaLocation = levelGraph.generatedArenas[i].ConvertArenaLocation(levelGrid.GridScale);
+            arenaInstance = Instantiate(arenaPrefab, arenaLocation, Quaternion.identity, gameObject.transform);
+            
+            arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
+            // set arena initial values (isBossLevel, hasCharacter, arenaLevel, numDoors)
+            arenaScript.SetInitialValues(false, false, currLevel, 1);
         }
-
-        // add arena to graph
-        success = levelGraph.AddArena(location);
-        if(!success){
-            Debug.Log("error adding arena to grid");
-            return false;
-        }
-
-        return success;
     }
 
     /*void LoadCombatArena()

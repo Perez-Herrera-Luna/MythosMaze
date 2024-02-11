@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 // Grid representation of level
@@ -60,17 +59,26 @@ public class LevelGrid
     }
 
     // generate random arena location within grid (leaving 1 gridwidth of space on each side)
-    // check if location is valid for arena -> if not, retry (loop stops at success or maxAttemptsGenLoc)
-    public bool GenerateArenaLocation(ArenaData arena)
+    public Vector2Int GenerateArenaLocation(ArenaData arena)
     {
-        // needs implementation still
-        return false;
+        int minX = (arena.width - 1) / 2;
+        int maxX = gridRows - minX;
+        int minY = (arena.height - 1) / 2;
+        int maxY = gridCols - minY;
+
+        // randomly generate center of arena (within smaller box constrained by arena proportions)
+        int locX = Random.Range(minX, maxX);
+        int locY = Random.Range(minY, maxY);
+        return new Vector2Int(locX, locY);
     }
 
     // Add Arena Layout to Grid (after generating valid arenaCenter location on grid)
     // smallest arena size is 3x3
     public bool AddArena(Vector2Int centerLoc, int height, int width)
     {
+        Debug.Log("current center location: " + centerLoc);
+        Debug.Log("current height, width: " + height + " , " + width);
+
         int numRows = height / gridScale;
         int numCols = width / gridScale;
 
@@ -81,24 +89,24 @@ public class LevelGrid
 
         // loop through gridNodes setting appropriate grid nodes according to arena layout
         // error checking if arena is within grid boundaries
-        // for square arena -> procedurally set door locations at N,E,S,W positions relative to arenaCenter
+        // currently only for square arena -> procedurally set door locations at N,E,S,W positions relative to arenaCenter
         for(int i = -rowCenter; i <= rowCenter; i++){
             for(int j = -colCenter; j <= colCenter; j++){
-                currLocation.Set(i, j);
+                currLocation.Set((centerLoc.x + i), (centerLoc.y + j));
                 if(isValidTarget(currLocation)){
+                    char node = 'X';
                     if((i == rowCenter | i == -rowCenter) & (j == 0)){
                         // doors at north and south of arena
-                        levelLayout[centerLoc.x + i, centerLoc.y + j].NodeValue = 'D';
+                        node = 'D';
                     }else if((i == 0) & (j == -colCenter | j == colCenter)){
                         // doors at east and west of arena
-                        levelLayout[centerLoc.x + i, centerLoc.y + j].NodeValue = 'D';
+                        node = 'D';
                     }else if((i == 0) & (j == 0)){
                         // set 'A' at arenaCenter
-                        levelLayout[centerLoc.x, centerLoc.y].NodeValue = 'A';
-                    }else{
-                        // set all other gridNodes within arena layout to X (blocked)
-                        levelLayout[centerLoc.x + i, centerLoc.y + j].NodeValue = 'X';
+                        node = 'A';
                     }
+
+                    levelLayout[currLocation.x, currLocation.y] = new GridNode(node);
                 }else{
                     Debug.Log("Error: arena Location not within grid boundaries");
                     return false;

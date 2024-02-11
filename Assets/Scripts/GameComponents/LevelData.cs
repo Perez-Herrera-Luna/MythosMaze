@@ -13,7 +13,7 @@ public class LevelData : ScriptableObject
     public float[] gridRings = new float[3];    
 
     public int maxNumArenas;
-    public int maxAttemptsGenArena;
-    public int maxAttemptsGenLoc;
+    public int maxTriesGenArena;
+    public int maxTriesGenLoc;
     public int maxPathLength;
 }

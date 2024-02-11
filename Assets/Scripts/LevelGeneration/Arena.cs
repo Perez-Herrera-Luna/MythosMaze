@@ -11,9 +11,6 @@ public class Arena : MonoBehaviour
     public int numDoors;
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
 
-    public ArenaData bossArenaData;
-    public List<ArenaData> arenasData;
-
     public List<GameObject> enemyPrefabs;    // list of monster prefabs that can appear in this level
     public List<GameObject> powerupPrefabs;   // list of enemyPrefabs that can appear in this level
     
@@ -60,7 +57,7 @@ public class Arena : MonoBehaviour
         // procedurally generate enemy locations
 
         // for initial prototype just spawn one type of enemy at set locations
-        for(int enemyNum = 0; enemyNum < arenasData[0].maxEnemies; enemyNum++)
+        for(int enemyNum = 0; enemyNum < arenaData.maxEnemies; enemyNum++)
         {
             // Instantiate(enemyPrefabs[0], gameObject.transform);
         }
@@ -71,7 +68,7 @@ public class Arena : MonoBehaviour
         // procedurally generate pickup locations
 
         // for initial prototype just spawn one type of pickup at set locations
-        for(int powerupNum = 0; powerupNum < arenasData[0].maxPowerups; powerupNum++)
+        for(int powerupNum = 0; powerupNum < arenaData.maxPowerups; powerupNum++)
         {
             Instantiate(powerupPrefabs[powerupNum], gameObject.transform);
         }

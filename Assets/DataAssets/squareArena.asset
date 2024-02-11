@@ -9,17 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8803f1406b00b034ca83f8f2d1e9b43d, type: 3}
-  m_Name: PrototypeLevel
+  m_Script: {fileID: 11500000, guid: 662403548de64f44784a376b9b198783, type: 3}
+  m_Name: squareArena
   m_EditorClassIdentifier: 
-  level: 0
-  gridRows: 41
-  gridCols: 41
-  gridRings:
-  - 10
-  - 20
-  - 30
-  maxNumArenas: 4
-  maxTriesGenArena: 4
-  maxTriesGenLoc: 1000
-  maxPathLength: 0
+  height: 10
+  width: 10
+  collisionRadius: 4
+  maxEnemies: 0
+  maxEnemyPower: 0
+  maxPowerups: 0

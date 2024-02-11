@@ -153,9 +153,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currLevel: {fileID: 11400000, guid: 92dee1b52eeda5f43af5af45105b6a29, type: 2}
-  numCombatArenas: 1
+  numArenas: 0
+  bossArenaPrefab: {fileID: 5765129691335200689, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
   arenaPrefab: {fileID: 5765129691335200689, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
   questCharPrefab: {fileID: 1445574416637479282, guid: 5e01ac689a0d7b044813e3b432efbb58, type: 3}
+  bossArenaData: {fileID: 11400000, guid: ae940306fe1492b4b8ee22594d98b12c, type: 2}
+  arenasData:
+  - {fileID: 11400000, guid: ae940306fe1492b4b8ee22594d98b12c, type: 2}
 --- !u!4 &1386353865
 Transform:
   m_ObjectHideFlags: 0
