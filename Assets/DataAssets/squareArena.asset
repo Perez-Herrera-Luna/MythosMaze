@@ -15,6 +15,11 @@ MonoBehaviour:
   height: 10
   width: 10
   collisionRadius: 4
+  doorLocations:
+  - {x: 0, y: 2}
+  - {x: 2, y: 0}
+  - {x: -2, y: 0}
+  - {x: 0, y: -2}
   maxEnemies: 0
   maxEnemyPower: 0
   maxPowerups: 0

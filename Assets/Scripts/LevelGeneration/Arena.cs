@@ -49,7 +49,7 @@ public class Arena : MonoBehaviour
 
     public void SetupDoors()
     {
-
+        // curr number of doors = (4 - availableDoors.Count)
     }
 
     public void SetupEnemies()

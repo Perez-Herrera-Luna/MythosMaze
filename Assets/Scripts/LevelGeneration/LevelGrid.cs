@@ -1,58 +1,69 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 // Grid representation of level
     // gridScale value multiplies by values such as gridRows to get level gameobject dimensions 
 public class LevelGrid
 {
+    public LevelData currLevel;
     // Important Note: for the current moment this code is dependent on gridRows + gridCols having odd values
-    private int gridRows = 21;
-    private int gridCols = 21;
-    private int gridScale = 2;
-    public int GridScale => gridScale;
+    public int GridRows => currLevel.gridRows;
+    public int GridCols => currLevel.gridCols;
+    public int GridScale => currLevel.gridScale;
 
     private GridNode[,] levelLayout;
-
     private Vector2Int gridCenter;
     public Vector2Int GridCenter => gridCenter;
 
-    public LevelGrid()
-    {
-        levelLayout = new GridNode[gridRows, gridCols];
+    // Random Walker Algorithm Attributes
+    bool isInitialPath; 
+    int maxWalkTries = 200000;
 
-        int halfRowNum = (gridRows - 1) / 2;
-        int halfColNum = (gridCols - 1) / 2;
+	public List<Vector2Int> startDoors, targetDoors;
+    Vector2Int currWalkerLoc, currStartLoc, currTargetLoc;
+    List<Vector2Int> pathExplorationOrder;
+    Dictionary<Vector2Int, (Vector2Int, Vector2Int)> currPath;
+
+    public LevelGrid(LevelData level)
+    {
+        currLevel = level;
+
+        levelLayout = new GridNode[currLevel.gridRows, currLevel.gridCols];
+        InitializeNodes();
+
+        int halfRowNum = (currLevel.gridRows - 1) / 2;
+        int halfColNum = (currLevel.gridCols - 1) / 2;
         gridCenter = new Vector2Int(halfRowNum, halfColNum);
     }
 
-    public LevelGrid(int rows, int cols)
+    private void InitializeNodes()
     {
-        gridRows = rows;
-        gridCols = cols;
-
-        levelLayout = new GridNode[gridRows, gridCols];
-
-        int halfRowNum = (gridRows - 1) / 2;
-        int halfColNum = (gridCols - 1) / 2;
-        gridCenter = new Vector2Int(halfRowNum, halfColNum);
+        for(int i = 0; i < currLevel.gridRows; i++){
+            for(int j = 0; j < currLevel.gridCols; j++){
+                levelLayout[i, j] = new GridNode('E');
+            }
+        }
     }
 
     // helper function returns reference to node located at location vector
     // returns invalid node (nodeValue = 'I') if location is out of bounds
-    private GridNode GetNode(Vector2Int location)
+    public GridNode GetNode(Vector2Int location)
     {
         // check if location is valid
         if(isValidTarget(location))
             return levelLayout[location.x, location.y];
 
         // otherwise, location invalid
-        return new GridNode('I');
+        GridNode invalid = new GridNode('I');
+        return invalid;
     }
 
     // helper function to check if location is within grid boundaries
     private bool isValidTarget(Vector2Int location)
     {
-        if(location.x >= 0 & location.x < gridRows){
-            if(location.y >= 0 & location.y < gridCols)
+        if(location.x >= 0 & location.x < currLevel.gridRows){
+            if(location.y >= 0 & location.y < currLevel.gridCols)
                 return true;
         }
         return false;
@@ -62,9 +73,9 @@ public class LevelGrid
     public Vector2Int GenerateArenaLocation(ArenaData arena)
     {
         int minX = (arena.width - 1) / 2;
-        int maxX = gridRows - minX;
+        int maxX = currLevel.gridRows - minX;
         int minY = (arena.height - 1) / 2;
-        int maxY = gridCols - minY;
+        int maxY = currLevel.gridCols - minY;
 
         // randomly generate center of arena (within smaller box constrained by arena proportions)
         int locX = Random.Range(minX, maxX);
@@ -76,11 +87,11 @@ public class LevelGrid
     // smallest arena size is 3x3
     public bool AddArena(Vector2Int centerLoc, int height, int width)
     {
-        Debug.Log("current center location: " + centerLoc);
-        Debug.Log("current height, width: " + height + " , " + width);
+        // Debug.Log("current center location: " + centerLoc);
+        // Debug.Log("current height, width: " + height + " , " + width);
 
-        int numRows = height / gridScale;
-        int numCols = width / gridScale;
+        int numRows = height / currLevel.gridScale;
+        int numCols = width / currLevel.gridScale;
 
         int rowCenter = (numRows - 1) / 2;
         int colCenter = (numCols - 1) / 2;
@@ -117,14 +128,52 @@ public class LevelGrid
         return true;
     }
 
-    // function which returns true / false on whether adding a path connection in moveDirection is possible
-    // may need additional checks, but for now I can't think of any
-    public bool CanConnect(Vector2Int currLocation, Vector2Int moveDirection, bool isInitialPath)
+    // After path is generated, add all path connections to grid
+    // returns false if any errors occured while adding connection
+    private bool AddPath()
     {
-        // add any error checks of currNode
+        foreach(KeyValuePair<Vector2Int, (Vector2Int, Vector2Int)> pathConnection in currPath){
+            bool success = false;
+            Vector2Int pathDir = pathConnection.Value.Item2;
 
+            // Debug.Log("AddPath() : currLocation = " + pathConnection.Key + ", direction = " + pathDir);
+
+            // add connection to curr node
+            GridNode srcNode = GetNode(pathConnection.Key);
+            success = srcNode.AddConnection(pathDir);
+            if (!success){
+                Debug.Log("Error adding pathConnection to GridNode");
+                return false;
+            }
+            BlockNewCorners(pathConnection.Key);
+
+            // add connection to target node
+            GridNode targetNode = GetNode(pathConnection.Key + pathDir);
+            success = targetNode.AddConnection(pathDir * (-1)); // connection from perspective of target node
+            if (!success){
+                return false;
+            }
+
+            BlockNewCorners(pathConnection.Key + pathDir);
+        }
+        return true;
+    }
+
+    // function which returns true / false on whether adding a path connection in moveDirection is possible
+    public bool CanConnect(Vector2Int currLoc, Vector2Int moveDir)
+    {
         // set target node equal to walker's next location
-        GridNode targetNode = GetNode(currLocation + moveDirection);
+        Vector2Int targetLoc = currLoc + moveDir;
+
+        if(!isValidTarget(targetLoc))
+            return false;
+
+        // check if path runs into itself
+        if(currPath.ContainsKey(targetLoc))
+            return false;
+
+        GridNode targetNode = new GridNode();
+        targetNode = GetNode(targetLoc);
 
         if(targetNode.NodeValue == 'E' | targetNode.NodeValue == 'D')     // if node is empty or arenaDoor
             return true;
@@ -139,52 +188,20 @@ public class LevelGrid
         
         if(targetNode.NodeValue == 'P' | targetNode.NodeValue == 'T'){
             // adding connection to existing simple path or turn
-            if(targetNode.NumConnections == 2){
-                return true;
-            }else{
-                Debug.Log("Error: trying to connect to path with invalid NumConnections");
-                return false;                
-            }
+            return true;
         }else if(targetNode.NodeValue == 'J'){
             // adding connection to existing junction
-            if(targetNode.NumConnections == 3){
-                return true;
-            }else if(targetNode.NumConnections == 4){
+            if(targetNode.NumConnections == 4){
                 Debug.Log("Error: trying to connect to junction that already has 4 connections");
                 return false;
             }else{
-                Debug.Log("Error: trying to connect to junction with invalid NumConnections");
-                return false;                
+                return true;             
             }
         }
 
         // if reached this point, something wrong - invalid value for targetNode
         Debug.Log("Error: CanConnect detected invalid value for targetNode");
         return false;
-    }
-
-    // Need to run CanConnect prior to calling this function
-    // returns false if any errors occured while adding connection
-    public bool AddConnection(Vector2Int currLocation, Vector2Int moveDirection){
-        bool success = false;
-
-        // add connection to curr node
-        GridNode currNode = GetNode(currLocation);
-        success = currNode.AddConnection(moveDirection);
-        if(!success)
-            return false;
-        if(currNode.NodeValue == 'T' | currNode.NodeValue == 'J')
-            BlockNewCorners(currLocation);
-
-        // add connection to target node
-        GridNode targetNode = GetNode(currLocation + moveDirection);
-        success = targetNode.AddConnection(moveDirection * (-1)); // connection from perspective of target node
-        if(!success)
-            return false;
-
-        BlockNewCorners(currLocation);
-
-        return true;
     }
 
     // helper function ensures corners of any turns/junctions are blocked
@@ -218,4 +235,152 @@ public class LevelGrid
         }
     }
 
+    // modified variation of random walk algorithm
+    public bool GeneratePath(bool initialPath, GraphNode startArena, GraphNode endArena){
+        // first setup walker 
+        isInitialPath = initialPath;
+        
+        startDoors = startArena.NearestDoors(endArena);
+        if(startDoors == null){
+            Debug.Log("No available doors at source arena");
+            return false;
+        }
+        targetDoors = endArena.NearestDoors(startArena);
+        if(targetDoors == null){
+            Debug.Log("No available doors at end arena");
+            return false;
+        }
+
+        bool success = false;
+        int doorCombos = startDoors.Count * targetDoors.Count;
+        int startDoor = 0, endDoor = 0;
+
+        // tries all possible door combinations to connect path between 2 arenas
+        while(!success & (doorCombos > 0)){
+
+            currStartLoc = startArena.GridLocation + startDoors[startDoor];
+            currTargetLoc = endArena.GridLocation + targetDoors[endDoor];
+
+            currWalkerLoc = currStartLoc;
+            currPath = new Dictionary<Vector2Int, (Vector2Int, Vector2Int)>();
+
+            success = RandomWalker();
+
+            if(success){
+                AddPath();
+
+                // mark used doors in src and target arena GraphNodes as unavailable
+                if(!startArena.AddDoor(startDoors[startDoor]))
+                    Debug.Log("Error adding door to start arena");
+                
+                if(!endArena.AddDoor(targetDoors[endDoor]))
+                    Debug.Log("Error adding door to end arena");
+            }else{
+                doorCombos -= 1;
+                // try different doors for startArena and endArena (if available)
+                if(doorCombos > 0){
+                    if(endDoor < (targetDoors.Count - 1)){
+                        endDoor++;
+                    }else{
+                        startDoor++;
+                        endDoor = 0;
+                    }
+                }
+            }
+        }
+
+        if(!success){
+            if(isInitialPath){
+                // error handling - if arena is unreachable from shortest path tree 
+                Debug.Log("Error: no more possible door combinations, reached max number of path tries in walker algorithm");
+            }else{
+                // error handling
+                Debug.Log("Error: arena unreachable (secondary walk)");
+            }
+        }
+
+        return success;
+    }
+
+    private bool RandomWalker()
+    {
+        int numTries = 0;
+        bool pathComplete = false;
+
+        GridNode currNode = new GridNode();
+        Vector2Int directionToTry = Vector2Int.zero;
+        Vector2Int prevLocation = new Vector2Int(-1, -1);
+
+        do
+        {
+            currNode = GetNode(currWalkerLoc);
+
+            // if node hasn't been visited yet this path iteration
+            if(!currPath.ContainsKey(currWalkerLoc))
+                currNode.CalculateExplorationOrder(currWalkerLoc - currTargetLoc, currLevel.drunkenRatio);
+
+            if(currNode.pathExplorationOrder.Count > 0){
+                directionToTry = currNode.pathExplorationOrder.Dequeue();
+
+                if(CanConnect(currWalkerLoc, directionToTry)){
+                    currPath.Add(currWalkerLoc, (prevLocation, directionToTry));
+
+                    prevLocation = currWalkerLoc;
+                    currWalkerLoc += directionToTry;
+
+                    if(currWalkerLoc == currTargetLoc)
+                        pathComplete = true;
+                }else{
+                    numTries++;
+                }
+            }else{
+                // if there are no more possible directions to explore in currNode
+                numTries++;
+                Vector2Int removeLoc = currWalkerLoc;
+
+                // update prevDirection
+                (Vector2Int prevLoc, Vector2Int tryDir) nodeToRemove;
+                if(!currPath.TryGetValue(removeLoc, out nodeToRemove)){
+                    Debug.Log("Error: nodeToRemove doesn't exist in currPath");
+                    return false;
+                }
+                // set walker location back to prev node's location
+                currWalkerLoc = nodeToRemove.prevLoc;
+
+                // check if updated walkerLocation is back to start of path (end of walker algo, failure)
+                if(currWalkerLoc == currStartLoc){
+                    Debug.Log("no possible paths between curr doors");
+                    return false;
+                }else{
+                    currPath.Remove(removeLoc);
+                }
+
+                // update prev location value
+                (Vector2Int prevLoc, Vector2Int tryDir) newNode;
+                if(!currPath.TryGetValue(currWalkerLoc, out newNode)){
+                    Debug.Log("Error: currNode doesn't exist in currPath");
+                    return false;
+                }
+                prevLocation = newNode.prevLoc;
+            }
+        } while (!pathComplete & (numTries < maxWalkTries));
+
+        return pathComplete;
+    }
+
+    // helper function to convert location from vector2Int to Vector3 (for instantiation)
+    public Vector3 ConvertLocation(int x, int y)
+    {
+        return new Vector3(10 * currLevel.gridScale * x , 0 , 10 * currLevel.gridScale * y);
+    }
+
+    public void PrintGrid(){
+        for(int i = 0; i < currLevel.gridRows; i++){
+            string row = levelLayout[i, 0].NodeValue.ToString();
+            for(int j = 1; j < currLevel.gridCols; j++){
+                row += levelLayout[i, j].NodeValue;
+            }
+            Debug.Log(row);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GraphNode
@@ -8,17 +9,20 @@ public class GraphNode
     public int arenaRows;
     public int arenaCols;
     public float distToBoss;
-    public int numDoors;
+    private int maxNumDoors;
+    public int MaxNumDoors => maxNumDoors;
 
     // vectors representing door locations with respect to arenaCenter in gridScale
-    public List<Vector2Int> activeDoorLocations;
+    public List<Vector2Int> availableDoors = new List<Vector2Int>();
+
+    public int NumDoors => 4 - availableDoors.Count;
 
     public Vector2Int GridLocation => gridLocation;
 
     public GraphNode(float bossDist, int doorNum)
     {
         distToBoss = bossDist;
-        numDoors = doorNum;
+        maxNumDoors = doorNum;
     }
 
     public void SetInitialNodeValues(Vector2Int location, ArenaData arena, int gridScale)
@@ -26,11 +30,74 @@ public class GraphNode
         gridLocation = location;
         arenaRows = arena.height / gridScale;
         arenaCols = arena.width / gridScale;
+
+        foreach(Vector2Int door in arena.doorLocations){
+            availableDoors.Add(door);
+        }
     }
 
     // helper function to convert arena location from vector2Int to Vector3 (for instantiation)
     public Vector3 ConvertArenaLocation(int gridScale)
     {
-        return new Vector3(20 * gridScale * gridLocation.x , 0 , 20 * gridScale * gridLocation.y);
+        return new Vector3(10 * gridScale * gridLocation.x , 0 , 10 * gridScale * gridLocation.y);
+    }
+
+    // returns true if curr number of doors is less than maxNumDoors
+    public bool canAddDoor()
+    {
+        if(NumDoors < maxNumDoors){
+            return true;
+        }else{
+            Debug.Log("Error: trying to add more doors than maxNumDoors: " + maxNumDoors);
+            return false;
+        }
+    }
+
+    public bool AddDoor(Vector2Int doorDirection)
+    {        
+        if(canAddDoor()){
+            return availableDoors.Remove(doorDirection);
+        }else{
+            return false;
+        }
+    }
+
+    // returns the locations of curr arena available doors ordered based on proximity to target arena
+    // if no available doors, returns null
+    public List<Vector2Int> NearestDoors(GraphNode target)
+    {
+        if(canAddDoor()){
+            // calculate the direction of target
+            Vector2 direction = target.GridLocation - gridLocation;
+
+            SortedList<float, Vector2Int> sortedDoors = new SortedList<float, Vector2Int>();
+
+            // sorts available doors by proximity to target arena direction
+            foreach(Vector2Int door in availableDoors)
+            {
+                // calculate projection of door vector onto direction vector
+                // dot product = negative (opposite directions), positive (same direction)
+                float currDotProduct = Vector2.Dot(door, direction);
+
+                // want to sort doors in order of closest (same direction) first, needs to have smallest value in queue
+                float doorKey = (-1) * currDotProduct;
+                
+                // make dot product 'unique' if same as another door
+                if(sortedDoors.ContainsKey(doorKey))
+                    doorKey += 0.1f;
+                
+                sortedDoors.Add(doorKey, door);
+            }
+
+            /* Debug.Log("Sorted Doors Arena: " + gridLocation.x + ", " + gridLocation.y);
+            Debug.Log("Available Doors: " + availableDoors.Count);
+            foreach(var doorL in sortedDoors.Values){
+                Debug.Log("Door: " + doorL.x + ", " + doorL.y);
+            } */
+
+            return sortedDoors.Values.ToList();
+        }else{
+            return null;
+        }
     }
 }
