@@ -17,7 +17,7 @@ public class NodePriorityQueue
             Debug.Log("Error: Tried adding existing node to priority queue");
     }
 
-    public bool isEmpty(){
+    public bool IsEmpty(){
         if(queue.Count > 0)
             return false;
         else

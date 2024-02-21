@@ -18,5 +18,5 @@ public class LevelData : ScriptableObject
     public int arenaDistanceBuff;
     public int maxTriesGenLoc;
     public int drunkenRatio;
-    // public int maxPathLength;
+    public int maxPathLength;
 }

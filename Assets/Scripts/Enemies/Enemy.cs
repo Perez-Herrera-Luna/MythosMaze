@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    public MonsterData monster;
+    public EnemyData monster;
     public bool hasWeapon;
     public WeaponData weapon;
 

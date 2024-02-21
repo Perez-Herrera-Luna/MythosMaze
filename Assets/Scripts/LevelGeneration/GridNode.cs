@@ -5,20 +5,17 @@ public class GridNode
 {
     private char nodeValue = 'E'; // values can be: E, X, A, D, P, T, I
     private int numConnections = 0;
-    public List<Vector2Int> currConnections = new List<Vector2Int>();   // stores Vector2Int.up, .down, .left, and .right
-    public List<Vector2Int> currCorners = new List<Vector2Int>();
-
-    public Queue<Vector2Int> pathExplorationOrder = new Queue<Vector2Int>();
+    private List<Vector2Int> currConnections = new List<Vector2Int>();   // stores Vector2Int.up, .down, .left, and .right
+    private List<Vector2Int> currCorners = new List<Vector2Int>();
+    public List<Vector2Int> CurrCorners => currCorners;
+    private Queue<Vector2Int> pathExplorationOrder = new Queue<Vector2Int>();
+    public Queue<Vector2Int> PathExplorationOrder => pathExplorationOrder;
 
     public GridNode() => nodeValue = 'I';
 
     public GridNode(char val) => nodeValue = val;
 
-    public char NodeValue
-    { 
-        get => nodeValue;
-        set => nodeValue = value;
-    }
+    public char NodeValue => nodeValue;
     public int NumConnections => numConnections;
 
     // helper function called in process of adding new path connection

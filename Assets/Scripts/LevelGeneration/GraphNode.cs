@@ -6,18 +6,17 @@ using UnityEngine;
 public class GraphNode
 {
     private Vector2Int gridLocation;
-    public int arenaRows;
-    public int arenaCols;
-    public float distToBoss;
+    public Vector2Int GridLocation => gridLocation;
+    private int arenaRows;
+    private int arenaCols;
+    private float distToBoss;
+    public float DistToBoss => distToBoss;
     private int maxNumDoors;
     public int MaxNumDoors => maxNumDoors;
 
     // vectors representing door locations with respect to arenaCenter in gridScale
-    public List<Vector2Int> availableDoors = new List<Vector2Int>();
-
+    private List<Vector2Int> availableDoors = new List<Vector2Int>();
     public int NumDoors => 4 - availableDoors.Count;
-
-    public Vector2Int GridLocation => gridLocation;
 
     public GraphNode(float bossDist, int doorNum)
     {
@@ -43,7 +42,7 @@ public class GraphNode
     }
 
     // returns true if curr number of doors is less than maxNumDoors
-    public bool canAddDoor()
+    private bool CanAddDoor()
     {
         if(NumDoors < maxNumDoors){
             return true;
@@ -55,7 +54,7 @@ public class GraphNode
 
     public bool AddDoor(Vector2Int doorDirection)
     {        
-        if(canAddDoor()){
+        if(CanAddDoor()){
             return availableDoors.Remove(doorDirection);
         }else{
             return false;
@@ -66,7 +65,7 @@ public class GraphNode
     // if no available doors, returns null
     public List<Vector2Int> NearestDoors(GraphNode target)
     {
-        if(canAddDoor()){
+        if(CanAddDoor()){
             // calculate the direction of target
             Vector2 direction = target.GridLocation - gridLocation;
 

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Arena : MonoBehaviour
 {
-    public LevelData arenaLevel;      // arena level data (determines max enemy power/arena setup)
+    private LevelData arenaLevel;      // arena level data (determines max enemy power/arena setup)
     public ArenaData arenaData;
-    public bool isBossLevel;    // designates if combatArena is boss level or not
-    public bool hasCharacter;   // designates if this arena has a quest character within it or not   
-    public int numDoors;
+    private bool isBossLevel;    // designates if combatArena is boss level or not
+    private bool hasCharacter;   // designates if this arena has a quest character within it or not   
+    private int numDoors;
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
 
     public List<GameObject> enemyPrefabs;    // list of monster prefabs that can appear in this level
@@ -16,7 +16,7 @@ public class Arena : MonoBehaviour
     
     public List<GameObject> bossPrefabs;      // boss
     public List<GameObject> charPrefabs;       // quest character prefab
-    public List<GameObject> itemPrefab;       // quest item prefab
+    public List<GameObject> itemPrefabs;       // quest item prefab
 
     // Start is called before the first frame update
     void Start()
@@ -57,21 +57,25 @@ public class Arena : MonoBehaviour
         // procedurally generate enemy locations
 
         // for initial prototype just spawn one type of enemy at set locations
-        for(int enemyNum = 0; enemyNum < arenaData.maxEnemies; enemyNum++)
+        /*for(int enemyNum = 0; enemyNum < arenaData.maxEnemies; enemyNum++)
         {
             // Instantiate(enemyPrefabs[0], gameObject.transform);
-        }
+        }*/
     }
 
+    private Vector2 GenerateEnemyLocation()
+    {
+        return Vector2.zero;
+    } 
     public void SetupPowerups()
     {
         // procedurally generate pickup locations
 
         // for initial prototype just spawn one type of pickup at set locations
-        for(int powerupNum = 0; powerupNum < arenaData.maxPowerups; powerupNum++)
+        /*for(int powerupNum = 0; powerupNum < arenaData.maxPowerups; powerupNum++)
         {
             Instantiate(powerupPrefabs[powerupNum], gameObject.transform);
-        }
+        }*/
     }
 
     public void SetupCharacter()

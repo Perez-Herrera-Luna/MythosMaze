@@ -6,7 +6,7 @@ public class ProceduralLevel : MonoBehaviour
 {
     public LevelData currLevel;
     public GameObject bossArenaPrefab;
-    public GameObject arenaPrefab;
+    public List<GameObject> arenaPrefabs;
     public GameObject questCharPrefab;
 
     public GameObject pathPrefab;
@@ -19,18 +19,6 @@ public class ProceduralLevel : MonoBehaviour
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
 
-    // arena generation attributes
-    Vector2Int currArenaLocation;
-    List<Vector2Int> currArenaDistances;
-
-
-    // walker algorithm attributes
-    bool isInitialPath;
-    int pathLength;
-    List<Vector2Int> currPath;
-    Vector2Int currWalkerLoc, targetLoc;
-
-
     // Start is called before the first frame update
     // calls necessary functions for procedural level generation
     void Start()
@@ -38,7 +26,7 @@ public class ProceduralLevel : MonoBehaviour
         InitialSetup();
         GenerateArenas();
 
-        // levelGrid.PrintGrid();
+        // levelGrid.PrintGrid(); (debugging)
 
         GeneratePaths();
 
@@ -126,13 +114,13 @@ public class ProceduralLevel : MonoBehaviour
         GraphNode srcArena, targetArena;
 
         // iterate through shortest path tree, generate initial paths
-        foreach(KeyValuePair<int, int> kvp in levelGraph.shortestPath){
-            // try to generate path from prevNode to currNode in shortestPath
-            if(kvp.Key != levelGraph.srcArenaIndex){
+        foreach(KeyValuePair<int, int> kvp in levelGraph.ShortestPath){
+            // try to generate path from prevNode to currNode in ShortestPath
+            if(kvp.Key != levelGraph.SrcArenaIndex){
                 // Debug.Log("generating initial path between src " + kvp.Value + " and dest " + kvp.Key);
 
-                srcArena = levelGraph.generatedArenas[kvp.Value];
-                targetArena = levelGraph.generatedArenas[kvp.Key];
+                srcArena = levelGraph.GeneratedArenas[kvp.Value];
+                targetArena = levelGraph.GeneratedArenas[kvp.Key];
 
                 bool pathGenerated = levelGrid.GeneratePath(true, srcArena, targetArena);
 
@@ -145,7 +133,7 @@ public class ProceduralLevel : MonoBehaviour
         // Secondary Paths
         List<GraphNode> availableArenas = new List<GraphNode>();
 
-        foreach(GraphNode arena in levelGraph.generatedArenas){
+        foreach(GraphNode arena in levelGraph.GeneratedArenas){
             if(arena.NumDoors < arena.MaxNumDoors)
                 availableArenas.Add(arena);
         }
@@ -200,17 +188,16 @@ public class ProceduralLevel : MonoBehaviour
         Vector3 arenaLocation;
 
         for(int i = 0; i < levelGraph.NumArenasAdded; i++){
-            arenaLocation = levelGraph.generatedArenas[i].ConvertArenaLocation(levelGrid.GridScale);
-            arenaInstance = Instantiate(arenaPrefab, arenaLocation, Quaternion.identity, gameObject.transform);
+            arenaLocation = levelGraph.GeneratedArenas[i].ConvertArenaLocation(levelGrid.GridScale);
+            arenaInstance = Instantiate(arenaPrefabs[0], arenaLocation, Quaternion.identity, gameObject.transform);
             
             arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
 
             // set arena initial values (isBossLevel, hasCharacter, arenaLevel, numDoors)
-            int numDoors = 4 - levelGraph.generatedArenas[i].availableDoors.Count;
-            arenaScript.SetInitialValues(true, false, currLevel, numDoors);
+            arenaScript.SetInitialValues(true, false, currLevel, levelGraph.GeneratedArenas[i].NumDoors);
         }
 
-        if(levelGraph.NumArenasAdded != levelGraph.generatedArenas.Count){
+        if(levelGraph.NumArenasAdded != levelGraph.GeneratedArenas.Count){
             Debug.Log("Error in adding arenas");
         }
     }

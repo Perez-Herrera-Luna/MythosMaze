@@ -154,7 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currLevel: {fileID: 11400000, guid: 92dee1b52eeda5f43af5af45105b6a29, type: 2}
   bossArenaPrefab: {fileID: 5765129691335200689, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
-  arenaPrefab: {fileID: 5765129691335200689, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
+  arenaPrefabs:
+  - {fileID: 5765129691335200689, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
   questCharPrefab: {fileID: 1445574416637479282, guid: 5e01ac689a0d7b044813e3b432efbb58, type: 3}
   pathPrefab: {fileID: 377600612867843343, guid: cbf1dc14a94f5364b8a79d63f87fdb12, type: 3}
   turnPrefab: {fileID: 7827503066924145794, guid: 887596536883ed345bc2d4678eefac35, type: 3}

@@ -6,18 +6,21 @@ using UnityEngine;
 // Arenas are nodes, each node contains edges to all other arenas
 public class LevelGraph
 {
-    public LevelData currLevel;
+    private LevelData currLevel;
     // Graph Attributes (list of nodes + adjacency list)
     private int numArenasAdded = 0;
-    public int NumArenasAdded => numArenasAdded;
+    public int  NumArenasAdded => numArenasAdded;
 
-    public List<GraphNode> generatedArenas = new List<GraphNode>();
+    private List<GraphNode> generatedArenas = new List<GraphNode>();
+    public List<GraphNode> GeneratedArenas => generatedArenas; 
     private List<(int, float)>[] arenaAdjacencyList;    // array of Lists
-    float maxCollisionRadius = 0;
+    private float maxCollisionRadius = 0;
 
     // Dijkstra's Algorithm Attributes  
-    public int srcArenaIndex;       // arena furthest distance from boss
-    public Dictionary<int, int> shortestPath;   // shortestPath (index, prevNodeIndex)
+    private int srcArenaIndex;       // arena furthest distance from boss
+    public int SrcArenaIndex => srcArenaIndex;
+    private Dictionary<int, int> shortestPath;   // shortestPath (index, prevNodeIndex)
+    public Dictionary<int, int> ShortestPath => shortestPath;
     private bool[] visited;
     private NodePriorityQueue nodePriorityQueue;    // priority queue with minDistances to boss
 
@@ -123,7 +126,7 @@ public class LevelGraph
         // compute srcArena index = index of arena furthest distance from gridCenter (bossArena)
         float largestDist = 0;
         for(int i = 0; i < numArenasAdded; i++){
-            float arenaDist = generatedArenas[i].distToBoss;
+            float arenaDist = generatedArenas[i].DistToBoss;
 
             if(arenaDist > largestDist){
                 srcArenaIndex = i;
@@ -160,7 +163,7 @@ public class LevelGraph
     {
         (int index, float distance) currNode;
 
-        while(!nodePriorityQueue.isEmpty()){
+        while(!nodePriorityQueue.IsEmpty()){
             currNode = nodePriorityQueue.DequeueSmallest();
             visited[currNode.index] = true;
 

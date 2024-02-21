@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class WeaponData : ScriptableObject
 {
-    public string name;
+    public string weaponName;
     public bool isThrown;
     public float damage;
     public float speed;

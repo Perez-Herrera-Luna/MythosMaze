@@ -6,7 +6,7 @@ using System.Linq;
     // gridScale value multiplies by values such as gridRows to get level gameobject dimensions 
 public class LevelGrid
 {
-    public LevelData currLevel;
+    private LevelData currLevel;
     // Important Note: for the current moment this code is dependent on gridRows + gridCols having odd values
     public int GridRows => currLevel.gridRows;
     public int GridCols => currLevel.gridCols;
@@ -17,13 +17,12 @@ public class LevelGrid
     public Vector2Int GridCenter => gridCenter;
 
     // Random Walker Algorithm Attributes
-    bool isInitialPath; 
-    int maxWalkTries = 200000;
+    private bool isInitialPath; 
+    private int maxWalkTries = 200000;
 
-	public List<Vector2Int> startDoors, targetDoors;
-    Vector2Int currWalkerLoc, currStartLoc, currTargetLoc;
-    List<Vector2Int> pathExplorationOrder;
-    Dictionary<Vector2Int, (Vector2Int, Vector2Int)> currPath;
+	private List<Vector2Int> startDoors, targetDoors;
+    private Vector2Int currWalkerLoc, currStartLoc, currTargetLoc;
+    private Dictionary<Vector2Int, (Vector2Int, Vector2Int)> currPath;
 
     public LevelGrid(LevelData level)
     {
@@ -51,7 +50,7 @@ public class LevelGrid
     public GridNode GetNode(Vector2Int location)
     {
         // check if location is valid
-        if(isValidTarget(location))
+        if(IsValidTarget(location))
             return levelLayout[location.x, location.y];
 
         // otherwise, location invalid
@@ -60,7 +59,7 @@ public class LevelGrid
     }
 
     // helper function to check if location is within grid boundaries
-    private bool isValidTarget(Vector2Int location)
+    private bool IsValidTarget(Vector2Int location)
     {
         if(location.x >= 0 & location.x < currLevel.gridRows){
             if(location.y >= 0 & location.y < currLevel.gridCols)
@@ -104,7 +103,7 @@ public class LevelGrid
         for(int i = -rowCenter; i <= rowCenter; i++){
             for(int j = -colCenter; j <= colCenter; j++){
                 currLocation.Set((centerLoc.x + i), (centerLoc.y + j));
-                if(isValidTarget(currLocation)){
+                if(IsValidTarget(currLocation)){
                     char node = 'X';
                     if((i == rowCenter | i == -rowCenter) & (j == 0)){
                         // doors at north and south of arena
@@ -160,12 +159,12 @@ public class LevelGrid
     }
 
     // function which returns true / false on whether adding a path connection in moveDirection is possible
-    public bool CanConnect(Vector2Int currLoc, Vector2Int moveDir)
+    private bool CanConnect(Vector2Int currLoc, Vector2Int moveDir)
     {
         // set target node equal to walker's next location
         Vector2Int targetLoc = currLoc + moveDir;
 
-        if(!isValidTarget(targetLoc))
+        if(!IsValidTarget(targetLoc))
             return false;
 
         // check if path runs into itself
@@ -212,18 +211,18 @@ public class LevelGrid
 
         // if node is a turn, block only corner (only has 1)
         if(currNode.NodeValue == 'T'){
-            GridNode cornerNode = GetNode(currNode.currCorners[0]);
+            GridNode cornerNode = GetNode(currNode.CurrCorners[0]);
             cornerNode.BlockCorner();
         }else if(currNode.NodeValue == 'J'){
             // if node is joint, block newest two corners
             GridNode cornerNode1, cornerNode2;
 
             if(currNode.NumConnections == 3){    // three way joint only has 2 corners
-                cornerNode1 = GetNode(currNode.currCorners[0]);
-                cornerNode2 = GetNode(currNode.currCorners[1]);
+                cornerNode1 = GetNode(currNode.CurrCorners[0]);
+                cornerNode2 = GetNode(currNode.CurrCorners[1]);
             }else if(currNode.NumConnections == 4){  // four way joint has 4 corners (only need to check newest two)
-                cornerNode1 = GetNode(currNode.currCorners[2]);
-                cornerNode2 = GetNode(currNode.currCorners[3]);
+                cornerNode1 = GetNode(currNode.CurrCorners[2]);
+                cornerNode2 = GetNode(currNode.CurrCorners[3]);
             }else{
                 Debug.Log("Error: incorrect number of connections on node");
                 cornerNode1 = new GridNode('I');
@@ -319,8 +318,8 @@ public class LevelGrid
             if(!currPath.ContainsKey(currWalkerLoc))
                 currNode.CalculateExplorationOrder(currWalkerLoc - currTargetLoc, currLevel.drunkenRatio);
 
-            if(currNode.pathExplorationOrder.Count > 0){
-                directionToTry = currNode.pathExplorationOrder.Dequeue();
+            if(currNode.PathExplorationOrder.Count > 0){
+                directionToTry = currNode.PathExplorationOrder.Dequeue();
 
                 if(CanConnect(currWalkerLoc, directionToTry)){
                     currPath.Add(currWalkerLoc, (prevLocation, directionToTry));

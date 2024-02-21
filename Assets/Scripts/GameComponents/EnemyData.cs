@@ -1,9 +1,9 @@
 using UnityEngine;
 
 [CreateAssetMenu]
-public class MonsterData : ScriptableObject
+public class EnemyData : ScriptableObject
 {
-    public string name;
+    public string enemyName;
     public float attackDamage;
     public float attackSpeed;
     public float health;
