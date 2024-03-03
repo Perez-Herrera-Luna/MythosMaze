@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
@@ -118,11 +119,33 @@ public class Monster : MonoBehaviour
         {
             attacking();
         }
+        if(hasAttacked)
+        {
+            coolDown();
+        }
+    }
+
+    private void coolDown()
+    {
+        if(enemyType == "Winged_Melee")
+        {
+            //attack code
+            Vector3 backOff = player.position;
+            backOff.y += 5;
+            moveEnemy(backOff, 1);
+        }
+
+        if(enemyType == "Baic_Melee")
+        {
+            moveEnemy(transform.position, 2); //stop enemy movement
+            transform.LookAt(player); // have enemy face the player
+        }
     }
 
     private void wandering()
     {
-        Debug.Log("enemy wandering");
+        Debug.Log("enemy wandering: ");
+        Debug.Log(walkPoint);
         //determine what point to walk to
         if(!pointChosen)
         {
@@ -149,6 +172,11 @@ public class Monster : MonoBehaviour
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
+        if(enemyType=="Winged_Melee")
+        {
+            walkPoint.y = flyingHeightMax;
+        }
+
         //check if the point chosen is valid
         if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
         {
@@ -161,10 +189,19 @@ public class Monster : MonoBehaviour
         Vector3 target;
         if(enemyType == "Winged_Melee" || enemyType == "Winged_Ranged")
         {
-            
-            target.x = player.position.x;
-            target.z = player.position.z;
-            target.y = transform.position.y;
+            if(Mathf.Abs(transform.position.x - player.position.x) > 0.5 && Mathf.Abs(transform.position.z - player.position.z) > 0.5)
+            {
+                target.x = player.position.x;
+                target.z = player.position.z;
+                target.y = transform.position.y;
+            }
+            else
+            {
+                target.x = player.position.x;
+                target.z = player.position.z;
+                target.y = player.position.y;
+            }
+
             if(target.y >= flyingHeightMax)
             {
                 target.y = flyingHeightMax - (float)0.5;
@@ -187,31 +224,22 @@ public class Monster : MonoBehaviour
     private void attacking()
     {
         Debug.Log("enemy attacking");
-        moveEnemy(transform.position, 2); //stop enemy movement
-
-        transform.LookAt(player); // have enemy face the player
-
         if(!hasAttacked)
         {
             //attack code
 
-            if(enemyType == "Winged_Melee")
-            {
-                moveEnemy(player.position, 1);
-                //attack code
-                Vector3 backOff = player.position;
-                backOff.y += 5;
-                moveEnemy(backOff, 1);
-            }
+
             //finish attack state
             hasAttacked = true;
-            Invoke(nameof(ResetAttack), attackCoolDown);
+            //Invoke(nameof(ResetAttack), attackCoolDown);
+            StartCoroutine(ResetAttack());
+            hasAttacked = false;
         }
     }
 
-    private void ResetAttack()
+    IEnumerator ResetAttack()
     {
-        hasAttacked = false;
+        yield return new WaitForSeconds(attackCoolDown);
     }
 
     private void moveEnemy(Vector3 target, int mode)
@@ -246,7 +274,7 @@ public class Monster : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemyTurnSpeed * Time.deltaTime);
             
             //move towards the target
-            transform.position += transform.forward * Time.deltaTime * moveSpeed * airMultiplier;
+            transform.position += target * Time.deltaTime * moveSpeed * airMultiplier;
         }
     }
 }
