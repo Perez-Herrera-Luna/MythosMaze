@@ -31,6 +31,7 @@ public class Monster : MonoBehaviour
     public float groundDrag; // enemy's drag when on the ground
     public float airMultiplier; //enemy's speed multiplier in air
     public float roamRange; //range from current position the walkpoints/flypoints can be set to
+    public float flyingHeightMax; // maximum height that a flying enemy can travel to.
 
     [Header("Transforms")]
     public Transform player;
@@ -164,6 +165,10 @@ public class Monster : MonoBehaviour
             target.x = player.position.x;
             target.z = player.position.z;
             target.y = transform.position.y;
+            if(target.y >= flyingHeightMax)
+            {
+                target.y = flyingHeightMax - (float)0.5;
+            }
         }
         else if (enemyType == "Sniper_Ranged")
         {
