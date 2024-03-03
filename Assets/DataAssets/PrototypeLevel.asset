@@ -13,6 +13,14 @@ MonoBehaviour:
   m_Name: PrototypeLevel
   m_EditorClassIdentifier: 
   level: 0
-  maxEnemies: 0
-  maxEnemyPower: 20
-  maxPowerups: 3
+  gridRows: 41
+  gridCols: 41
+  gridScale: 2
+  gridRings:
+  - 10
+  - 30
+  maxNumArenas: 5
+  maxTriesGenArena: 15
+  arenaDistanceBuff: 0
+  maxTriesGenLoc: 1000
+  drunkenRatio: 2

@@ -365,17 +365,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25182ce917cf3d4991c4e062cdbb10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 0
+  arenaLevel: {fileID: 0}
+  arenaData: {fileID: 11400000, guid: ae940306fe1492b4b8ee22594d98b12c, type: 2}
   isBossLevel: 0
   hasCharacter: 0
-  arenaLevel: {fileID: 0}
   numDoors: 0
   arenaActive: 0
+  bossArenaData: {fileID: 0}
+  arenasData: []
   enemyPrefabs: []
   powerupPrefabs:
   - {fileID: 8535981317751429174, guid: 813a6be98154c55469598952ca00c383, type: 3}
   - {fileID: 5540783177727174168, guid: 897b49e536e129841bdb0c89c2d78b00, type: 3}
   - {fileID: 6518420507772143697, guid: b3539525dc3c89048812e9220b4def67, type: 3}
+  bossPrefabs: []
+  charPrefabs: []
+  itemPrefab: []
 --- !u!1 &6468779703439864271
 GameObject:
   m_ObjectHideFlags: 0

@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 7
-  sprintSpeed: 10
+  dashSpeed: 18
   groundDrag: 5
   jumpForce: 7
   jumpCooldown: 0.25
@@ -410,15 +410,33 @@ MonoBehaviour:
   crouchSpeed: 3.5
   crouchYScale: 0.5
   jumpKey: 32
-  sprintKey: 304
   crouchKey: 306
+  dashKey: 304
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
   maxSlopeAngle: 40
+  maxSlideTime: 0.75
+  slideForce: 200
+  dashForce: 18
+  dashUpwardForce: 0
+  dashDuration: 0.25
+  dashCooldown: 1.5
+  dashSpeedChangeFactor: 50
+  maxDashYSpeed: 18
+  useCameraForward: 0
+  allowAllDirections: 1
+  disableGravity: 1
+  resetVelocity: 1
+  playerFov: 85
+  changeDuration: 0.25
+  dashFov: 95
+  cam: {fileID: 963194229}
   orientation: {fileID: 1620618775}
   state: 0
+  currentSpeed: 0
+  isGrounded: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
