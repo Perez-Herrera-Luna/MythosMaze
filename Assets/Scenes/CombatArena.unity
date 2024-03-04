@@ -1089,6 +1089,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782032642}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &793007561 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6656167841753078130, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+  m_PrefabInstance: {fileID: 1069202018}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &815541798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1194,6 +1199,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -28.117, y: 0, z: 0}
+--- !u!4 &961627229 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6656167841753078130, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+  m_PrefabInstance: {fileID: 1693993492}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1456,12 +1466,72 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 74304195a21c62c4c92af2aaa29acafb, type: 2}
     - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: health
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 366597263}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: enemyType
       value: Winged_Melee
       objectReference: {fileID: 0}
     - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
-      propertyPath: attackRange
+      propertyPath: moveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: roamRange
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: chaseSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: sightRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: attackRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: enemyHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: orientation
+      value: 
+      objectReference: {fileID: 793007561}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: wanderSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: airMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: attackCoolDown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: enemyTurnSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: flyingHeightMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: whatIsGround.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: whatIsPlayer.m_Bits
+      value: 2048
       objectReference: {fileID: 0}
     - target: {fileID: 1635248992243946394, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_Mesh
@@ -2191,8 +2261,72 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 7cd1bc30bc6c2a24e8407704722cd0cc, type: 2}
     - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: health
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 366597263}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: enemyType
       value: Basic_Melee
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: moveSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: roamRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: chaseSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: groundDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: sightRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: attackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: enemyHeight
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: orientation
+      value: 
+      objectReference: {fileID: 961627229}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: wanderSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: airMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: attackCoolDown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: enemyTurnSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: whatIsGround.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: whatIsPlayer.m_Bits
+      value: 2048
       objectReference: {fileID: 0}
     - target: {fileID: 1635248992243946394, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_Mesh

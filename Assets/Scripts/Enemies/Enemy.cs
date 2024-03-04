@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
@@ -91,6 +89,7 @@ public class Monster : MonoBehaviour
         //check if player is within sight/attack range
 
         float distance = Vector3.Distance (transform.position, player.position);
+
         if(distance < sightRange && distance > attackRange)
         {
             playerInSight = true;
@@ -115,7 +114,7 @@ public class Monster : MonoBehaviour
         {
             chasing();
         }
-        if(playerInSight && playerAttackable)
+        if(playerAttackable)
         {
             attacking();
         }
@@ -144,8 +143,8 @@ public class Monster : MonoBehaviour
 
     private void wandering()
     {
-        Debug.Log("enemy wandering: ");
-        Debug.Log(walkPoint);
+        Debug.Log("enemy wandering");
+
         //determine what point to walk to
         if(!pointChosen)
         {
@@ -169,16 +168,41 @@ public class Monster : MonoBehaviour
         //create a random point within wandering range
         float randomZ = Random.Range(-roamRange, roamRange);
         float randomX = Random.Range(-roamRange, roamRange);
+        float randomY = Random.Range(flyingHeightMax-1, flyingHeightMax);
 
-        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
+        walkPoint = new Vector3();
 
-        if(enemyType=="Winged_Melee")
+        switch(enemyType)
         {
-            walkPoint.y = flyingHeightMax;
+            case "Winged_Melee":
+                walkPoint.x = transform.position.x + randomX;
+                walkPoint.y = transform.position.y + randomY;
+                walkPoint.z = transform.position.z + randomZ;
+                pointChosen = true;
+                break;
+
+            case "Winged_Ranged":
+                walkPoint.x = transform.position.x + randomX;
+                walkPoint.y = transform.position.y + randomY;
+                walkPoint.z = transform.position.z + randomZ;
+                pointChosen = true;
+                break;
+
+            case "Sniper_Ranged":
+                walkPoint.x = transform.position.x + randomX;
+                walkPoint.y = transform.position.y;
+                walkPoint.z = transform.position.z + randomZ;
+                break;
+
+            default:
+                walkPoint.x = transform.position.x + randomX;
+                walkPoint.y = transform.position.y;
+                walkPoint.z = transform.position.z + randomZ;
+                break;
         }
 
         //check if the point chosen is valid
-        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && (enemyType != "Winged_Melee" || enemyType != "Winged_Ranged"))
         {
             pointChosen = true;
         }
@@ -186,37 +210,53 @@ public class Monster : MonoBehaviour
 
     private void chasing()
     {
+        Debug.Log("enemy chasing");
         Vector3 target;
-        if(enemyType == "Winged_Melee" || enemyType == "Winged_Ranged")
+        switch(enemyType)
         {
-            if(Mathf.Abs(transform.position.x - player.position.x) > 0.5 && Mathf.Abs(transform.position.z - player.position.z) > 0.5)
-            {
+            case "Winged_Melee":
+
+                if(Mathf.Abs(transform.position.x - player.position.x) > 0.5 && Mathf.Abs(transform.position.z - player.position.z) > 0.5)
+                {
+                    target.x = player.position.x;
+                    target.z = player.position.z;
+                    target.y = transform.position.y;
+                }
+                else
+                {
+                    target.x = player.position.x;
+                    target.z = player.position.z;
+                    target.y = player.position.y;
+                }
+
+                if(target.y >= flyingHeightMax)
+                {
+                    target.y = flyingHeightMax - (float)0.5;
+                }
+                break;
+
+            case "Winged_Ranged":
                 target.x = player.position.x;
                 target.z = player.position.z;
                 target.y = transform.position.y;
-            }
-            else
-            {
-                target.x = player.position.x;
-                target.z = player.position.z;
-                target.y = player.position.y;
-            }
+                
+                if(target.y >= flyingHeightMax)
+                {
+                    target.y = flyingHeightMax - (float)0.5;
+                }
+                break;
 
-            if(target.y >= flyingHeightMax)
-            {
-                target.y = flyingHeightMax - (float)0.5;
-            }
+            case "Sniper_Ranged":
+                target.x = (transform.position.x - player.position.x) * 2;
+                target.z = (transform.position.z - player.position.z) * 2;
+                target.y = player.position.y;
+                break;
+
+            default:
+                target = player.position;
+                break;
         }
-        else if (enemyType == "Sniper_Ranged")
-        {
-            target.x = (transform.position.x - player.position.x) * 2;
-            target.z = (transform.position.z - player.position.z) * 2;
-            target.y = player.position.y;
-        }
-        else
-        {
-            target = player.position;
-        }
+        
         Debug.Log("enemy chasing");
         moveEnemy(target, 1);
     }
@@ -274,7 +314,7 @@ public class Monster : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemyTurnSpeed * Time.deltaTime);
             
             //move towards the target
-            transform.position += target * Time.deltaTime * moveSpeed * airMultiplier;
+            transform.position += transform.forward * Time.deltaTime * moveSpeed * airMultiplier;
         }
     }
 }
