@@ -211,11 +211,12 @@ public class ProceduralLevel : MonoBehaviour
                 Vector2Int location = new Vector2Int(i, j);
                 GridNode currNode = new GridNode();
                 currNode = levelGrid.GetNode(location);
-                
+
                 // Debug.Log("checking currNode");
 
-                Quaternion rotation;
-                rotation = currNode.GetRotation();
+                int rotValue = currNode.GetRotation();
+                Quaternion rotation = Quaternion.identity;
+                rotation.eulerAngles = new Vector3(0, rotValue, 0);
 
                 if (currNode.NodeValue == 'P')
                     GameObject.Instantiate(pathPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);

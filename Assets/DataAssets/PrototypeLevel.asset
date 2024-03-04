@@ -23,4 +23,5 @@ MonoBehaviour:
   maxTriesGenArena: 15
   arenaDistanceBuff: 0
   maxTriesGenLoc: 1000
-  drunkenRatio: 2
+  drunkenRatio: 6
+  maxPathLength: 0
