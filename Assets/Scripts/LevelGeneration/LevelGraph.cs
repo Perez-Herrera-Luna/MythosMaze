@@ -74,12 +74,12 @@ public class LevelGraph
                 return false;
             }
 
-            distance = distance * distance; // buff distance
+            distance = distance * 2; // buff distance
 
             // if arena just checked is the boss arena (index 0)
             if(existingArenaIndex == 0){
-                // buff distance to boss arena even more
-                distance *= 2;
+                // buff distance to boss arena
+                distance *= 4;
                 distToBoss = distance;
             }
 
@@ -159,7 +159,7 @@ public class LevelGraph
 
     // Dijkstras algorithm to compute shortest path tree
     // modified so it prioritizes next node according to their distance from center of grid (boss)
-    public void Dijkstras()
+    private void Dijkstras()
     {
         (int index, float distance) currNode;
 

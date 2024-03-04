@@ -18,7 +18,7 @@ public class LevelGrid
 
     // Random Walker Algorithm Attributes
     private bool isInitialPath; 
-    private int maxWalkTries = 200000;
+    private int maxWalkTries = 20000;
 
 	private List<Vector2Int> startDoors, targetDoors;
     private Vector2Int currWalkerLoc, currStartLoc, currTargetLoc;

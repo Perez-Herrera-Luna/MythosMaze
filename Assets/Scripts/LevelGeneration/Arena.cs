@@ -18,6 +18,11 @@ public class Arena : MonoBehaviour
     public List<GameObject> charPrefabs;       // quest character prefab
     public List<GameObject> itemPrefabs;       // quest item prefab
 
+    public bool IsBossLevel => isBossLevel;
+    public bool HasCharacter => hasCharacter;
+    public int NumDoors => numDoors;
+    public int GetLevel => arenaLevel.level;
+
     // Start is called before the first frame update
     void Start()
     {
