@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class ProcGenerTests
+public class ProceduralGenerationTests
 {
     // // A Test behaves as an ordinary method
     // [Test]
@@ -15,6 +15,19 @@ public class ProcGenerTests
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
+    [UnityTest]
+    public IEnumerator ValidatePathToBossArena()
+    {
+        GameObject level = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/LevelGeneration/ProceduralLevel"));
+
+        ProceduralLevel levelScript = level.GetComponent<ProceduralLevel>();
+
+        // allow time for procedural generation to occur
+        yield return new WaitForSeconds(30);
+
+        Assert.AreEqual(1, levelScript.GetLevelGraph.GetBossArena.NumDoors);
+    }
+
     [UnityTest]
     public IEnumerator TestInitialArenaSetup()
     {
