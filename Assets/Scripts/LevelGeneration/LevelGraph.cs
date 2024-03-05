@@ -16,6 +16,8 @@ public class LevelGraph
     private List<(int, float)>[] arenaAdjacencyList;    // array of Lists
     private float maxCollisionRadius = 0;
 
+    public GraphNode GetBossArena => generatedArenas[0];
+
     // Dijkstra's Algorithm Attributes  
     private int srcArenaIndex;       // arena furthest distance from boss
     public int SrcArenaIndex => srcArenaIndex;

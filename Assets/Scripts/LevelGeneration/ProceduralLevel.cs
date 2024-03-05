@@ -19,6 +19,8 @@ public class ProceduralLevel : MonoBehaviour
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
 
+    public LevelGraph GetLevelGraph => levelGraph;
+
     // Start is called before the first frame update
     // calls necessary functions for procedural level generation
     void Start()
