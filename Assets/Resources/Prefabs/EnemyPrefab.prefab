@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5807031954036749087}
   - component: {fileID: 1390354748640331299}
   m_Layer: 14
-  m_Name: EnemyName
+  m_Name: EnemyPrefab
   m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,7 +151,7 @@ MonoBehaviour:
   monster: {fileID: 0}
   hasWeapon: 0
   weapon: {fileID: 0}
-  enemyType: 
+  enemyType: Basic_Melee
   moveSpeed: 0
   health: 0
   attackCoolDown: 0

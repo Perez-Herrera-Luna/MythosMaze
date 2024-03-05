@@ -9,7 +9,7 @@ public class Monster : MonoBehaviour
 
     [Header("Enemy Stats")]
     //enemy type
-    public string enemyType; //Enemy type: Basic_Melee, Basic_Ranged, Sniper_Ranged, Shotgun_Ranged, 
+    public string enemyType = "Basic_Melee"; //Enemy type: Basic_Melee, Basic_Ranged, Sniper_Ranged, Shotgun_Ranged, 
                              //Predictive_Ranged, Winged_Melee, Winged_Ranged, Shielded_Ranged, Bard
     public float moveSpeed; //enemy's move speed
     public float health;
@@ -118,10 +118,10 @@ public class Monster : MonoBehaviour
         {
             attacking();
         }
-        if(hasAttacked)
-        {
-            coolDown();
-        }
+        // if(hasAttacked)
+        // {
+        //     coolDown();
+        // }
     }
 
     private void coolDown()
@@ -139,6 +139,8 @@ public class Monster : MonoBehaviour
             moveEnemy(transform.position, 2); //stop enemy movement
             transform.LookAt(player); // have enemy face the player
         }
+
+        hasAttacked = false;
     }
 
     private void wandering()
@@ -267,19 +269,29 @@ public class Monster : MonoBehaviour
         if(!hasAttacked)
         {
             //attack code
+            switch(enemyType)
+            {
+                case "Winged_Melee":
+                    Vector3 backOff = new Vector3(transform.position.x, transform.position.y+5, transform.position.z);
+                    moveEnemy(backOff, 1);
+                    break;
 
+                case "Winged_Ranged":
+        
+                    break;
+
+                case "Sniper_Ranged":
+                    
+                    break;
+
+                default:
+                    
+                    break;
+            }
 
             //finish attack state
             hasAttacked = true;
-            //Invoke(nameof(ResetAttack), attackCoolDown);
-            StartCoroutine(ResetAttack());
-            hasAttacked = false;
         }
-    }
-
-    IEnumerator ResetAttack()
-    {
-        yield return new WaitForSeconds(attackCoolDown);
     }
 
     private void moveEnemy(Vector3 target, int mode)
