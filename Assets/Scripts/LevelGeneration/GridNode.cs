@@ -56,11 +56,12 @@ public class GridNode
 
         // if node is currently path, check if path becomes simple path, turn, or junction
         if(nodeValue == 'P'){
+            // if path currently is connected only on one end (becomes simple path or turn)
             if(numConnections == 1){
                 // check if new connection is parallel or perpendicular to currConnection
                 float dotProduct = Vector2.Dot(currConnections[0], newConnection);
 
-                if(dotProduct == 1){
+                if(dotProduct == -1){
                     // connections are parallel, node becomes Simple Path
                     numConnections++;
                     currConnections.Add(newConnection);
@@ -73,7 +74,7 @@ public class GridNode
                     // add new corner to corner list
                     currCorners.Add(currConnections[0] + newConnection);
                     return true;
-                }else if(dotProduct == -1){
+                }else if(dotProduct == 1){
                     // new connection is the same as existing connection = no changes
                     return true; 
                 }else{
@@ -81,6 +82,8 @@ public class GridNode
                     Debug.Log("Error: invalid dotProduct value when adding path connection");
                     return false; 
                 }
+
+             // if path already has two connections (becomes junction)
             }else if(numConnections == 2){
                 // changing simple path into 3-way junction
                 nodeValue = 'J';
@@ -126,11 +129,13 @@ public class GridNode
                 numConnections++;
                 currConnections.Add(newConnection);
 
-                // add new corners to list (correspond to perpendicular path connections
+                // add new corners to list (correspond to perpendicular path connections)
                 foreach (Vector2Int currConnection in currConnections)
                 {
                     if (Vector2.Dot(currConnection, newConnection) == 0)
+                    {
                         currCorners.Add(currConnection + newConnection);
+                    }
                 }
 
                 return true;
@@ -148,13 +153,23 @@ public class GridNode
     // generate order of path direction
     public void CalculateExplorationOrder(Vector2Int targetDir, int drunkenRatio)
     {
-        int probability = Random.Range(0, drunkenRatio);
-
-        if(probability == 0){   // chance of occuring = 1 / drunkenRatio
-            RandomOrder();
-        }
-        else{
+        // check if target is nearby
+        if (targetDir.magnitude < 3)
+        {
             BiasedOrder(targetDir);
+        }
+        else
+        {
+            int probability = Random.Range(0, drunkenRatio);
+
+            if (probability == 0)
+            {   // chance of occuring = 1 / drunkenRatio
+                RandomOrder();
+            }
+            else
+            {
+                BiasedOrder(targetDir);
+            }
         }
 
     }

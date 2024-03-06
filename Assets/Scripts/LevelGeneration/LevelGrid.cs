@@ -17,12 +17,14 @@ public class LevelGrid
     public Vector2Int GridCenter => gridCenter;
 
     // Random Walker Algorithm Attributes
-    private bool isInitialPath; 
-    private int maxWalkTries = 20000;
+    private bool isInitialPath;
+    private bool pathComplete;
+    private int maxWalkTries = 200000;
 
 	private List<Vector2Int> startDoors, targetDoors;
     private Vector2Int currWalkerLoc, currStartLoc, currTargetLoc;
     private Dictionary<Vector2Int, (Vector2Int, Vector2Int)> currPath;
+    private Stack<Vector2Int> currPathCorners;
 
     public LevelGrid(LevelData level)
     {
@@ -150,6 +152,7 @@ public class LevelGrid
             GridNode targetNode = GetNode(pathConnection.Key + pathDir);
             success = targetNode.AddConnection(pathDir * (-1)); // connection from perspective of target node
             if (!success){
+                Debug.Log("Error adding pathConnection to targetNode");
                 return false;
             }
 
@@ -171,6 +174,10 @@ public class LevelGrid
         if(currPath.ContainsKey(targetLoc))
             return false;
 
+        // check if path is trying to connect to a newly added corner
+        if (currPathCorners.Contains(targetLoc))
+            return false;
+
         GridNode targetNode = new GridNode();
         targetNode = GetNode(targetLoc);
 
@@ -181,12 +188,13 @@ public class LevelGrid
         else if(targetNode.NodeValue == 'I')   // if node is invalid (out of bounds of grid)
             return false;
 
-        // initial path can't connecting to any other nodes (P, T, J) as they all indicate existing paths
+        // initial path can't connect to any other nodes (P, T, J) as they all indicate existing paths
         if(isInitialPath)
             return false;
-        
+
         if(targetNode.NodeValue == 'P' | targetNode.NodeValue == 'T'){
             // adding connection to existing simple path or turn
+            pathComplete = true;
             return true;
         }else if(targetNode.NodeValue == 'J'){
             // adding connection to existing junction
@@ -194,6 +202,7 @@ public class LevelGrid
                 Debug.Log("Error: trying to connect to junction that already has 4 connections");
                 return false;
             }else{
+                pathComplete = true;
                 return true;             
             }
         }
@@ -209,28 +218,32 @@ public class LevelGrid
         // locate currNode
         GridNode currNode = GetNode(currLocation);
 
-        // if node is a turn, block only corner (only has 1)
-        if(currNode.NodeValue == 'T'){
-            GridNode cornerNode = GetNode(currNode.CurrCorners[0]);
-            cornerNode.BlockCorner();
-        }else if(currNode.NodeValue == 'J'){
-            // if node is joint, block newest two corners
-            GridNode cornerNode1, cornerNode2;
+        int cornersToCheck = 0;
 
-            if(currNode.NumConnections == 3){    // three way joint only has 2 corners
-                cornerNode1 = GetNode(currNode.CurrCorners[0]);
-                cornerNode2 = GetNode(currNode.CurrCorners[1]);
-            }else if(currNode.NumConnections == 4){  // four way joint has 4 corners (only need to check newest two)
-                cornerNode1 = GetNode(currNode.CurrCorners[2]);
-                cornerNode2 = GetNode(currNode.CurrCorners[3]);
-            }else{
-                Debug.Log("Error: incorrect number of connections on node");
-                cornerNode1 = new GridNode('I');
-                cornerNode2 = new GridNode('I');
-            }
+        if (currNode.NodeValue == 'T')
+        {
+            cornersToCheck = 1;
+        }else if(currNode.NodeValue == 'J')
+        {
+            if (currNode.NumConnections == 3)
+                cornersToCheck = 2;
+            else if (currNode.NumConnections == 4)
+                cornersToCheck = 4;
+        }
             
-            cornerNode1.BlockCorner();
-            cornerNode2.BlockCorner();
+        foreach(Vector2Int cornerLoc in currNode.CurrCorners)
+        {
+            if(cornersToCheck > 0)
+            {
+                GridNode cornerNode = GetNode(cornerLoc);
+                cornerNode.BlockCorner();
+                cornersToCheck--;
+            }
+        }
+
+        if(cornersToCheck > 0)
+        {
+            Debug.Log("Error: corner number does not match current node type");
         }
     }
 
@@ -262,17 +275,20 @@ public class LevelGrid
 
             currWalkerLoc = currStartLoc;
             currPath = new Dictionary<Vector2Int, (Vector2Int, Vector2Int)>();
+            currPathCorners = new Stack<Vector2Int>();
 
             success = RandomWalker();
 
             if(success){
-                AddPath();
+                if (!AddPath())
+                    Debug.Log("Error adding path");
 
                 // mark used doors in src and target arena GraphNodes as unavailable
                 if(!startArena.AddDoor(startDoors[startDoor]))
                     Debug.Log("Error adding door to start arena");
                 
-                if(!endArena.AddDoor(targetDoors[endDoor]))
+                // check if path connected to target arena or existing path
+                if(currWalkerLoc == currTargetLoc & !endArena.AddDoor(targetDoors[endDoor]))
                     Debug.Log("Error adding door to end arena");
             }else{
                 doorCombos -= 1;
@@ -289,11 +305,8 @@ public class LevelGrid
         }
 
         if(!success){
-            if(isInitialPath){
-                // error handling - if arena is unreachable from shortest path tree 
-                Debug.Log("Error: no more possible door combinations, reached max number of path tries in walker algorithm");
-            }else{
-                // error handling
+            if(!isInitialPath){
+                // error handling - if arena is unreachable on secondary walk
                 Debug.Log("Error: arena unreachable (secondary walk)");
             }
         }
@@ -304,7 +317,7 @@ public class LevelGrid
     private bool RandomWalker()
     {
         int numTries = 0;
-        bool pathComplete = false;
+        pathComplete = false;
 
         GridNode currNode = new GridNode();
         Vector2Int directionToTry = Vector2Int.zero;
@@ -315,31 +328,44 @@ public class LevelGrid
             currNode = GetNode(currWalkerLoc);
 
             // if node hasn't been visited yet this path iteration
-            if(!currPath.ContainsKey(currWalkerLoc))
+            if (!currPath.ContainsKey(currWalkerLoc))
                 currNode.CalculateExplorationOrder(currWalkerLoc - currTargetLoc, currLevel.drunkenRatio);
 
-            if(currNode.PathExplorationOrder.Count > 0){
+            if (currNode.PathExplorationOrder.Count > 0)
+            {
                 directionToTry = currNode.PathExplorationOrder.Dequeue();
 
-                if(CanConnect(currWalkerLoc, directionToTry)){
+                if (CanConnect(currWalkerLoc, directionToTry))
+                {
                     currPath.Add(currWalkerLoc, (prevLocation, directionToTry));
+
+                    // if the current node is becoming a Turn, add corner to pathCorner list
+                    Vector2Int prevConnectDir = prevLocation - currWalkerLoc;
+
+                    if (Vector2.Dot(directionToTry, prevConnectDir) == 0)
+                        currPathCorners.Push(currWalkerLoc + directionToTry + prevConnectDir);
 
                     prevLocation = currWalkerLoc;
                     currWalkerLoc += directionToTry;
 
-                    if(currWalkerLoc == currTargetLoc)
+                    if (currWalkerLoc == currTargetLoc)
                         pathComplete = true;
-                }else{
+                }
+                else
+                {
                     numTries++;
                 }
-            }else{
+            }
+            else
+            {
                 // if there are no more possible directions to explore in currNode
                 numTries++;
                 Vector2Int removeLoc = currWalkerLoc;
 
                 // update prevDirection
                 (Vector2Int prevLoc, Vector2Int tryDir) nodeToRemove;
-                if(!currPath.TryGetValue(removeLoc, out nodeToRemove)){
+                if (!currPath.TryGetValue(removeLoc, out nodeToRemove))
+                {
                     Debug.Log("Error: nodeToRemove doesn't exist in currPath");
                     return false;
                 }
@@ -347,21 +373,33 @@ public class LevelGrid
                 currWalkerLoc = nodeToRemove.prevLoc;
 
                 // check if updated walkerLocation is back to start of path (end of walker algo, failure)
-                if(currWalkerLoc == currStartLoc){
+                if (currWalkerLoc == currStartLoc)
+                {
                     Debug.Log("no possible paths between curr doors");
                     return false;
-                }else{
+                }
+                else
+                {
                     currPath.Remove(removeLoc);
                 }
 
                 // update prev location value
                 (Vector2Int prevLoc, Vector2Int tryDir) newNode;
-                if(!currPath.TryGetValue(currWalkerLoc, out newNode)){
+                if (!currPath.TryGetValue(currWalkerLoc, out newNode))
+                {
                     Debug.Log("Error: currNode doesn't exist in currPath");
                     return false;
                 }
                 prevLocation = newNode.prevLoc;
+
+                // check if node to be removed had a blocked corner (is a turn from prevNode)
+                Vector2Int connectToRemoveDir = removeLoc - currWalkerLoc;
+                Vector2Int prevConnectDir = prevLocation - currWalkerLoc;
+
+                if (Vector2.Dot(connectToRemoveDir, prevConnectDir) == 0)
+                    currPathCorners.Pop();
             }
+
         } while (!pathComplete & (numTries < maxWalkTries));
 
         return pathComplete;

@@ -126,8 +126,8 @@ public class ProceduralLevel : MonoBehaviour
 
                 bool pathGenerated = levelGrid.GeneratePath(true, srcArena, targetArena);
 
-                if(!pathGenerated)
-                    Debug.Log("Error adding initial path");
+                /*if(!pathGenerated)
+                    Debug.Log("Error adding initial path");*/
                 
             }
         }
@@ -152,19 +152,24 @@ public class ProceduralLevel : MonoBehaviour
                 }
             }else{
                 foreach(GraphNode availableArena in availableArenas){
+                    // Debug.Log("Adding secondary path");
+
                     // try and add a secondary path connection between currArena and availableArena
-                    if(levelGrid.GeneratePath(false, currArena, availableArena)){
+                    if (levelGrid.GeneratePath(false, currArena, availableArena))
+                    {
                         // check curr arena to see if can still add door
-                        if(currArena.NumDoors < currArena.MaxNumDoors)
+                        if (currArena.NumDoors < currArena.MaxNumDoors)
                             availableArenas.Add(currArena);
 
                         // check availableArena to see if need to remove
-                        if(availableArena.NumDoors == availableArena.MaxNumDoors)
+                        if (availableArena.NumDoors == availableArena.MaxNumDoors)
                             availableArenas.Remove(availableArena);
 
                         // break out of foreach loop
                         break;
-                    }else{
+                    }
+                    else
+                    {
                         Debug.Log("Error adding secondary path");
                     }
                 }

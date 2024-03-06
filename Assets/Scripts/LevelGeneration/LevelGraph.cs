@@ -100,10 +100,10 @@ public class LevelGraph
         }
 
         // (1) calculate num doors based on distToBoss
-        if(distToBoss < (currLevel.gridRings[0] * currLevel.gridRings[0]))    // arenas closest to boss 
-            numDoors = 4;
-        else if(distToBoss < (currLevel.gridRings[1] * currLevel.gridRings[1]))
-            numDoors = 3;
+        if (distToBoss < (currLevel.gridRings[0] * currLevel.gridRings[0]))    // arenas closest to boss 
+            numDoors = Random.Range(3, 5);
+        else if (distToBoss < (currLevel.gridRings[1] * currLevel.gridRings[1]))
+            numDoors = Random.Range(2, 4);
         else
             numDoors = 2;   // all other arenas must have at least 2 doors
         
@@ -136,6 +136,9 @@ public class LevelGraph
             }
         }
 
+        // set source arena max number of doors to 4
+        generatedArenas[srcArenaIndex].MaxNumDoors = 4;
+
         // initialize dijkstra algorithm helper attributes
 
         // reset shortest path values
@@ -156,7 +159,7 @@ public class LevelGraph
         // call dijkstra's algorithm - populates shortestPath tree
         Dijkstras();
 
-        PrintShortestPath();
+        // PrintShortestPath();
     }
 
     // Dijkstras algorithm to compute shortest path tree

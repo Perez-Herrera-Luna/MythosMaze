@@ -12,11 +12,13 @@ public class GraphNode
     private float distToBoss;
     public float DistToBoss => distToBoss;
     private int maxNumDoors;
-    public int MaxNumDoors => maxNumDoors;
+    public int MaxNumDoors { get => maxNumDoors; set => maxNumDoors = value; }
 
     // vectors representing door locations with respect to arenaCenter in gridScale
     private List<Vector2Int> availableDoors = new List<Vector2Int>();
     public int NumDoors => 4 - availableDoors.Count;
+
+    
 
     public GraphNode(float bossDist, int doorNum)
     {

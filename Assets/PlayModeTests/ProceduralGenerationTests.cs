@@ -40,8 +40,6 @@ public class ProceduralGenerationTests
         // set initial boss levels as - isBossLevel, hasChar, currLevel, doors
         arenaScript.SetInitialValues(true, false, prototypeLvl, 3);
 
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
         yield return null;
 
         bool arenaSetup = true;
