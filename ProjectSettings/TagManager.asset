@@ -12,6 +12,7 @@ TagManager:
   - shootingWeapon
   - throwingWeapon
   - character
+  - melee_enemy
   layers:
   - Default
   - TransparentFX

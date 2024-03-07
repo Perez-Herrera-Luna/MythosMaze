@@ -16,7 +16,7 @@ public class Monster : MonoBehaviour
 
     //Attack
     public float attackCoolDown; //time between attacks
-    bool hasAttacked;   //true if currently executing an attack
+    public static bool hasAttacked = false;   //true if currently executing an attack
 
     //states
     public float sightRange, attackRange;
@@ -108,29 +108,34 @@ public class Monster : MonoBehaviour
 
         if(!playerInSight && !playerAttackable)
         {
+            hasAttacked = false;
             wandering();
         }
         if(playerInSight && !playerAttackable)
         {
+            hasAttacked = false;
             chasing();
         }
-        if(playerAttackable)
+        if(playerAttackable && !hasAttacked)
         {
             attacking();
         }
-        // if(hasAttacked)
-        // {
-        //     coolDown();
-        // }
+        if(hasAttacked)
+        {
+            coolDown();
+
+        }
     }
 
     private void coolDown()
     {
+        Vector3 backOff = player.position;
+        backOff.y += 5;
+
         if(enemyType == "Winged_Melee")
         {
             //attack code
-            Vector3 backOff = player.position;
-            backOff.y += 5;
+            
             moveEnemy(backOff, 1);
         }
 
@@ -140,12 +145,16 @@ public class Monster : MonoBehaviour
             transform.LookAt(player); // have enemy face the player
         }
 
-        hasAttacked = false;
+        StartCoroutine(coolDownTimer());
+    }
+
+    IEnumerator coolDownTimer()
+    {
+        yield return new WaitForSeconds(attackCoolDown);
     }
 
     private void wandering()
     {
-        Debug.Log("enemy wandering");
 
         //determine what point to walk to
         if(!pointChosen)
@@ -212,7 +221,6 @@ public class Monster : MonoBehaviour
 
     private void chasing()
     {
-        Debug.Log("enemy chasing");
         Vector3 target;
         switch(enemyType)
         {
@@ -259,39 +267,12 @@ public class Monster : MonoBehaviour
                 break;
         }
         
-        Debug.Log("enemy chasing");
         moveEnemy(target, 1);
     }
 
     private void attacking()
     {
-        Debug.Log("enemy attacking");
-        if(!hasAttacked)
-        {
-            //attack code
-            switch(enemyType)
-            {
-                case "Winged_Melee":
-                    Vector3 backOff = new Vector3(transform.position.x, transform.position.y+5, transform.position.z);
-                    moveEnemy(backOff, 1);
-                    break;
-
-                case "Winged_Ranged":
-        
-                    break;
-
-                case "Sniper_Ranged":
-                    
-                    break;
-
-                default:
-                    
-                    break;
-            }
-
-            //finish attack state
-            hasAttacked = true;
-        }
+        hasAttacked = true;
     }
 
     private void moveEnemy(Vector3 target, int mode)

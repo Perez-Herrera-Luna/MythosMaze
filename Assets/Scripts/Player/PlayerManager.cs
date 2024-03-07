@@ -9,7 +9,6 @@ public class PlayerManager : MonoBehaviour
         inst = this;
     }
 
-
     //Player's stats will be stored here
     [Header("Movement")]
     public float moveSpeed; // Player's movement speed
@@ -20,6 +19,9 @@ public class PlayerManager : MonoBehaviour
     public float jumpCooldown; // Player's jump cooldown
     public float airMultiplier; // Player's movement speed multiplier when in the air
     bool canJump;
+
+    [Header("Health")]
+    public float playerHealth;
 
     [Header("Attack")]
     public float attackSpeed; 
