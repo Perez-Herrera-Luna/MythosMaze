@@ -10,6 +10,9 @@ public class SceneManager : MonoBehaviour
     public static SceneManager inst;
     public GameObject loadingScreen;
     public GameObject background;
+    public GameObject canvas;
+    public GameObject gameOverMenu;
+    public GameObject gameWonMenu;
     public UnityEngine.UI.Slider progressBar;
     private void Awake()
     {
@@ -21,6 +24,21 @@ public class SceneManager : MonoBehaviour
     {
         StartCoroutine(LoadUserInterfaceScene()); // Load the user interface scene
         StartCoroutine(LoadPlayerScene()); // Load the player scene
+    }
+
+    public void setCanvas(GameObject canv)
+    {
+        canvas = canv;
+    }
+
+    public void setGameOverMenu(GameObject gameOver)
+    {
+        gameOverMenu = gameOver;
+    }
+
+    public void setGameWonMenu(GameObject gameWon)
+    {
+        gameWonMenu = gameWon;
     }
 
     public void setLoadScreen(GameObject loadScreen)
@@ -90,11 +108,33 @@ public class SceneManager : MonoBehaviour
             if (asyncLoad.progress >= 0.9f)
             {
                 asyncLoad.allowSceneActivation = true;
-                loadingScreen.SetActive(false);
-                background.SetActive(false);
+
+                GameStart();
             }
 
             yield return null;
         }
+    }
+
+    public void GameStart()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
+
+        loadingScreen.SetActive(false);
+        background.SetActive(false);
+        canvas.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        canvas.SetActive(true);
+        gameOverMenu.SetActive(true);
+    }
+
+    public void GameWon()
+    {
+        canvas.SetActive(true);
+        gameWonMenu.SetActive(true);
     }
 }
