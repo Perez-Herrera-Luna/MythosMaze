@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class SceneManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class SceneManager : MonoBehaviour
     public Camera userInterfaceCamera;
     public GameObject loadingScreen;
     public GameObject background;
-    // public Slider progressBar;
+    public UnityEngine.UI.Slider progressBar;
     private void Awake()
     {
         inst = this;
@@ -32,9 +33,13 @@ public class SceneManager : MonoBehaviour
         background = bg;
     }
 
+    public void setProgressBar(UnityEngine.UI.Slider bar)
+    {
+        progressBar = bar;
+    }
+
     public void LoadSceneByName(string sceneName)
     {
-        // progressBar = loadingScreen.GetComponentInChildren<Slider>();
         StartCoroutine(LoadScene(sceneName));
         loadingScreen.SetActive(true);
     }
@@ -68,8 +73,8 @@ public class SceneManager : MonoBehaviour
 
         while (!asyncLoad.isDone)
         {
-            float progress = asyncLoad.progress * 100;
-            // progressBar.value = progress;
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            progressBar.value = progress;
 
             if (asyncLoad.progress >= 0.9f)
             {
