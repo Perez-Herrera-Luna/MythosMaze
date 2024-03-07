@@ -51,7 +51,6 @@ public class Arena : MonoBehaviour
 
         if(hasCharacter)
             SetupCharacter();
-
     }
 
     public void SetupDoors()

@@ -218,4 +218,9 @@ public class LevelGraph
             }
         }
     }
+
+    public Vector3 CalculatePlayerInitLoc(int gridScale)
+    {
+        return generatedArenas[srcArenaIndex].PlayerInitLoc(gridScale);
+    }
 }
