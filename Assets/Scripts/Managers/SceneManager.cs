@@ -22,4 +22,19 @@ public class SceneManager : MonoBehaviour
     {
         
     }
+
+    public void LoadSceneByName(string sceneName)
+    {
+        StartCoroutine(LoadScene(sceneName));
+    }
+
+    IEnumerator LoadScene(string sceneName)
+    {
+        AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
 }

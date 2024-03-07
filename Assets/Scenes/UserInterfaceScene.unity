@@ -1459,6 +1459,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2cecc34fb3188347896acc96d882f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneMgr: {fileID: 0}
+  inst: {fileID: 0}
+  firstLevelName: CombatArena
 --- !u!1 &730388580
 GameObject:
   m_ObjectHideFlags: 0
