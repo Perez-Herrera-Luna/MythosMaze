@@ -1649,7 +1649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneMgr: {fileID: 0}
   inst: {fileID: 0}
-  firstLevelName: CombatArena
+  firstLevelName: PrototypeLevel
 --- !u!1 &730388580
 GameObject:
   m_ObjectHideFlags: 0

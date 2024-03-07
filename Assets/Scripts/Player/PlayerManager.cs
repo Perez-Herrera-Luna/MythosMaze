@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
-{   
+{
     public static PlayerManager inst;
-    private void Awake(){
+    private void Awake()
+    {
         inst = this;
     }
 
@@ -22,7 +23,7 @@ public class PlayerManager : MonoBehaviour
     bool canJump;
 
     [Header("Attack")]
-    public float attackSpeed; 
+    public float attackSpeed;
     public float attackDamage;
 
     // methods to be called by powerup type
@@ -30,7 +31,7 @@ public class PlayerManager : MonoBehaviour
     public void buffAttackDamage(float buff) => attackDamage += buff;
 
 
-    [Header("Weapons")]    
+    [Header("Weapons")]
     public int numWeapons;  // number of weapons player is current holding [can be 0, 1, or 2]
     public int activeWeapon;    // index of active weapon
     public WeaponData[] weapons = new WeaponData[2];
@@ -46,12 +47,12 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

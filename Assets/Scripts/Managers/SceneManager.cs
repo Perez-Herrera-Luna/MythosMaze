@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class SceneManager : MonoBehaviour
 {
     public static SceneManager inst;
-    public Camera userInterfaceCamera;
     public GameObject loadingScreen;
     public GameObject background;
     public UnityEngine.UI.Slider progressBar;
@@ -21,6 +20,7 @@ public class SceneManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(LoadUserInterfaceScene()); // Load the user interface scene
+        StartCoroutine(LoadPlayerScene()); // Load the player scene
     }
 
     public void setLoadScreen(GameObject loadScreen)
@@ -44,11 +44,6 @@ public class SceneManager : MonoBehaviour
         loadingScreen.SetActive(true);
     }
 
-    public void MainMenuLoadDone()
-    {
-        userInterfaceCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-    }
-
     IEnumerator LoadUserInterfaceScene()
     {
         AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("UserInterfaceScene", LoadSceneMode.Additive);
@@ -58,8 +53,17 @@ public class SceneManager : MonoBehaviour
 
             yield return null;
         }
+    }
 
-        MainMenuLoadDone();
+    IEnumerator LoadPlayerScene()
+    {
+        AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerScene", LoadSceneMode.Additive);
+
+        while (!asyncLoad.isDone)
+        {
+
+            yield return null;
+        }
     }
 
     private AsyncOperation asyncLoad;
@@ -81,7 +85,6 @@ public class SceneManager : MonoBehaviour
                 asyncLoad.allowSceneActivation = true;
                 loadingScreen.SetActive(false);
                 background.SetActive(false);
-                userInterfaceCamera.enabled = false;
             }
 
             yield return null;
