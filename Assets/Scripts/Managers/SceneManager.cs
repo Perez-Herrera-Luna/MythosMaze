@@ -44,6 +44,11 @@ public class SceneManager : MonoBehaviour
         loadingScreen.SetActive(true);
     }
 
+    public void LoadPlayerSceneDone()
+    {
+        // Do something after the player scene is loaded
+    }
+
     IEnumerator LoadUserInterfaceScene()
     {
         AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("UserInterfaceScene", LoadSceneMode.Additive);
@@ -64,6 +69,8 @@ public class SceneManager : MonoBehaviour
 
             yield return null;
         }
+
+        LoadPlayerSceneDone();
     }
 
     private AsyncOperation asyncLoad;
