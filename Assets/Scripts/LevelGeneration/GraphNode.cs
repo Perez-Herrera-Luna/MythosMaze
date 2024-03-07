@@ -46,12 +46,15 @@ public class GraphNode
     // helper function to generate Vector3 location for player start (called on source arena)
     public Vector3 PlayerInitLoc(int gridScale)
     {
-        // for now set the player near the north door of the arena
-        float verticalOffset = (arenaRows * gridScale - 2) / 2;
+        // for now set the player near the south door of the arena
+        float offset = (10 * arenaRows * gridScale) / 2 - 20;
 
-        Vector3 arenaLoc = ConvertArenaLocation(gridScale);
-        arenaLoc.z += verticalOffset;
-        return arenaLoc;
+        Vector3 playerLoc = ConvertArenaLocation(gridScale);
+        playerLoc.z -= offset;
+        playerLoc.y += 1.4f;
+
+        // Debug.Log(playerLoc);
+        return playerLoc;
     }
 
     // helper function returns true if curr number of doors is less than maxNumDoors

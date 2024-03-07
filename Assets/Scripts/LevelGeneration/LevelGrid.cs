@@ -306,12 +306,12 @@ public class LevelGrid
             }
         }
 
-        if(!success){
+        /*if(!success){
             if(!isInitialPath){
                 // error handling - if arena is unreachable on secondary walk
                 Debug.Log("Error: arena unreachable (secondary walk)");
             }
-        }
+        }*/
 
         return success;
     }

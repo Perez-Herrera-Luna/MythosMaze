@@ -13,6 +13,7 @@ public class SceneManager : MonoBehaviour
     public GameObject canvas;
     public GameObject gameOverMenu;
     public GameObject gameWonMenu;
+    public GameObject playerDamageScreen;
     public UnityEngine.UI.Slider progressBar;
     private void Awake()
     {
@@ -29,6 +30,11 @@ public class SceneManager : MonoBehaviour
     public void setCanvas(GameObject canv)
     {
         canvas = canv;
+    }
+
+    public void setPlayerDamageScreen(GameObject playerDamage)
+    {
+        playerDamageScreen = playerDamage;
     }
 
     public void setGameOverMenu(GameObject gameOver)
@@ -116,6 +122,16 @@ public class SceneManager : MonoBehaviour
         }
     }
 
+    public void DisplayDamage()
+    {
+        // canvas.SetActive(true);
+    }
+
+    public void HideDamage()
+    {
+        // canvas.SetActive(false);
+    }
+
     public void GameStart()
     {
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
@@ -128,13 +144,15 @@ public class SceneManager : MonoBehaviour
 
     public void GameOver()
     {
-        canvas.SetActive(true);
         gameOverMenu.SetActive(true);
+        background.SetActive(true);
+        canvas.SetActive(true);
     }
 
     public void GameWon()
     {
-        canvas.SetActive(true);
         gameWonMenu.SetActive(true);
+        background.SetActive(true);
+        canvas.SetActive(true);
     }
 }

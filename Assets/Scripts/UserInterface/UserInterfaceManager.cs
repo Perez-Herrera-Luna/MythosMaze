@@ -12,6 +12,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject mainMenu;
     public GameObject gameOverMenu;
     public GameObject gameWonMenu;
+    public GameObject playerDamageScreen;
     public Slider progressBar;
     public SceneManager sceneMgr;
 
@@ -24,6 +25,7 @@ public class UserInterfaceManager : MonoBehaviour
         loadingScreen = GameObject.Find("LoadingScreen");
         gameOverMenu = GameObject.Find("GameOverMenu");
         gameWonMenu = GameObject.Find("GameWinMenu");
+        playerDamageScreen = GameObject.Find("PlayerDamageScreen");
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
 
         mainMenu.SetActive(true);
@@ -31,6 +33,7 @@ public class UserInterfaceManager : MonoBehaviour
         loadingScreen.SetActive(false);
         gameOverMenu.SetActive(false);
         gameWonMenu.SetActive(false);
+        playerDamageScreen.SetActive(false);
 
         sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         sceneMgr.setLoadScreen(loadingScreen);
@@ -39,5 +42,6 @@ public class UserInterfaceManager : MonoBehaviour
         sceneMgr.setCanvas(mainMenu);
         sceneMgr.setGameOverMenu(gameOverMenu);
         sceneMgr.setGameWonMenu(gameWonMenu);
+        sceneMgr.setPlayerDamageScreen(playerDamageScreen);
     }
 }

@@ -22,7 +22,8 @@ public class ProceduralLevel : MonoBehaviour
     public LevelGraph GetLevelGraph => levelGraph;
 
     private GameObject playerObj;
-    private Transform playerTransform;
+
+    private bool initialLoad = true;
 
     // Start is called before the first frame update
     // calls necessary functions for procedural level generation
@@ -35,9 +36,18 @@ public class ProceduralLevel : MonoBehaviour
 
         GeneratePaths();
 
-        SetupPlayer();
-
         LoadLevel();
+    }
+
+    void Update()
+    {
+
+        // current work-around for player location not setting right 100% of the time (still need to debug that)
+        if (initialLoad) {
+            initialLoad = false;
+
+            SetupPlayer();
+        }
     }
 
     // initialize grid and graph according to levelData
@@ -173,10 +183,10 @@ public class ProceduralLevel : MonoBehaviour
                         // break out of foreach loop
                         break;
                     }
-                    else
+                    /*else
                     {
                         Debug.Log("Error adding secondary path");
-                    }
+                    }*/
                 }
             }
         }
@@ -198,15 +208,23 @@ public class ProceduralLevel : MonoBehaviour
         GameObject arenaInstance;
         Arena arenaScript;
         Vector3 arenaLocation;
+        bool bossArena = false;
 
         for(int i = 0; i < levelGraph.NumArenasAdded; i++){
             arenaLocation = levelGraph.GeneratedArenas[i].ConvertArenaLocation(levelGrid.GridScale);
             arenaInstance = Instantiate(arenaPrefabs[0], arenaLocation, Quaternion.identity, gameObject.transform);
-            
+
+            if (i == 0)
+                bossArena = true;
+            else if (i == levelGraph.SrcArenaIndex)
+                SetupPlayer();
+
             arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
 
-            // set arena initial values (isBossLevel, hasCharacter, arenaLevel, availableDoorLocations)
-            arenaScript.SetInitialValues(true, false, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
+            // set arena initial values (isBossArena, hasCharacter, arenaLevel, availableDoorLocations)
+            arenaScript.SetInitialValues(bossArena, false, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
+
+            bossArena = false;
         }
 
         if(levelGraph.NumArenasAdded != levelGraph.GeneratedArenas.Count){
@@ -256,13 +274,6 @@ public class ProceduralLevel : MonoBehaviour
             return;
         }
 
-        playerTransform = playerObj.GetComponent<Transform>();
-        if(playerTransform == null)
-        {
-            Debug.Log("Cannot find player Transform");
-            return;
-        }
-
-        playerTransform.position = levelGraph.CalculatePlayerInitLoc(levelGrid.GridScale);
+        playerObj.transform.position = levelGraph.CalculatePlayerInitLoc(levelGrid.GridScale);
     }
 }

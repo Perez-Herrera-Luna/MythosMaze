@@ -43,6 +43,8 @@ GameObject:
   - component: {fileID: 9000482042509692614}
   - component: {fileID: 1338531622364605829}
   - component: {fileID: 1363305569011410708}
+  - component: {fileID: 2396900754701770216}
+  - component: {fileID: 2716340207378726050}
   m_Layer: 11
   m_Name: Player Collider
   m_TagString: player
@@ -131,6 +133,41 @@ CapsuleCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2396900754701770216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906019544203395698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1e432d05b50d6345ae145ba42c38710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!136 &2716340207378726050
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906019544203395698}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -302,8 +339,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3415533557654712391}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.34203, y: -1.0279748, z: 27.33873}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -334,6 +371,7 @@ GameObject:
   - component: {fileID: 635499752504008104}
   - component: {fileID: 2554011567201504010}
   - component: {fileID: 1360397923719045533}
+  - component: {fileID: 120753129878279768}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -349,8 +387,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6247612348979673440}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -23.716324, y: -1.101444, z: 28.492125}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -434,6 +472,34 @@ MonoBehaviour:
   state: 0
   currentSpeed: 0
   isGrounded: 0
+--- !u!114 &120753129878279768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6247612348979673440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4adcdbddae39567498d03c4c52133512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0
+  groundDrag: 0
+  jumpForce: 0
+  jumpCooldown: 0
+  airMultiplier: 0
+  playerHealth: 0
+  attackSpeed: 0
+  attackDamage: 0
+  numWeapons: 0
+  activeWeapon: 0
+  weapons:
+  - {fileID: 0}
+  - {fileID: 0}
+  weaponDamageBuff: 0
+  weaponSpeedBuff: 0
+  weaponCooldownReduction: 0
 --- !u!1 &8553954783573070859
 GameObject:
   m_ObjectHideFlags: 0

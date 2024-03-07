@@ -7,7 +7,7 @@ public class Arena : MonoBehaviour
 {
     private LevelData arenaLevel;      // arena level data (determines max enemy power/arena setup)
     public ArenaData arenaData;
-    private bool isBossLevel;    // designates if combatArena is boss level or not
+    private bool isBossArena;    // designates if combatArena is boss level or not
     private bool hasCharacter;   // designates if this arena has a quest character within it or not   
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
 
@@ -21,7 +21,7 @@ public class Arena : MonoBehaviour
     private List<Vector2Int> activeDoors = new List<Vector2Int>();
     public List<GameObject> doorGameObjects;
 
-    public bool IsBossLevel => isBossLevel;
+    public bool IsBossArena => isBossArena;
     public bool HasCharacter => hasCharacter;
     public int GetLevel => arenaLevel.level;
 
@@ -37,9 +37,9 @@ public class Arena : MonoBehaviour
         
     }
 
-    public void SetInitialValues(bool bossLevel, bool hasChar, LevelData currLevel, List<Vector2Int> availableDoorLocs)
+    public void SetInitialValues(bool bossArena, bool hasChar, LevelData currLevel, List<Vector2Int> availableDoorLocs)
     {
-        isBossLevel = bossLevel;
+        isBossArena = bossArena;
         hasCharacter = hasChar;
         arenaLevel = currLevel;
         activeDoors = arenaData.doorLocations.Except(availableDoorLocs).ToList();
@@ -79,17 +79,35 @@ public class Arena : MonoBehaviour
     {
         // procedurally generate enemy locations
 
+        // for demo, just manually setting enemy locations using unity interface
+
+        int maxEnemies = 0;
+        if (isBossArena)
+            maxEnemies = 1;
+        else
+            maxEnemies = 3;
+
+        Quaternion rotation = Quaternion.Euler(0, 0, 0);
+
+        List<Vector3> enemyLocations = new List<Vector3>();
+        Vector3 loc = new Vector3(0, 1.4f, 0);
+        enemyLocations.Add(loc + gameObject.transform.position);
+        loc = new Vector3(20, 1.4f, 20);
+        enemyLocations.Add(loc + gameObject.transform.position);
+        loc = new Vector3(-10, 1.4f, 10);
+        enemyLocations.Add(loc + gameObject.transform.position);
+
         // for initial prototype just spawn one type of enemy at set locations
-        /*for(int enemyNum = 0; enemyNum < arenaData.maxEnemies; enemyNum++)
+        for (int enemyNum = 0; enemyNum < maxEnemies; enemyNum++)
         {
-            // Instantiate(enemyPrefabs[0], gameObject.transform);
-        }*/
+            Instantiate(enemyPrefabs[0], enemyLocations[enemyNum], rotation, gameObject.transform);
+        }
     }
 
-    private Vector2 GenerateEnemyLocation()
+    /*private Vector2 GenerateEnemyLocation()
     {
         return Vector2.zero;
-    } 
+    } */
     public void SetupPowerups()
     {
         // procedurally generate pickup locations

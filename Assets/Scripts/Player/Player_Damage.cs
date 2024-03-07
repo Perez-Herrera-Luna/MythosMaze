@@ -10,10 +10,13 @@ public class Player_Damage : MonoBehaviour
     public static float playerHealth = 10.0f;
     private float maxHealth = 10.0f;
 
+    private SceneManager sceneMgr;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
     }
 
     // Update is called once per frame
@@ -51,12 +54,17 @@ public class Player_Damage : MonoBehaviour
     {
         playerHealth -= damage;
         Debug.Log("Health: " + playerHealth);
-        yield return new WaitForSeconds(1);
+        sceneMgr.DisplayDamage();
+
+        yield return new WaitForSeconds(2);
+
+        sceneMgr.HideDamage();
     }
 
     private void gameOver()
     {
         //death code//
+        sceneMgr.GameOver();
     }
 
 

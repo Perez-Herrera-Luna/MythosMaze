@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 1390354748640331299}
   - component: {fileID: 2911108217633794853}
   m_Layer: 14
-  m_Name: EnemyPrefab
-  m_TagString: enemy
+  m_Name: BasicMeleeEnemyPrefab
+  m_TagString: melee_enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,7 +44,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1937601175838191562}
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &-7594281347260719435
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 7cd1bc30bc6c2a24e8407704722cd0cc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,8 +106,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 1.5
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5807031954036749087
@@ -153,27 +153,27 @@ MonoBehaviour:
   hasWeapon: 0
   weapon: {fileID: 0}
   enemyType: Basic_Melee
-  moveSpeed: 0
-  health: 0
-  attackCoolDown: 0
-  sightRange: 0
-  attackRange: 0
-  wanderSpeed: 0
-  chaseSpeed: 0
-  enemyTurnSpeed: 0
-  groundDrag: 0
-  airMultiplier: 0
-  roamRange: 0
+  moveSpeed: 2
+  health: 10
+  attackCoolDown: 1
+  sightRange: 10
+  attackRange: 2
+  wanderSpeed: 1
+  chaseSpeed: 2
+  enemyTurnSpeed: 3
+  groundDrag: 1
+  airMultiplier: 1
+  roamRange: 10
   flyingHeightMax: 0
   player: {fileID: 0}
-  orientation: {fileID: 0}
-  enemyHeight: 0
+  orientation: {fileID: 6656167841753078130}
+  enemyHeight: 2
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   whatIsPlayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   walkPoint: {x: 0, y: 0, z: 0}
 --- !u!136 &2911108217633794853
 CapsuleCollider:
@@ -194,7 +194,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 1.5
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
