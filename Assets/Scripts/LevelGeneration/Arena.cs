@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Arena : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class Arena : MonoBehaviour
     public ArenaData arenaData;
     private bool isBossLevel;    // designates if combatArena is boss level or not
     private bool hasCharacter;   // designates if this arena has a quest character within it or not   
-    private int numDoors;
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
 
     public List<GameObject> enemyPrefabs;    // list of monster prefabs that can appear in this level
@@ -18,9 +18,11 @@ public class Arena : MonoBehaviour
     public List<GameObject> charPrefabs;       // quest character prefab
     public List<GameObject> itemPrefabs;       // quest item prefab
 
+    private List<Vector2Int> activeDoors = new List<Vector2Int>();
+    public List<GameObject> doorGameObjects;
+
     public bool IsBossLevel => isBossLevel;
     public bool HasCharacter => hasCharacter;
-    public int NumDoors => numDoors;
     public int GetLevel => arenaLevel.level;
 
     // Start is called before the first frame update
@@ -35,12 +37,12 @@ public class Arena : MonoBehaviour
         
     }
 
-    public void SetInitialValues(bool bossLevel, bool hasChar, LevelData currLevel, int doors)
+    public void SetInitialValues(bool bossLevel, bool hasChar, LevelData currLevel, List<Vector2Int> availableDoorLocs)
     {
         isBossLevel = bossLevel;
         hasCharacter = hasChar;
         arenaLevel = currLevel;
-        numDoors = doors;
+        activeDoors = arenaData.doorLocations.Except(availableDoorLocs).ToList();
 
         SetupDoors();
 
@@ -54,7 +56,24 @@ public class Arena : MonoBehaviour
 
     public void SetupDoors()
     {
-        // curr number of doors = (4 - availableDoors.Count)
+        foreach(Vector2Int door in activeDoors)
+        {
+            // north/south doors
+            if(door.x == 0)
+            {
+                if (door.y > 0)
+                    doorGameObjects[0].SetActive(false);
+                else
+                    doorGameObjects[1].SetActive(false);
+
+            }else if(door.y == 0)   // East/West Doors
+            {
+                if (door.x > 0)
+                    doorGameObjects[2].SetActive(false);
+                else
+                    doorGameObjects[3].SetActive(false);
+            }
+        }
     }
 
     public void SetupEnemies()

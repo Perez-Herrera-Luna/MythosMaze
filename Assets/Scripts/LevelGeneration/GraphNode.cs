@@ -18,7 +18,7 @@ public class GraphNode
     private List<Vector2Int> availableDoors = new List<Vector2Int>();
     public int NumDoors => 4 - availableDoors.Count;
 
-    
+    public List<Vector2Int> GetAvailableDoors => availableDoors;
 
     public GraphNode(float bossDist, int doorNum)
     {

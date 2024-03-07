@@ -200,8 +200,8 @@ public class ProceduralLevel : MonoBehaviour
             
             arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
 
-            // set arena initial values (isBossLevel, hasCharacter, arenaLevel, numDoors)
-            arenaScript.SetInitialValues(true, false, currLevel, levelGraph.GeneratedArenas[i].NumDoors);
+            // set arena initial values (isBossLevel, hasCharacter, arenaLevel, availableDoorLocations)
+            arenaScript.SetInitialValues(true, false, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
         }
 
         if(levelGraph.NumArenasAdded != levelGraph.GeneratedArenas.Count){

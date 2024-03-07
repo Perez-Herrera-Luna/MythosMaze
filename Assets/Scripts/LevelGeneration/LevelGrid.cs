@@ -286,10 +286,12 @@ public class LevelGrid
                 // mark used doors in src and target arena GraphNodes as unavailable
                 if(!startArena.AddDoor(startDoors[startDoor]))
                     Debug.Log("Error adding door to start arena");
-                
+
                 // check if path connected to target arena or existing path
-                if(currWalkerLoc == currTargetLoc & !endArena.AddDoor(targetDoors[endDoor]))
-                    Debug.Log("Error adding door to end arena");
+                if (currWalkerLoc == currTargetLoc) {
+                    if(!endArena.AddDoor(targetDoors[endDoor]))
+                        Debug.Log("Error adding door to end arena");
+                }
             }else{
                 doorCombos -= 1;
                 // try different doors for startArena and endArena (if available)

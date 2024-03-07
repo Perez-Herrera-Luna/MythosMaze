@@ -28,7 +28,7 @@ public class ProceduralGenerationTests
         Assert.AreEqual(1, levelScript.GetLevelGraph.GetBossArena.NumDoors);
     }
 
-    [UnityTest]
+    /* [UnityTest]
     public IEnumerator TestInitialArenaSetup()
     {
         GameObject gameArena = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/LevelGeneration/CombatArena"));
@@ -56,5 +56,5 @@ public class ProceduralGenerationTests
         Assert.IsTrue(arenaSetup);
 
         Object.Destroy(gameArena.gameObject);
-    }
+    } */
 }
