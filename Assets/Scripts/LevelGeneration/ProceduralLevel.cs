@@ -21,6 +21,9 @@ public class ProceduralLevel : MonoBehaviour
 
     public LevelGraph GetLevelGraph => levelGraph;
 
+    private GameObject playerObj;
+    private Transform playerTransform;
+
     // Start is called before the first frame update
     // calls necessary functions for procedural level generation
     void Start()
@@ -31,6 +34,8 @@ public class ProceduralLevel : MonoBehaviour
         // levelGrid.PrintGrid(); (debugging)
 
         GeneratePaths();
+
+        SetupPlayer();
 
         LoadLevel();
     }
@@ -148,7 +153,7 @@ public class ProceduralLevel : MonoBehaviour
             // if currArena was the last one in availableArenas
             if(availableArenas.Count == 0){
                 if(currArena.NumDoors < 2){
-                    Debug.Log("Error: Detached arena!");
+                    // Debug.Log("Error: Detached arena!");
                 }
             }else{
                 foreach(GraphNode availableArena in availableArenas){
@@ -240,5 +245,24 @@ public class ProceduralLevel : MonoBehaviour
             }
         }
 
+    }
+
+    private void SetupPlayer()
+    {
+        playerObj = GameObject.Find("Player");
+        if (playerObj == null)
+        {
+            Debug.Log("Cannot find player GameObject");
+            return;
+        }
+
+        playerTransform = playerObj.GetComponent<Transform>();
+        if(playerTransform == null)
+        {
+            Debug.Log("Cannot find player Transform");
+            return;
+        }
+
+        playerTransform.position = levelGraph.CalculatePlayerInitLoc(levelGrid.GridScale);
     }
 }
