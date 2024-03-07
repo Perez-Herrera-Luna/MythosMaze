@@ -20,7 +20,6 @@ public class MainMenuController : MonoBehaviour
         // Invoke scene loader to async load the game scene
         sceneMgr.LoadSceneByName(firstLevelName);
         gameObject.SetActive(false);
-        
     }
 
     public void QuitGame()

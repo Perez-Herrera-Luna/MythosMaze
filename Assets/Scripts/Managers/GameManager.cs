@@ -21,22 +21,12 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoadUserInterfaceScene());
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-    }
-
-    IEnumerator LoadUserInterfaceScene()
-    {
-        AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("UserInterfaceScene", LoadSceneMode.Additive);
-
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
     }
 }
