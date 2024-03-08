@@ -36,6 +36,7 @@ public class UserInterfaceManager : MonoBehaviour
         playerDamageScreen.SetActive(false);
 
         sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        sceneMgr.setMainMenu(mainMenu);
         sceneMgr.setLoadScreen(loadingScreen);
         sceneMgr.setBackGround(background);
         sceneMgr.setProgressBar(progressBar);
