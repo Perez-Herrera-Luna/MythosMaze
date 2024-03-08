@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2350,6 +2350,42 @@ PrefabInstance:
     - target: {fileID: 1937601175838191562, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_Name
       value: Basic Melee Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2911108217633794853, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2911108217633794853, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2911108217633794853, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2911108217633794853, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Center.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Center.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6656167841753078130, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_LocalPosition.x

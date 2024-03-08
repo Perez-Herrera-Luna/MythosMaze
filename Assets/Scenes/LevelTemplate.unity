@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -180,11 +180,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
---- !u!1 &681868781 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5765129691335200689, guid: 2819107026fe7ae419166b60a33669e7, type: 3}
-  m_PrefabInstance: {fileID: 681868780}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &790034080
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,13 +200,29 @@ PrefabInstance:
       propertyPath: m_TagString
       value: enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 2911108217633794853, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2911108217633794853, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4756014694829141543, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6656167841753078130, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6656167841753078130, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.07
       objectReference: {fileID: 0}
     - target: {fileID: 6656167841753078130, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_LocalPosition.z
@@ -270,10 +281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b7ddbcb56511a4ba2cc0e5084d477f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monster: {fileID: 0}
-  hasWeapon: 0
-  weapon: {fileID: 0}
-  currHealth: 0
 --- !u!1001 &799044112
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -589,9 +596,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currLevel: {fileID: 0}
-  numCombatArenas: 0
-  arenaPrefab: {fileID: 681868781}
+  bossArenaPrefab: {fileID: 0}
+  arenaPrefabs: []
   questCharPrefab: {fileID: 0}
+  pathPrefab: {fileID: 0}
+  turnPrefab: {fileID: 0}
+  threeJunctionPrefab: {fileID: 0}
+  fourJunctionPrefab: {fileID: 0}
+  bossArenaData: {fileID: 0}
+  arenasData: []
 --- !u!4 &1607111028
 Transform:
   m_ObjectHideFlags: 0
@@ -692,7 +705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7abbb89c04ed8b544bf1716813c62086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 
+  itemName: 
 --- !u!1001 &1891347197
 PrefabInstance:
   m_ObjectHideFlags: 0
