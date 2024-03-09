@@ -192,6 +192,20 @@ public class PlayerMovement : MonoBehaviour
         {
             StopCrouch();
         }
+
+        if(horizontalInput == -1)
+        {
+            cam.applyTilt("left");
+        }
+    
+        else if (horizontalInput == 1)
+        {
+            cam.applyTilt("right");
+        }
+        else if (horizontalInput == 0)
+        {
+            cam.applyTilt("reset");
+        }
     }
 
     private void StateHandler()
