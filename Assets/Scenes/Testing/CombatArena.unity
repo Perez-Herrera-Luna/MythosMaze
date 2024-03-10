@@ -2347,6 +2347,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 366597263}
+    - target: {fileID: 1390354748640331299, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
+      propertyPath: attackRange
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1937601175838191562, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
       propertyPath: m_Name
       value: Basic Melee Enemy

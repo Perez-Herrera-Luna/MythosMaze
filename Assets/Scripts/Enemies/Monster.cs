@@ -16,7 +16,7 @@ public class Monster : MonoBehaviour
 
     //Attack
     public float attackCoolDown; //time between attacks
-    public static bool hasAttacked = false;   //true if currently executing an attack
+    public bool hasAttacked = false;   //true if currently executing an attack
 
     //states
     public float sightRange, attackRange;
@@ -108,49 +108,29 @@ public class Monster : MonoBehaviour
 
         if(!playerInSight && !playerAttackable)
         {
-            hasAttacked = false;
             wandering();
         }
         if(playerInSight && !playerAttackable)
         {
-            hasAttacked = false;
             chasing();
         }
-        if(playerAttackable && !hasAttacked)
+        if(playerAttackable)
         {
+            //Debug.Log("attacking");
             attacking();
-        }
-        if(hasAttacked)
-        {
-            coolDown();
-
         }
     }
 
     private void coolDown()
     {
-        Vector3 backOff = player.position;
-        backOff.y += 5;
-
-        if(enemyType == "Winged_Melee")
-        {
-            //attack code
-            
-            moveEnemy(backOff, 1);
-        }
-
-        if(enemyType == "Baic_Melee")
-        {
-            moveEnemy(transform.position, 2); //stop enemy movement
-            transform.LookAt(player); // have enemy face the player
-        }
-
-        StartCoroutine(coolDownTimer());
+        
     }
 
     IEnumerator coolDownTimer()
     {
+        //hasAttacked = false;
         yield return new WaitForSeconds(attackCoolDown);
+        hasAttacked = false;
     }
 
     private void wandering()
@@ -272,7 +252,26 @@ public class Monster : MonoBehaviour
 
     private void attacking()
     {
-        hasAttacked = true;
+        if(!hasAttacked)
+        {
+            hasAttacked = true;
+            Vector3 backOff = player.position;
+            backOff.y += 5;
+
+            if(enemyType == "Winged_Melee")
+            {
+                //attack code
+                
+                moveEnemy(backOff, 1);
+            }
+
+            if(enemyType == "Baic_Melee")
+            {
+                moveEnemy(transform.position, 2); //stop enemy movement
+                transform.LookAt(player); // have enemy face the player
+            }
+            StartCoroutine(coolDownTimer());
+        }  
     }
 
     private void moveEnemy(Vector3 target, int mode)

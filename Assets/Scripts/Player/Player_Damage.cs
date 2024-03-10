@@ -1,22 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using Codice.Client.Common.GameUI;
 using UnityEditor;
 using UnityEngine;
 
 public class Player_Damage : MonoBehaviour
 {
-    Rigidbody rb;
-
     public static float playerHealth = 10.0f;
     private float maxHealth = 10.0f;
 
-    private SceneManager sceneMgr;
+    private GameManager gameMgr;
+    private Monster monster_script;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -44,9 +43,14 @@ public class Player_Damage : MonoBehaviour
     {
         if(other.gameObject.CompareTag("melee_enemy"))
         {
-            Debug.Log("Player hit!");
-            //player hit
-            StartCoroutine(OnHit(2));
+            Debug.Log("collider triggered");
+            monster_script = other.GetComponent<Monster>();
+            if(monster_script.hasAttacked)
+            {
+                Debug.Log("Enemy Attacked");
+                StartCoroutine(OnHit(2));
+            }
+            
         }
     }
 
@@ -54,17 +58,17 @@ public class Player_Damage : MonoBehaviour
     {
         playerHealth -= damage;
         Debug.Log("Health: " + playerHealth);
-        sceneMgr.DisplayDamage();
+        gameMgr.DisplayDamage();
 
         yield return new WaitForSeconds(2);
 
-        sceneMgr.HideDamage();
+        gameMgr.HideDamage();
     }
 
     private void gameOver()
     {
         //death code//
-        sceneMgr.GameOver();
+        gameMgr.GameOver();
     }
 
 
