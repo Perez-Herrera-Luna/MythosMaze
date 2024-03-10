@@ -7,11 +7,13 @@ using UnityEngine;
 // TODO: Interpolate between sliding and crouching
 // TODO: Handle jumping out of a slide or crouch properly
 // TODO: Add a wall jump
-// TODO: Obtain orientation at runtime
-// TODO: Have camera reference assigned at runtime
 // TODO: Allow dashing during start of jump
 // TODO: Prevent entering crouch while in air
 // TODO: Handle dashing off or into a slope
+// TODO: Add double/triple jump
+// TODO: Give player a limited number of dashes
+// TODO: Add a dash meter
+// TODO: Add a slam in the air
 
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerMovement : MonoBehaviour

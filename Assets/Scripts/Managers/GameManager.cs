@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager inst;
+    public UserInterfaceManager userInterfaceMgr;
     private void Awake()
     {
         inst = this;
@@ -28,5 +29,30 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void setUserInterfaceManager(UserInterfaceManager uim)
+    {
+        userInterfaceMgr = uim;
+    }
+
+    public void DisplayDamage()
+    {
+        userInterfaceMgr.DisplayDamage();
+    }
+
+    public void HideDamage()
+    {
+        userInterfaceMgr.HideDamage();
+    }
+
+    public void GameOver()
+    {
+        userInterfaceMgr.GameOver();
+    }
+
+    public void GameWon()
+    {
+        userInterfaceMgr.GameWon();
     }
 }
