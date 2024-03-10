@@ -11,7 +11,7 @@ public class Monster : MonoBehaviour
     //enemy type
     public string enemyType = "Basic_Melee"; //Enemy type: Basic_Melee, Basic_Ranged, Sniper_Ranged, Shotgun_Ranged, 
                              //Predictive_Ranged, Winged_Melee, Winged_Ranged, Shielded_Ranged, Bard
-    public float moveSpeed; //enemy's move speed
+    private float moveSpeed; //enemy's move speed
     public float health;
 
     //Attack
@@ -121,16 +121,12 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void coolDown()
-    {
-        
-    }
-
     IEnumerator coolDownTimer()
     {
-        //hasAttacked = false;
+        hasAttacked = true;
         yield return new WaitForSeconds(attackCoolDown);
         hasAttacked = false;
+        Debug.Log("cooldown finished");
     }
 
     private void wandering()
@@ -254,14 +250,12 @@ public class Monster : MonoBehaviour
     {
         if(!hasAttacked)
         {
-            hasAttacked = true;
+            
             Vector3 backOff = player.position;
-            backOff.y += 5;
-
             if(enemyType == "Winged_Melee")
             {
                 //attack code
-                
+                backOff.y += 5;
                 moveEnemy(backOff, 1);
             }
 
@@ -270,6 +264,7 @@ public class Monster : MonoBehaviour
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player
             }
+            
             StartCoroutine(coolDownTimer());
         }  
     }
