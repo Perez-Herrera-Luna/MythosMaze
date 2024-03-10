@@ -8,14 +8,7 @@ using UnityEngine.UI;
 public class SceneManager : MonoBehaviour
 {
     public static SceneManager inst;
-    public GameObject loadingScreen;
-    public GameObject background;
-    public GameObject canvas;
-    public GameObject gameOverMenu;
-    public GameObject gameWonMenu;
-    public GameObject mainMenu;
-    public GameObject playerDamageScreen;
-    public UnityEngine.UI.Slider progressBar;
+    public UserInterfaceManager userInterfaceMgr;
     private void Awake()
     {
         inst = this;
@@ -28,55 +21,25 @@ public class SceneManager : MonoBehaviour
         StartCoroutine(LoadPlayerScene()); // Load the player scene
     }
 
-    public void setCanvas(GameObject canv)
+    public void setUserInterfaceManager(UserInterfaceManager uim)
     {
-        canvas = canv;
-    }
-
-    public void setMainMenu(GameObject menu)
-    {
-        mainMenu = menu;
-    }
-
-    public void setPlayerDamageScreen(GameObject playerDamage)
-    {
-        playerDamageScreen = playerDamage;
-    }
-
-    public void setGameOverMenu(GameObject gameOver)
-    {
-        gameOverMenu = gameOver;
-    }
-
-    public void setGameWonMenu(GameObject gameWon)
-    {
-        gameWonMenu = gameWon;
-    }
-
-    public void setLoadScreen(GameObject loadScreen)
-    {
-        loadingScreen = loadScreen;
-    }
-
-    public void setBackGround(GameObject bg)
-    {
-        background = bg;
-    }
-
-    public void setProgressBar(UnityEngine.UI.Slider bar)
-    {
-        progressBar = bar;
+        userInterfaceMgr = uim;
     }
 
     public void LoadSceneByName(string sceneName)
     {
+        userInterfaceMgr.GameLoading();
         StartCoroutine(LoadScene(sceneName));
-        loadingScreen.SetActive(true);
     }
 
     public void LoadPlayerSceneDone()
     {
         // Do something after the player scene is loaded
+    }
+
+    public void LoadUserInterfaceSceneDone()
+    {
+        // Do something after the user interface scene is loaded
     }
 
     IEnumerator LoadUserInterfaceScene()
@@ -115,52 +78,16 @@ public class SceneManager : MonoBehaviour
         while (!asyncLoad.isDone)
         {
             float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            progressBar.value = progress;
+            userInterfaceMgr.updateProgressBar(progress);
 
             if (asyncLoad.progress >= 0.9f)
             {
                 asyncLoad.allowSceneActivation = true;
 
-                GameStart();
+                userInterfaceMgr.GameStart();
             }
 
             yield return null;
         }
-    }
-
-    public void DisplayDamage()
-    {
-        // canvas.SetActive(true);
-    }
-
-    public void HideDamage()
-    {
-        // canvas.SetActive(false);
-    }
-
-    public void GameStart()
-    {
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        UnityEngine.Cursor.visible = false;
-
-        loadingScreen.SetActive(false);
-        background.SetActive(false);
-        canvas.SetActive(false);
-    }
-
-    public void GameOver()
-    {
-        canvas.SetActive(true);
-        mainMenu.SetActive(false);
-        gameOverMenu.SetActive(true);
-        background.SetActive(true);
-    }
-
-    public void GameWon()
-    {
-        canvas.SetActive(true);
-        mainMenu.SetActive(false);
-        gameWonMenu.SetActive(true);
-        background.SetActive(true);
     }
 }

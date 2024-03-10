@@ -12,10 +12,19 @@ public class PlayerCamera : MonoBehaviour
 
     float xRotation;
     float yRotation;
+    float zRotation;
+    float defaultZ_Rotation = 0;
+    float tiltAngle = 3f;
+    float rotationDuration = 0.20f;
+    string previousTiltDirection;
+
+    private IEnumerator FOV_Change_Coroutine;
+    private IEnumerator Tilt_Coroutine;
 
     void Start()
     {
-        // Locks the cursor to the center of the screen and makes it invisible
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        zRotation = defaultZ_Rotation;
     }
 
     void Update()
@@ -28,7 +37,7 @@ public class PlayerCamera : MonoBehaviour
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Prevents the player from looking too far up or down
 
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, zRotation);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
@@ -36,8 +45,13 @@ public class PlayerCamera : MonoBehaviour
     {
         float targetHorizontalFov = Camera.HorizontalToVerticalFieldOfView(targetFov, Camera.main.aspect);
 
-        StopAllCoroutines();
-        StartCoroutine(SmoothFovChangeCoroutine(targetHorizontalFov, duration));
+        if (FOV_Change_Coroutine != null)
+        {
+            StopCoroutine(FOV_Change_Coroutine);
+        }
+
+        FOV_Change_Coroutine = SmoothFovChangeCoroutine(targetHorizontalFov, duration);
+        StartCoroutine(FOV_Change_Coroutine);
     }
 
     IEnumerator SmoothFovChangeCoroutine(float targetFov, float duration)
@@ -59,5 +73,54 @@ public class PlayerCamera : MonoBehaviour
         }
 
         Camera.main.fieldOfView = targetFov;
+    }
+
+    public void applyTilt(string direction)
+    {
+        if(direction == previousTiltDirection)
+        {
+            return;
+        }
+
+        float targetZRotation;
+        if(direction == "left")
+        {
+            targetZRotation = defaultZ_Rotation + tiltAngle;
+        }
+        else if(direction == "right")
+        {
+            targetZRotation = defaultZ_Rotation - tiltAngle;
+        }
+        else if(direction == "reset")
+        {
+            targetZRotation = defaultZ_Rotation;
+        }
+        else
+        {
+            targetZRotation = defaultZ_Rotation;
+        }
+
+        if (Tilt_Coroutine != null)
+        {
+            StopCoroutine(Tilt_Coroutine);
+        }
+
+        Tilt_Coroutine = SmoothCameraTilt(targetZRotation);
+        StartCoroutine(Tilt_Coroutine);
+        previousTiltDirection = direction;
+    }
+
+    IEnumerator SmoothCameraTilt(float targetZRotation)
+    {
+        
+        float startZRotation = zRotation;
+        float time = 0;
+        
+        while (targetZRotation != zRotation)
+        {
+            zRotation = Mathf.Lerp(startZRotation, targetZRotation, time / rotationDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
     }
 }
