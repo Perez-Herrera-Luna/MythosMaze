@@ -5,21 +5,29 @@ using UnityEngine;
 
 public class MainMenuController : MonoBehaviour
 {
-    public SceneManager sceneMgr;
+    public UserInterfaceManager userInterfaceMgr;
     public MainMenuController inst;
-    public string firstLevelName;
 
     public void Start()
     {
         inst = this;
-        sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+    }
+
+    public void setUserInterfaceManager(UserInterfaceManager uim)
+    {
+        userInterfaceMgr = uim;
     }
 
     public void PlayGame()
     {
         // Invoke scene loader to async load the game scene
-        sceneMgr.LoadSceneByName(firstLevelName);
+        userInterfaceMgr.LoadFirstLevel();
         gameObject.SetActive(false);
+    }
+
+    public void OptionsMenu()
+    {
+        userInterfaceMgr.OptionsMenu();
     }
 
     public void QuitGame()

@@ -17,13 +17,18 @@ public class SceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoadUserInterfaceScene()); // Load the user interface scene
-        StartCoroutine(LoadPlayerScene()); // Load the player scene
+        
     }
 
     public void setUserInterfaceManager(UserInterfaceManager uim)
     {
         userInterfaceMgr = uim;
+    }
+
+    public void LoadPayerAndUserInterfaceScenes()
+    {
+        StartCoroutine(LoadUserInterfaceScene());
+        StartCoroutine(LoadPlayerScene());
     }
 
     public void LoadSceneByName(string sceneName)
@@ -51,6 +56,8 @@ public class SceneManager : MonoBehaviour
 
             yield return null;
         }
+
+        LoadUserInterfaceSceneDone();
     }
 
     IEnumerator LoadPlayerScene()

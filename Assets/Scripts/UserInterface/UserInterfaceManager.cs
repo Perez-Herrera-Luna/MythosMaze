@@ -9,6 +9,8 @@ public class UserInterfaceManager : MonoBehaviour
     public static UserInterfaceManager inst;
     public SceneManager sceneMgr;
     public GameManager gameMgr;
+    public MainMenuController mainMenuController;
+    public OptionsMenuController optionsMenuController;
 
     public GameObject canvas;
     public GameObject background;
@@ -17,6 +19,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject mainMenu;
     public GameObject gameOverMenu;
     public GameObject gameWonMenu;
+    //public GameObject playerGameUI;
     public GameObject playerDamageScreen;
     public UnityEngine.UI.Slider progressBar;
 
@@ -35,8 +38,14 @@ public class UserInterfaceManager : MonoBehaviour
         loadingScreen = GameObject.Find("LoadingScreen");
         gameOverMenu = GameObject.Find("GameOverMenu");
         gameWonMenu = GameObject.Find("GameWinMenu");
+        //playerGameUI = GameObject.Find("PlayerGameUI");
         playerDamageScreen = GameObject.Find("PlayerDamageScreen");
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
+
+        mainMenuController = mainMenu.GetComponent<MainMenuController>();
+        optionsMenuController = optionsMenu.GetComponent<OptionsMenuController>();
+        mainMenuController.setUserInterfaceManager(inst);
+        optionsMenuController.setUserInterfaceManager(inst);
 
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
@@ -51,28 +60,29 @@ public class UserInterfaceManager : MonoBehaviour
         gameMgr.setUserInterfaceManager(inst);
     }
 
+    public void MainMenu()
+    {
+        EnableMenuElement(mainMenu);
+    }
+
+    public void OptionsMenu()
+    {
+        EnableMenuElement(optionsMenu);
+    }
+
     public void GameLoading()
     {
-        canvas.SetActive(true);
-        mainMenu.SetActive(false);
-        loadingScreen.SetActive(true);
-        background.SetActive(true);
+        EnableMenuElement(loadingScreen);
     }
 
     public void GameWon()
     {
-        canvas.SetActive(true);
-        mainMenu.SetActive(false);
-        gameWonMenu.SetActive(true);
-        background.SetActive(true);
+        EnableMenuElement(gameWonMenu);
     }
 
     public void GameOver()
     {
-        canvas.SetActive(true);
-        mainMenu.SetActive(false);
-        gameOverMenu.SetActive(true);
-        background.SetActive(true);
+        EnableMenuElement(gameOverMenu);
     }
 
     public void GameStart()
@@ -98,5 +108,22 @@ public class UserInterfaceManager : MonoBehaviour
     public void updateProgressBar(float progress)
     {
         progressBar.value = progress;
+    }
+
+    public void LoadFirstLevel()
+    {
+        sceneMgr.LoadSceneByName(gameMgr.firstLevelName);
+    }
+
+    public void EnableMenuElement(GameObject element)
+    {
+        canvas.SetActive(true);
+        background.SetActive(true);
+        mainMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+        loadingScreen.SetActive(false);
+        gameOverMenu.SetActive(false);
+        gameWonMenu.SetActive(false);
+        element.SetActive(true);
     }
 }

@@ -15,7 +15,7 @@ public class PlayerCamera : MonoBehaviour
     float zRotation;
     float defaultZ_Rotation = 0;
     float tiltAngle = 3f;
-    float rotationDuration = 0.20f;
+    float rotationDuration = 0.15f;
     string previousTiltDirection;
 
     private IEnumerator FOV_Change_Coroutine;
