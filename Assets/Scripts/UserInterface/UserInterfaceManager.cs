@@ -19,7 +19,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject mainMenu;
     public GameObject gameOverMenu;
     public GameObject gameWonMenu;
-    //public GameObject playerGameUI;
+    public GameObject playerGameUI;
     public GameObject playerDamageScreen;
     public UnityEngine.UI.Slider progressBar;
 
@@ -38,7 +38,7 @@ public class UserInterfaceManager : MonoBehaviour
         loadingScreen = GameObject.Find("LoadingScreen");
         gameOverMenu = GameObject.Find("GameOverMenu");
         gameWonMenu = GameObject.Find("GameWinMenu");
-        //playerGameUI = GameObject.Find("PlayerGameUI");
+        playerGameUI = GameObject.Find("PlayerGameUI");
         playerDamageScreen = GameObject.Find("PlayerDamageScreen");
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
 
@@ -47,12 +47,7 @@ public class UserInterfaceManager : MonoBehaviour
         mainMenuController.setUserInterfaceManager(inst);
         optionsMenuController.setUserInterfaceManager(inst);
 
-        mainMenu.SetActive(true);
-        optionsMenu.SetActive(false);
-        loadingScreen.SetActive(false);
-        gameOverMenu.SetActive(false);
-        gameWonMenu.SetActive(false);
-        playerDamageScreen.SetActive(false);
+        EnableMenuElement(mainMenu);
 
         sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -92,7 +87,7 @@ public class UserInterfaceManager : MonoBehaviour
 
         loadingScreen.SetActive(false);
         background.SetActive(false);
-        canvas.SetActive(false);
+        playerGameUI.SetActive(true);
     }
 
     public void DisplayDamage()
@@ -124,6 +119,8 @@ public class UserInterfaceManager : MonoBehaviour
         loadingScreen.SetActive(false);
         gameOverMenu.SetActive(false);
         gameWonMenu.SetActive(false);
+        playerDamageScreen.SetActive(false);
+        playerGameUI.SetActive(false);
         element.SetActive(true);
     }
 }
