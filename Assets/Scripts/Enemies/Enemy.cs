@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    public EnemyData monster;
+    public EnemyData enemy;
     public bool hasWeapon;
     public WeaponData weapon;
 
@@ -50,6 +50,12 @@ public class Monster : MonoBehaviour
     public Vector3 walkPoint; //point on the ground to walk to
     bool pointChosen;   //true if a new walkpoint is set
 
+    public PlayerMovement moveScript; 
+
+    public GameObject playerObject;
+
+    public bool invulnerable = false;
+
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
@@ -66,11 +72,19 @@ public class Monster : MonoBehaviour
         {
             gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
+
+        moveScript = playerObject.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(moveScript == null)
+        {
+            Debug.Log("moveScript Null!");
+        }
+        //check enemy health
+        checkHealth();
         //raycasting for ground detection
 
         isGrounded = Physics.Raycast(transform.position, Vector3.down, enemyHeight * 0.5f + 0.2f, whatIsGround);
@@ -119,6 +133,7 @@ public class Monster : MonoBehaviour
             //Debug.Log("attacking");
             attacking();
         }
+        
     }
 
     IEnumerator coolDownTimer()
@@ -126,7 +141,7 @@ public class Monster : MonoBehaviour
         hasAttacked = true;
         yield return new WaitForSeconds(attackCoolDown);
         hasAttacked = false;
-        Debug.Log("cooldown finished");
+        //Debug.Log("cooldown finished");
     }
 
     private void wandering()
@@ -302,6 +317,58 @@ public class Monster : MonoBehaviour
             
             //move towards the target
             transform.position += transform.forward * Time.deltaTime * moveSpeed * airMultiplier;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("playerWeapon"))
+        {
+            Debug.Log("collider triggered");
+            Debug.Log("Enemy hit!");
+            StartCoroutine(OnHit(4));
+            //player_script = other.GetComponent<Weapon>();
+            if(moveScript.primaryAttack)
+            {
+                Debug.Log("Enemy hit!");
+                StartCoroutine(OnHit(5));
+            }
+            
+        }
+    }
+
+    IEnumerator OnHit(int damage)
+    {
+        if(!invulnerable)
+        {
+            invulnerable = true;
+            health -= damage;
+            Debug.Log("Enemy Health: " + health);
+        }
+        else
+        {
+            StartCoroutine(hitDelay());
+        }
+      
+        //gameMgr.DisplayDamage();
+
+        yield return new WaitForSeconds(2);
+
+        //gameMgr.HideDamage();
+    }
+
+    IEnumerator hitDelay()
+    {
+        yield return new WaitForSeconds(0.6f);
+        invulnerable = false;
+    }
+
+    private void checkHealth()
+    {
+        if(health < 0)
+        {
+            health = 0;
+            Object.Destroy(this.gameObject);
         }
     }
 }

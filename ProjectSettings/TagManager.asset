@@ -13,6 +13,8 @@ TagManager:
   - throwingWeapon
   - character
   - melee_enemy
+  - meleeWeapon
+  - playerWeapon
   layers:
   - Default
   - TransparentFX
@@ -30,8 +32,8 @@ TagManager:
   - Pickups
   - Enemies
   - Quests
-  - 
-  - 
+  - PlayerWeapons
+  - EnemyWeapons
   - 
   - 
   - 

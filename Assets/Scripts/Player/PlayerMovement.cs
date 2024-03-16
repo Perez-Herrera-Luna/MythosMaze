@@ -91,6 +91,11 @@ public class PlayerMovement : MonoBehaviour
     public float currentSpeed; // Player's current speed. To be made private later
     public bool isGrounded; // Is the player on the ground?
 
+    [Header("Attacking")]
+    public KeyCode attackKey = KeyCode.Mouse0; // Keybind for primary attack. Hardcoded to spacebar for now
+    public bool primaryAttack = false; //player attack flag
+    public bool attackEnabled = true;
+
     private float horizontalInput; // Player's horizontal input
     private float verticalInput; // Player's vertical input
 
@@ -229,6 +234,26 @@ public class PlayerMovement : MonoBehaviour
         {
             cam.applyTilt("reset");
         }
+
+        //attacking
+        if(Input.GetKey(attackKey) && attackEnabled)
+        {
+            //Debug.Log("attack key pressed");
+            primaryAttack = true;
+            attackEnabled = false;
+            StartCoroutine(attackCoolDown());
+        }
+        else if(Input.GetKeyUp(attackKey))
+        {
+            primaryAttack = false;
+        }
+        
+    }
+
+    IEnumerator attackCoolDown()
+    {
+        yield return new WaitForSeconds(0.25f);
+        attackEnabled = true;
     }
 
     private void ReadMoveInput()
