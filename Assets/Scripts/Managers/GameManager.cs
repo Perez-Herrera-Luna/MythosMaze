@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     {
         sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         sceneMgr.LoadPayerAndUserInterfaceScenes();
+        sceneMgr.setGameManager(inst);
     }
 
     // Update is called once per frame
@@ -57,5 +58,15 @@ public class GameManager : MonoBehaviour
     public void GameWon()
     {
         userInterfaceMgr.GameWon();
+    }
+
+    public void GameStart()
+    {
+        userInterfaceMgr.GameStart();
+
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
+
+        // invoke player camera and set camera orientation
     }
 }
