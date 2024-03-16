@@ -9,6 +9,7 @@ public class SceneManager : MonoBehaviour
 {
     public static SceneManager inst;
     public UserInterfaceManager userInterfaceMgr;
+    public GameManager gameManager;
     private void Awake()
     {
         inst = this;
@@ -17,7 +18,12 @@ public class SceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    public void setGameManager(GameManager gm)
+    {
+        gameManager = gm;
     }
 
     public void setUserInterfaceManager(UserInterfaceManager uim)
@@ -91,7 +97,7 @@ public class SceneManager : MonoBehaviour
             {
                 asyncLoad.allowSceneActivation = true;
 
-                userInterfaceMgr.GameStart();
+                gameManager.GameStart();
             }
 
             yield return null;

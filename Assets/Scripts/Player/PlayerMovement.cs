@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // TODO: Add camera rotation when sliding
-// TODO: Interpolate between sliding and crouching
 // TODO: Handle jumping out of a slide or crouch properly
-// TODO: Add a wall jump
 // TODO: Allow dashing during start of jump
 // TODO: Prevent entering crouch while in air
 // TODO: Handle dashing off or into a slope
-// TODO: Add double/triple jump
 // TODO: Give player a limited number of dashes
 // TODO: Add a dash meter
 // TODO: Add a slam in the air
@@ -18,14 +16,11 @@ using UnityEngine;
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerMovement : MonoBehaviour
 {
-    private float moveSpeed; // Player's movement speed
-
     [Header("Movement")]
-
-    public float walkSpeed = 10f; // Player's walk speed
-    public float dashSpeed = 18f; // Player's dash speed
-    public float groundDrag = 5f; // Player's drag when on the ground
-    private float maxYSpeed;
+    public float walkSpeed = 10f; // Player's base walk speed
+    
+    private float moveSpeed; // Player's  current movement speed
+    private float groundDrag = 5f; // Player's drag when on the ground
 
     private float desiredMoveSpeed; // Player's desired speed
     private float lastDesiredMoveSpeed; // Player's last desired speed
@@ -34,49 +29,51 @@ public class PlayerMovement : MonoBehaviour
     private float speedChangeFactor; // Used to change player's speed
 
     [Header("Jumping")]
-
     public float jumpForce = 7f; // Player's jump force
     public float jumpCooldown = 0.25f; // Player's jump cooldown
     public float airMultiplier = 0.4f; // Player's movement speed multiplier when in the air
-    bool canJump;
 
+    private bool canJump;
+
+    // TODO: Remove crouching
     [Header("Crouching")]
     public float crouchSpeed = 3.5f; // Player's crouch speed
     public float crouchYScale = 0.5f; // Player's crouch height
-    private float startYScale; // Player's starting height
 
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space; // Keybind for jumping. Hardcoded to spacebar for now
-    public KeyCode crouchKey = KeyCode.LeftControl; // Keybind for crouching. Hardcoded to left control for now
-    public KeyCode dashKey = KeyCode.LeftShift; // Keybind for dashing. Hardcoded to left shift for now
+    private float startYScale; // Player's starting height
 
     [Header("Ground Detection")]
     public float playerHeight = 2f; // Player's height. Used for length of raycast to detect ground
+    public float additionalHeight = 0.2f; // Additional height added to the raycast to detect ground
     public LayerMask whatIsGround; // Layermask for ground detection
 
     [Header("Slope Handling")]
     public float maxSlopeAngle = 40f; // Maximum angle of slope the player can walk on
+
     private RaycastHit slopeHit; // Raycast to detect slope angle
     private bool exitingSlope; // Used to detect if the player is exiting a slope
 
     [Header("Sliding")]
-    public float maxSlideTime = 0.75f; // Maximum time the player can slide
     public float slideForce = 200f; // Force applied to the player when sliding
-    private float slideTimer; // Timer for sliding
+
     private bool isSliding; // Used to track if the player is sliding
+    private Vector3 slideDirection; // Direction of the slide
 
     [Header("Dashing")]
+    public float dashSpeedModifier = 8f; // Player's dash speed modifier
+    public float dashSpeed; // Player's dash speed
+
     public float dashForce = 18f;
     public float dashUpwardForce;
+
     public float dashDuration = 0.25f;
     public float dashCooldown = 1.5f;
+
     public float dashSpeedChangeFactor = 50f;
-    public float maxDashYSpeed = 18f;
+
     private float dashCooldownTimer;
     private bool isDashing;
 
-    public bool useCameraForward = false;
-    public bool allowAllDirections = true;
     public bool disableGravity = true;
     public bool resetVelocity = true;
 
@@ -99,55 +96,77 @@ public class PlayerMovement : MonoBehaviour
     public bool primaryAttack = false; //player attack flag
     public bool attackEnabled = true;
 
-    float horizontalInput; // Player's horizontal input
-    float verticalInput; // Player's vertical input
+    private float horizontalInput; // Player's horizontal input
+    private float verticalInput; // Player's vertical input
 
-    Vector3 moveDirection; // Player's movement direction
-    Rigidbody rb; // Player's rigidbody
+    private Vector3 moveDirection; // Player's movement direction
+    private Rigidbody rb; // Player's rigidbody
+
+    [Header("Input Actions")]
+    [SerializeField] private InputActionAsset playerControls;
+
+    private InputAction moveAction;
+    private InputAction jumpAction;
+    private InputAction slideAction;
+    private InputAction dashAction;
+    private Vector2 moveInput;
 
     public enum MovementState
     {
         walking,
-        crouching,
         sliding,
         dashing,
+    }
+
+    private void Awake()
+    {
+        moveAction = playerControls.FindAction("Move");
+        jumpAction = playerControls.FindAction("Jump");
+        slideAction = playerControls.FindAction("Slide");
+        dashAction = playerControls.FindAction("Dash");
+
+        moveAction.performed += context => moveInput = context.ReadValue<Vector2>();
+        moveAction.canceled += context => moveInput = Vector2.zero;
+    }
+
+    private void OnEnable()
+    {
+        moveAction.Enable();
+        jumpAction.Enable();
+        slideAction.Enable();
+        dashAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        moveAction.Disable();
+        jumpAction.Disable();
+        slideAction.Disable();
+        dashAction.Disable();
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // Freeze player's rotation
+
         ChangeFov(playerFov, 0f); // Set player's default field of view
-        canJump = true;
+
+        canJump = true; // Set jump state
         startYScale = transform.localScale.y; // Set player's starting height
+        dashSpeed = walkSpeed + dashSpeedModifier; // Set player's dash speed
     }
 
     void Update()
     {
-        if (state == MovementState.crouching || state == MovementState.sliding) // If the player is crouching or sliding, use a shorter raycast for ground detection
-        {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.25f + 0.2f, whatIsGround);
-        }
-        else // Otherwise, use regular raycast for ground detection
-        {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
-        }
-
-        MyInput(); // Get player input
+        CheckGrounded(); // Detect if the player is on the ground
+        PlayerInput(); // Get player input
         SpeedControl(); // Limit player's speed
         StateHandler(); // Handle player's movement state
         MeasureSpeed(); // Measure player's speed
+        CheckDrag(); // Apply drag based on player's state
 
-        if (isGrounded && !isDashing) // Apply drag when on the ground and not dashing
-        {
-            rb.drag = groundDrag;
-        }
-        else // Remove drag when in the air or dashing
-        {
-            rb.drag = 0f;
-        }
-
-        if (dashCooldownTimer > 0)
+        if (dashCooldownTimer > 0) // Decrement dash cooldown timer
         {
             dashCooldownTimer -= Time.deltaTime;
         }
@@ -163,49 +182,51 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void MyInput()
+    private void CheckGrounded()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKeyDown(dashKey))
+        if (isSliding) // If the player is sliding, use a shorter raycast for ground detection
         {
-            Dash();
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.25f + additionalHeight, whatIsGround);
         }
-
-        if (Input.GetKey(jumpKey) && isGrounded && canJump) // Jump if the player is on the ground and the jump key is pressed and the jump cooldown is over
+        else // Otherwise, use regular raycast for ground detection
         {
-            canJump = false;
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + additionalHeight, whatIsGround);
+        }
+    }
+
+
+    private void PlayerInput()
+    {
+        ReadMoveInput();
+
+        // 
+        if (jumpAction.ReadValue<float>() > 0 && isGrounded && canJump) // Jump if the player is on the ground and the jump key is pressed and the jump cooldown is over
+        {
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown); // Reset jump cooldown
         }
 
-        if (Input.GetKeyDown(crouchKey) && IsMoving()) // Slide if the player is moving and the crouch key is pressed
+        if (dashAction.triggered)
+        {
+            Dash();
+        }
+
+        if (slideAction.ReadValue<float>() > 0 && !isSliding) // Slide if the slide key is pressed
         {
             StartSlide();
         }
 
-        if (Input.GetKeyUp(crouchKey) && isSliding) // Stop sliding if the crouch key is released and the player is sliding
+        else if (slideAction.ReadValue<float>() <= 0 && isSliding) // Stop sliding if the crouch key is released and the player is sliding
         {
             StopSlide();
         }
 
-        if (Input.GetKeyDown(crouchKey) && !IsMoving()) // Crouch if the crouch key is pressed and the player is not moving
-        {
-            StartCrouch();
-        }
-
-        if (Input.GetKeyUp(crouchKey) && !isSliding) // Uncrouch if the crouch key is released and the player is not sliding
-        {
-            StopCrouch();
-        }
-
-        if(horizontalInput == -1)
+        if(horizontalInput < 0)
         {
             cam.applyTilt("left");
         }
     
-        else if (horizontalInput == 1)
+        else if (horizontalInput > 0)
         {
             cam.applyTilt("right");
         }
@@ -235,6 +256,12 @@ public class PlayerMovement : MonoBehaviour
         attackEnabled = true;
     }
 
+    private void ReadMoveInput()
+    {
+        horizontalInput = moveInput.x;
+        verticalInput = moveInput.y;
+    }
+
     private void StateHandler()
     {
         if (isDashing) // Dashing
@@ -247,11 +274,6 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.sliding;
             desiredMoveSpeed = walkSpeed;
-        }
-        else if (Input.GetKey(crouchKey) && !isSliding) // Crouching
-        {
-            state = MovementState.crouching;
-            desiredMoveSpeed = crouchSpeed;
         }
         else if (isGrounded) // Walking
         {
@@ -333,16 +355,24 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
             }
         }
+    }
 
-        if (maxYSpeed != 0 && rb.velocity.y > maxYSpeed) // Limiting vertical speed
+    private void CheckDrag()
+    {
+        if (isGrounded && !isDashing) // Apply drag when on the ground and not dashing
         {
-            rb.velocity = new Vector3(rb.velocity.x, maxYSpeed, rb.velocity.z);
+            rb.drag = groundDrag;
+        }
+        else // Remove drag when in the air or dashing
+        {
+            rb.drag = 0f;
         }
     }
 
     // Preforms a jump
     private void Jump()
     {
+        canJump = false;
         exitingSlope = true;
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); // Reset player's velocity on Y axis. Ensures that the player always jumps the same height
 
@@ -374,12 +404,6 @@ public class PlayerMovement : MonoBehaviour
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
 
-    // Returns true if the player is inputting movement
-    private bool IsMoving()
-    {
-        return horizontalInput != 0 || verticalInput != 0;
-    }
-
     // Returns the player's input direction
     private Vector3 InputDirection()
     {
@@ -390,73 +414,47 @@ public class PlayerMovement : MonoBehaviour
     {
         isSliding = true;
 
-        StartCrouch();
+        transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z); // Scale player's height down
+        rb.AddForce(Vector3.down * 5f, ForceMode.Impulse); // Apply force to keep player on ground as slide starts
 
-        slideTimer = maxSlideTime;
-    }
-
-    private void SlidingMovement()
-    {
-        if (!OnSlope() || rb.velocity.y > -0.1f) // If the player is not on a slope or is moving upwards, preform regular slide
-        {
-            rb.AddForce(InputDirection().normalized * slideForce, ForceMode.Force);
-
-            slideTimer -= Time.deltaTime;
-        }
-        else
-        {
-            rb.AddForce(GetSlopeMoveDirection(InputDirection()) * slideForce, ForceMode.Force);
-        }
-
-        if (slideTimer <= 0)
-        {
-            isSliding = false;
-        }
+        slideDirection = GetNormalizedInputDirectionVector();
     }
 
     private void StopSlide()
     {
         isSliding = false;
 
-        StopCrouch();
-    }
-
-    private void StartCrouch()
-    {
-        transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-    }
-
-    private void StopCrouch()
-    {
         transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
     }
 
+    private void SlidingMovement()
+    {
+        if (!OnSlope() || rb.velocity.y > -0.1f) // If the player is not on a slope or is moving upwards, preform regular slide
+        {
+            rb.AddForce(slideDirection * slideForce, ForceMode.Force);
+        }
+        else // If the player is on a slope, preform slide with slope movement
+        {
+            rb.AddForce(GetSlopeMoveDirection(slideDirection) * slideForce, ForceMode.Force);
+        }
+    }
 
     private void MeasureSpeed()
     {
         currentSpeed = rb.velocity.magnitude;
     }
 
-    private Vector3 GetDashDirection(Transform forwardT)
+    private Vector3 GetNormalizedInputDirectionVector()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float horizontal = moveInput.x;
+        float vertical = moveInput.y;
 
         Vector3 direction = new Vector3();
-
-        if (allowAllDirections)
-        {
-            direction = forwardT.forward * vertical + forwardT.right * horizontal;
-        }
-        else
-        {
-            direction = forwardT.forward;
-        }
+        direction = orientation.forward * vertical + orientation.right * horizontal;
 
         if (vertical == 0 && horizontal == 0)
         {
-            direction = forwardT.forward;
+            direction = orientation.forward;
         }
 
         return direction.normalized;
@@ -474,23 +472,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isDashing = true;
-        maxYSpeed = maxDashYSpeed;
+
 
         ChangeFov(dashFov, changeDuration);
 
-        Transform forwardT;
-
-        if (useCameraForward)
-        {
-            forwardT = cam.transform;
-        }
-        else
-        {
-            forwardT = orientation;
-        }
-
-        Vector3 direction = GetDashDirection(forwardT);
-
+        Vector3 direction = GetNormalizedInputDirectionVector();
         Vector3 forceToApply = direction * dashForce + orientation.up * dashUpwardForce;
 
         if (disableGravity)
@@ -504,7 +490,7 @@ public class PlayerMovement : MonoBehaviour
         Invoke(nameof(ResetDash), dashDuration);
     }
 
-    private Vector3 delayedForceToApply; // Used to apply the dash force after a short delay. Hacky solution to a problem with the dash force not being applied properly. Replace with coroutine later
+    private Vector3 delayedForceToApply; // Used to apply the dash force after a short delay. Hacky solution to a problem with the dash force not being applied properly
 
     private void DelayedDashForce()
     {
@@ -519,7 +505,6 @@ public class PlayerMovement : MonoBehaviour
     private void ResetDash()
     {
         isDashing = false;
-        maxYSpeed = 0;
 
         ChangeFov(playerFov, changeDuration);
 

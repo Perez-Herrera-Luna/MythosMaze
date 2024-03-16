@@ -82,9 +82,6 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void GameStart()
     {
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        UnityEngine.Cursor.visible = false;
-
         loadingScreen.SetActive(false);
         background.SetActive(false);
         playerGameUI.SetActive(true);
