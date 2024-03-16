@@ -1,13 +1,10 @@
-//using System.Diagnostics;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerWeaponController : MonoBehaviour
 {
-    public PlayerMovement moveScript;
-    //public GameObject playerHolder;
-    private Animator daggerAnim;
-
     public int weaponSelect = 0;
 
     public GameObject daggerObject;
@@ -21,35 +18,24 @@ public class PlayerWeaponController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        daggerAnim = GameObject.Find("Dagger").GetComponent<Animator>();
-        //moveScript = gameObject.GetComponent<PlayerMovement>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        bool playerAttack = gameObject.GetComponent<PlayerMovement>().primaryAttack;
-
         switch(weaponSelect)
         {
             case 1:
-                //dagger selected
-                if(playerAttack)
-                {
-                    //Debug.Log("Player attack with dagger!");
-                    daggerAnim.SetBool("isIdle", false);  
-                    daggerAnim.SetBool("isAttacking", true);  
-
-                    StartCoroutine(attackAnim());
-                }   
-
+                //dagger
                 daggerObject.SetActive(true);
+
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 break;
             
             case 2:
-                //throwing knife
+                //dagger
                 throwingKnifeObject.SetActive(true);
 
                 daggerObject.SetActive(false);
@@ -57,7 +43,7 @@ public class PlayerWeaponController : MonoBehaviour
                 break;
 
             case 3:
-                //bow and arrow
+                //dagger
                 bowAndArrowObject.SetActive(true);
 
                 daggerObject.SetActive(false);
@@ -72,13 +58,5 @@ public class PlayerWeaponController : MonoBehaviour
                 break;
 
         }
-    }
-
-    IEnumerator attackAnim()
-    {
-        yield return new WaitForSeconds(0.6f);
-
-        daggerAnim.SetBool("isIdle", true);  
-        daggerAnim.SetBool("isAttacking", false);  
     }
 }

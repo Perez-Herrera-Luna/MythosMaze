@@ -10,7 +10,7 @@ public class Player_Damage : MonoBehaviour
     private float maxHealth = 10.0f;
 
     private GameManager gameMgr;
-    private Enemy enemy_script;
+    private Monster monster_script;
 
     // Start is called before the first frame update
     void Start()
@@ -43,11 +43,11 @@ public class Player_Damage : MonoBehaviour
     {
         if(other.gameObject.CompareTag("melee_enemy"))
         {
-            //Debug.Log("collider triggered");
-            enemy_script = other.GetComponent<Enemy>();
-            if(enemy_script.hasAttacked)
+            Debug.Log("collider triggered");
+            monster_script = other.GetComponent<Monster>();
+            if(monster_script.hasAttacked)
             {
-                //Debug.Log("Enemy Attacked");
+                Debug.Log("Enemy Attacked");
                 StartCoroutine(OnHit(2));
             }
             
@@ -57,7 +57,7 @@ public class Player_Damage : MonoBehaviour
     IEnumerator OnHit(int damage)
     {
         playerHealth -= damage;
-        Debug.Log("Player Health: " + playerHealth);
+        Debug.Log("Health: " + playerHealth);
         gameMgr.DisplayDamage();
 
         yield return new WaitForSeconds(2);
@@ -70,4 +70,6 @@ public class Player_Damage : MonoBehaviour
         //death code//
         gameMgr.GameOver();
     }
+
+
 }

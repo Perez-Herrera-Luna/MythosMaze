@@ -22,7 +22,7 @@ public class EnemyAITesting
 
         Assert.IsNotNull(testEnemy, "Prefab not loaded");
 
-        Enemy monsterScript = testEnemy.GetComponent<Enemy>();
+        Monster monsterScript = testEnemy.GetComponent<Monster>();
 
         Assert.IsNotNull(monsterScript, "Monster component not found");
 
