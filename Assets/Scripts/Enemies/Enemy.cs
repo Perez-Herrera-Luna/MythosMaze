@@ -324,9 +324,9 @@ public class Enemy : MonoBehaviour
     {
         if(other.gameObject.CompareTag("playerWeapon"))
         {
-            Debug.Log("collider triggered");
-            Debug.Log("Enemy hit!");
-            StartCoroutine(OnHit(4));
+            Debug.Log(moveScript.primaryAttack);
+            //Debug.Log("Enemy hit!");
+            //StartCoroutine(OnHit(4));
             //player_script = other.GetComponent<Weapon>();
             if(moveScript.primaryAttack)
             {

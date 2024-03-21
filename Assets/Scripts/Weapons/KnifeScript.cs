@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class KnifeScript : MonoBehaviour
 {
-    public float life = 4;
+    public float life = 4.0f;
     void Awake()
     {
-        Destroy(gameObject, life);
+        Destroy(transform, life);
     }
 
     void OnCollisionEnter(Collision other)
     {
-        Destroy(gameObject);
+        Destroy(transform);
     }
 }
