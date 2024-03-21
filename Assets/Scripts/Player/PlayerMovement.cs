@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 // TODO: Handle jumping out of a slide or crouch properly
 // TODO: Allow dashing during start of jump
 // TODO: Prevent entering crouch while in air
-// TODO: Handle dashing off or into a slope
+// TODO: Handle dashing off or into a slope 
 // TODO: Give player a limited number of dashes
 // TODO: Add a dash meter
 // TODO: Add a slam in the air
@@ -91,11 +91,6 @@ public class PlayerMovement : MonoBehaviour
     public float currentSpeed; // Player's current speed. To be made private later
     public bool isGrounded; // Is the player on the ground?
 
-    [Header("Attacking")]
-    public KeyCode attackKey = KeyCode.Mouse0; // Keybind for primary attack. Hardcoded to spacebar for now
-    public bool primaryAttack = false; //player attack flag
-    public bool attackEnabled = true;
-
     private float horizontalInput; // Player's horizontal input
     private float verticalInput; // Player's vertical input
 
@@ -110,6 +105,17 @@ public class PlayerMovement : MonoBehaviour
     private InputAction slideAction;
     private InputAction dashAction;
     private Vector2 moveInput;
+    private InputAction attackAction;
+    private InputAction weapon1;
+    private InputAction weapon2;
+    private InputAction weapon3;
+
+    [Header("Attacking")]
+    public KeyCode attackKey = KeyCode.Mouse0; // Keybind for primary attack. Hardcoded to spacebar for now
+    public bool primaryAttack = false; //player attack flag
+    public bool attackEnabled = true;
+
+    public int weaponSelected = 1;
 
     public enum MovementState
     {
@@ -125,6 +131,11 @@ public class PlayerMovement : MonoBehaviour
         slideAction = playerControls.FindAction("Slide");
         dashAction = playerControls.FindAction("Dash");
 
+        attackAction = playerControls.FindAction("Attack");
+        weapon1 = playerControls.FindAction("Weapon1");
+        weapon2 = playerControls.FindAction("Weapon2");
+        weapon3 = playerControls.FindAction("Weapon3");
+
         moveAction.performed += context => moveInput = context.ReadValue<Vector2>();
         moveAction.canceled += context => moveInput = Vector2.zero;
     }
@@ -135,6 +146,10 @@ public class PlayerMovement : MonoBehaviour
         jumpAction.Enable();
         slideAction.Enable();
         dashAction.Enable();
+        attackAction.Enable();
+        weapon1.Enable();
+        weapon2.Enable();
+        weapon3.Enable();
     }
 
     private void OnDisable()
@@ -143,6 +158,10 @@ public class PlayerMovement : MonoBehaviour
         jumpAction.Disable();
         slideAction.Disable();
         dashAction.Disable();
+        attackAction.Disable();
+        weapon1.Disable();
+        weapon2.Disable();
+        weapon3.Disable();
     }
 
     void Start()
@@ -236,24 +255,41 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //attacking
-        if(Input.GetKey(attackKey) && attackEnabled)
+        if(attackAction.triggered)
         {
-            //Debug.Log("attack key pressed");
-            primaryAttack = true;
-            attackEnabled = false;
-            StartCoroutine(attackCoolDown());
+            
+            // if(attackEnabled)
+            // {
+            //     primaryAttack = true;
+            //     attackEnabled = false;
+            //     StartCoroutine(attackCoolDown());
+            // }     
+            primaryAttack = true; 
+            //Debug.Log(primaryAttack);
         }
-        else if(Input.GetKeyUp(attackKey))
+        else
         {
-            primaryAttack = false;
+             primaryAttack = false;
         }
         
-    }
-
-    IEnumerator attackCoolDown()
-    {
-        yield return new WaitForSeconds(0.25f);
-        attackEnabled = true;
+        //weapon select
+        
+        if(weapon1.triggered)
+        {
+            Debug.Log("weapon 1 selected");
+            weaponSelected = 1;
+        }
+        if(weapon2.triggered)
+        {
+            Debug.Log("weapon 2 selected");
+            weaponSelected = 2;
+        }
+        if(weapon3.triggered)
+        {
+            Debug.Log("weapon 3 selected");
+            weaponSelected = 3;
+        }
+          
     }
 
     private void ReadMoveInput()

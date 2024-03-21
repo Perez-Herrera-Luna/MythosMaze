@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour
     {
         if(moveScript == null)
         {
-            Debug.Log("moveScript Null!");
+            //Debug.Log("moveScript Null!");
         }
         //check enemy health
         checkHealth();

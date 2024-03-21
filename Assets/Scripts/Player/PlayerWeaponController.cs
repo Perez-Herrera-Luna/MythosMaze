@@ -10,25 +10,39 @@ public class PlayerWeaponController : MonoBehaviour
 
     public int weaponSelect = 0;
 
+    [Header("Weapon Game Objects")]
     public GameObject daggerObject;
     public GameObject throwingKnifeObject;
     public GameObject bowAndArrowObject;
     //public GameObject throwingSpearObject;
     //public GameObject slingshotObject;
     //public GameObject boomerangObject;
+
+    public Transform knifeSpawnPoint;
+    public GameObject knifePrefab;
+    public float knifeSpeed = 20.0f;
+    public float kifeCoolDown = 1.0f;
+    public float daggerCoolDown = 0.25f;
+
+    private bool attackEnabled = true;
+
+
+    [Header("Weapon animation durations")]
+    public float daggerDuration = 0.6f;
     
+
 
     // Start is called before the first frame update
     void Start()
     {
         daggerAnim = GameObject.Find("Dagger").GetComponent<Animator>();
-        //moveScript = gameObject.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
         bool playerAttack = gameObject.GetComponent<PlayerMovement>().primaryAttack;
+        weaponSelect = gameObject.GetComponent<PlayerMovement>().weaponSelected;
 
         switch(weaponSelect)
         {
@@ -36,20 +50,31 @@ public class PlayerWeaponController : MonoBehaviour
                 //dagger selected
                 if(playerAttack)
                 {
-                    //Debug.Log("Player attack with dagger!");
+                    attackEnabled = false;
+                    //Debug.Log("playerAttackTriggered");
                     daggerAnim.SetBool("isIdle", false);  
                     daggerAnim.SetBool("isAttacking", true);  
 
                     StartCoroutine(attackAnim());
-                }   
+                    StartCoroutine(attackCoolDown(daggerDuration));
+                }
 
                 daggerObject.SetActive(true);
+                
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 break;
             
             case 2:
                 //throwing knife
+                if(playerAttack)
+                {
+                    attackEnabled = false;
+                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, knifeSpawnPoint.rotation);
+                    knife.GetComponent<Rigidbody>().velocity = knifeSpawnPoint.forward * knifeSpeed;
+                    StartCoroutine(attackCoolDown(daggerDuration));
+                }
+
                 throwingKnifeObject.SetActive(true);
 
                 daggerObject.SetActive(false);
@@ -74,11 +99,18 @@ public class PlayerWeaponController : MonoBehaviour
         }
     }
 
+    IEnumerator attackCoolDown(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        attackEnabled = true;
+    }
+
     IEnumerator attackAnim()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(daggerDuration);
 
         daggerAnim.SetBool("isIdle", true);  
         daggerAnim.SetBool("isAttacking", false);  
+        gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
     }
 }
