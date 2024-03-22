@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8688a8fcc69c26145a5dc913c27daee5, type: 3}
+  m_Name: Throwing_Knife_Stats
+  m_EditorClassIdentifier: 
+  weaponName: 
+  isThrown: 0
+  damage: 0
+  speed: 0
+  cooldown: 0
