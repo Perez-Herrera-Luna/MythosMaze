@@ -7,11 +7,11 @@ public class KnifeScript : MonoBehaviour
     public float life = 4.0f;
     void Awake()
     {
-        Destroy(transform, life);
+        Object.Destroy(this.gameObject, life);
     }
 
     void OnCollisionEnter(Collision other)
     {
-        Destroy(transform);
+        Object.Destroy(this.gameObject);
     }
 }

@@ -326,8 +326,7 @@ public class Enemy : MonoBehaviour
     {
         if(other.gameObject.CompareTag("playerWeapon"))
         {
-            Debug.Log("bless this mess");
-            Debug.Log("player attacking: " + playerData.isAttacking);
+            //Debug.Log("player attacking: " + playerData.isAttacking);
             //Debug.Log("Enemy hit!");
             //StartCoroutine(OnHit(4));
             //player_script = other.GetComponent<Weapon>();
@@ -362,13 +361,13 @@ public class Enemy : MonoBehaviour
 
     IEnumerator hitDelay()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.25f);
         invulnerable = false;
     }
 
     private void checkHealth()
     {
-        if(health < 0)
+        if(health <= 0)
         {
             health = 0;
             Object.Destroy(this.gameObject);

@@ -19,17 +19,23 @@ public class PlayerWeaponController : MonoBehaviour
     //public GameObject slingshotObject;
     //public GameObject boomerangObject;
 
+    public float knifeXOffset;
+    public float knifeYOffset;
+    public float knifeZOffset;
+
     public Transform knifeSpawnPoint;
     public GameObject knifePrefab;
     public float knifeSpeed = 20.0f;
     public float kifeCoolDown = 1.0f;
     public float daggerCoolDown = 0.25f;
 
+    public Transform knifeTransform;
+
     private bool attackEnabled = true;
 
 
     [Header("Weapon animation durations")]
-    public float daggerDuration = 0.6f;
+    public float daggerDuration = 0.4f;
     
 
 
@@ -58,6 +64,7 @@ public class PlayerWeaponController : MonoBehaviour
 
                     StartCoroutine(attackAnim());
                     StartCoroutine(attackCoolDown(daggerDuration));
+                    
                 }
 
                 daggerObject.SetActive(true);
@@ -68,12 +75,14 @@ public class PlayerWeaponController : MonoBehaviour
             
             case 2:
                 //throwing knife
-                if(playerAttack)
+                if(playerAttack && attackEnabled)
                 {
+                    
                     attackEnabled = false;
-                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, knifeSpawnPoint.rotation);
+                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, knifeTransform.rotation);
                     knife.GetComponent<Rigidbody>().velocity = knifeSpawnPoint.forward * knifeSpeed;
                     StartCoroutine(attackCoolDown(daggerDuration));
+                    Destroy(knife, 3);
                 }
 
                 throwingKnifeObject.SetActive(true);
@@ -113,6 +122,6 @@ public class PlayerWeaponController : MonoBehaviour
         daggerAnim.SetBool("isIdle", true);  
         daggerAnim.SetBool("isAttacking", false);  
         //gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
-        playerData.isAttacking = false;
+        //playerData.isAttacking = false;
     }
 }

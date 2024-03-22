@@ -260,14 +260,10 @@ public class PlayerMovement : MonoBehaviour
         if(attackAction.triggered)
         {    
             //primaryAttack = true; 
-            
 
             playerData.isAttacking = true;
-            Debug.Log(playerData.isAttacking);
-        }
-        else
-        {
-            playerData.isAttacking = false;
+            StartCoroutine(attackDelay());
+            Debug.Log("attack");
         }
         
         //weapon select
@@ -291,6 +287,14 @@ public class PlayerMovement : MonoBehaviour
             playerData.activeWeapon = 3;
         }
           
+    }
+
+    IEnumerator attackDelay()
+    {
+        //Debug.Log("Delay start");
+        yield return new WaitForSeconds(0.5f);
+        //Debug.Log("Delay end");
+        playerData.isAttacking = false;
     }
 
     private void ReadMoveInput()
