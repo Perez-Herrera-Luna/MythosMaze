@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     public bool hasWeapon;
     public WeaponData weapon;
 
+    public PlayerData playerData;
+
     [Header("Enemy Stats")]
     //enemy type
     public string enemyType = "Basic_Melee"; //Enemy type: Basic_Melee, Basic_Ranged, Sniper_Ranged, Shotgun_Ranged, 
@@ -324,11 +326,12 @@ public class Enemy : MonoBehaviour
     {
         if(other.gameObject.CompareTag("playerWeapon"))
         {
-            Debug.Log(moveScript.primaryAttack);
+            Debug.Log("bless this mess");
+            Debug.Log("player attacking: " + playerData.isAttacking);
             //Debug.Log("Enemy hit!");
             //StartCoroutine(OnHit(4));
             //player_script = other.GetComponent<Weapon>();
-            if(moveScript.primaryAttack)
+            if(playerData.isAttacking)
             {
                 Debug.Log("Enemy hit!");
                 StartCoroutine(OnHit(5));

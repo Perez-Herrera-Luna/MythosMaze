@@ -16,6 +16,8 @@ using UnityEngine.InputSystem;
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerMovement : MonoBehaviour
 {
+    public PlayerData playerData;
+
     [Header("Movement")]
     public float walkSpeed = 10f; // Player's base walk speed
     
@@ -256,20 +258,16 @@ public class PlayerMovement : MonoBehaviour
 
         //attacking
         if(attackAction.triggered)
-        {
+        {    
+            //primaryAttack = true; 
             
-            // if(attackEnabled)
-            // {
-            //     primaryAttack = true;
-            //     attackEnabled = false;
-            //     StartCoroutine(attackCoolDown());
-            // }     
-            primaryAttack = true; 
-            //Debug.Log(primaryAttack);
+
+            playerData.isAttacking = true;
+            Debug.Log(playerData.isAttacking);
         }
         else
         {
-             primaryAttack = false;
+            playerData.isAttacking = false;
         }
         
         //weapon select
@@ -278,16 +276,19 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("weapon 1 selected");
             weaponSelected = 1;
+            playerData.activeWeapon = 1;
         }
         if(weapon2.triggered)
         {
             Debug.Log("weapon 2 selected");
             weaponSelected = 2;
+            playerData.activeWeapon = 2;
         }
         if(weapon3.triggered)
         {
             Debug.Log("weapon 3 selected");
             weaponSelected = 3;
+            playerData.activeWeapon = 3;
         }
           
     }

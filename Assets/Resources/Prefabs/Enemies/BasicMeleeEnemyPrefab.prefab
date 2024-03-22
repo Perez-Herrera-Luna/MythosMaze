@@ -152,6 +152,7 @@ MonoBehaviour:
   enemy: {fileID: 0}
   hasWeapon: 0
   weapon: {fileID: 0}
+  playerData: {fileID: 11400000, guid: a2346e02e051af2489daf34a8dbb1e65, type: 2}
   enemyType: Basic_Melee
   health: 10
   attackCoolDown: 1

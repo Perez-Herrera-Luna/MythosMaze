@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerWeaponController : MonoBehaviour
 {
+    public PlayerData playerData;
     public PlayerMovement moveScript;
     //public GameObject playerHolder;
     private Animator daggerAnim;
@@ -41,8 +42,8 @@ public class PlayerWeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool playerAttack = gameObject.GetComponent<PlayerMovement>().primaryAttack;
-        weaponSelect = gameObject.GetComponent<PlayerMovement>().weaponSelected;
+        bool playerAttack = playerData.isAttacking;
+        weaponSelect = playerData.activeWeapon;
 
         switch(weaponSelect)
         {
@@ -60,7 +61,7 @@ public class PlayerWeaponController : MonoBehaviour
                 }
 
                 daggerObject.SetActive(true);
-                
+
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 break;
@@ -111,6 +112,7 @@ public class PlayerWeaponController : MonoBehaviour
 
         daggerAnim.SetBool("isIdle", true);  
         daggerAnim.SetBool("isAttacking", false);  
-        gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
+        //gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
+        playerData.isAttacking = false;
     }
 }
