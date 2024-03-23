@@ -263,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
 
             playerData.isAttacking = true;
             StartCoroutine(attackDelay());
-            Debug.Log("attack");
+            //Debug.Log("attack");
         }
         
         //weapon select
@@ -292,7 +292,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator attackDelay()
     {
         //Debug.Log("Delay start");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
         //Debug.Log("Delay end");
         playerData.isAttacking = false;
     }

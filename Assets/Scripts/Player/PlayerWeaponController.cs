@@ -19,6 +19,7 @@ public class PlayerWeaponController : MonoBehaviour
     //public GameObject slingshotObject;
     //public GameObject boomerangObject;
 
+    [Header("Throwing knife rotation corrections")]
     public float knifeXOffset;
     public float knifeYOffset;
     public float knifeZOffset;
@@ -77,8 +78,13 @@ public class PlayerWeaponController : MonoBehaviour
                 //throwing knife
                 if(playerAttack && attackEnabled)
                 {
+                    Quaternion finalRotation = Quaternion.Euler(
+                        knifeSpawnPoint.rotation.eulerAngles.x + knifeXOffset,
+                        knifeSpawnPoint.rotation.eulerAngles.y + knifeYOffset,
+                        knifeSpawnPoint.rotation.eulerAngles.z + knifeZOffset);
+
                     attackEnabled = false;
-                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, knifeSpawnPoint.rotation);
+                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, finalRotation);
                     knife.GetComponent<Rigidbody>().velocity = knifeSpawnPoint.forward * knifeSpeed;
                     StartCoroutine(attackCoolDown(daggerDuration));
                     Destroy(knife, 2);
