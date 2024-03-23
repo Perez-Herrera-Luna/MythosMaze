@@ -77,9 +77,8 @@ public class PlayerWeaponController : MonoBehaviour
                 //throwing knife
                 if(playerAttack && attackEnabled)
                 {
-                    
                     attackEnabled = false;
-                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, knifeTransform.rotation);
+                    var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, knifeSpawnPoint.rotation);
                     knife.GetComponent<Rigidbody>().velocity = knifeSpawnPoint.forward * knifeSpeed;
                     StartCoroutine(attackCoolDown(daggerDuration));
                     Destroy(knife, 2);

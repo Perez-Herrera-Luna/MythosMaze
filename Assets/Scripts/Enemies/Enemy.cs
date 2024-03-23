@@ -326,14 +326,35 @@ public class Enemy : MonoBehaviour
     {
         if(other.gameObject.CompareTag("playerWeapon"))
         {
-            //Debug.Log("player attacking: " + playerData.isAttacking);
+            Debug.Log("player attacking: " + playerData.isAttacking);
             //Debug.Log("Enemy hit!");
             //StartCoroutine(OnHit(4));
             //player_script = other.GetComponent<Weapon>();
             if(playerData.isAttacking)
             {
                 Debug.Log("Enemy hit!");
-                StartCoroutine(OnHit(5));
+
+                switch(playerData.activeWeapon)
+                {
+                    case 1:
+                        //dagger
+                        StartCoroutine(OnHit(5));
+                        break;
+                        
+                    case 2:
+                        //throwing knife
+                        StartCoroutine(OnHit(2));
+                        break;
+
+                    case 3:
+                        //bow and arrow
+                        StartCoroutine(OnHit(5));
+                        break;
+
+                    default:
+                        //no weapon
+                        break;
+                }
             }
             
         }

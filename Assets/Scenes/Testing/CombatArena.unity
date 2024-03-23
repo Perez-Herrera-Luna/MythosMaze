@@ -2554,6 +2554,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Throwing_Knife
       objectReference: {fileID: 0}
+    - target: {fileID: 2715959806479996454, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_TagString
+      value: playerWeapon
+      objectReference: {fileID: 0}
     - target: {fileID: 3859934829674801825, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.0089012
@@ -2597,6 +2601,34 @@ PrefabInstance:
     - target: {fileID: 5668607704393066030, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
       propertyPath: m_Mass
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5668607704393066030, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216578878623569470, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_Size.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216578878623569470, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_Size.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216578878623569470, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_Size.z
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216578878623569470, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_Center.y
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216578878623569470, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_Center.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216578878623569470, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
