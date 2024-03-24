@@ -101,9 +101,9 @@ public class LevelGraph
 
         // (1) calculate num doors based on distToBoss
         if (distToBoss < (currLevel.gridRings[0] * currLevel.gridRings[0]))    // arenas closest to boss 
-            numDoors = Random.Range(3, 5);
+            numDoors = ThreadSafeRandom.GetRandom(3, 5);
         else if (distToBoss < (currLevel.gridRings[1] * currLevel.gridRings[1]))
-            numDoors = Random.Range(2, 4);
+            numDoors = ThreadSafeRandom.GetRandom(2, 4);
         else
             numDoors = 2;   // all other arenas must have at least 2 doors
         
@@ -172,7 +172,6 @@ public class LevelGraph
             currNode = nodePriorityQueue.DequeueSmallest();
             visited[currNode.index] = true;
 
-            // Debug.Log("currNode: " + currNode.index);
 
             // for each node adjacent to currently visiting one, calculate new path distance (through currNode)
             foreach ((int index, float distance) adjNode in arenaAdjacencyList[currNode.index])
@@ -183,12 +182,9 @@ public class LevelGraph
                     if(currDistance != -1){
                         float newDistance = currNode.distance + adjNode.distance;
 
-                        // Debug.Log("currDist: " + currDistance + ", newDist: " + newDistance);
-
                         // if new path distance is smaller than curr distance to node, add node to path
                         if (newDistance < currDistance)
                         {
-                            // Debug.Log("newDistance < currDistance");
                             nodePriorityQueue.UpdateDistance(adjNode.index, newDistance);
 
                             // update shortest path for adj node (prevNode == currNode)

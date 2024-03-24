@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
-        sceneMgr.LoadPayerAndUserInterfaceScenes();
+        sceneMgr.LoadPlayerAndUserInterfaceScenes();
         sceneMgr.setGameManager(inst);
     }
 

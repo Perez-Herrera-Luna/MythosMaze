@@ -160,7 +160,7 @@ public class GridNode
         }
         else
         {
-            int probability = Random.Range(0, drunkenRatio);
+            int probability = ThreadSafeRandom.GetRandom(0, drunkenRatio);
 
             if (probability == 0)
             {   // chance of occuring = 1 / drunkenRatio
@@ -183,7 +183,7 @@ public class GridNode
         
         // randomly shuffle pathDirections using Fisher-Yates Shuffle Algorithm (modern version)
         for(int i = 3; i >= 0; i--){
-            int j = Random.Range(0, i+1); // int overload of random range [minInclusive, maxExclusive)
+            int j = ThreadSafeRandom.GetRandom(0, i+1); // int overload of random range [minInclusive, maxExclusive)
 
             // perform shuffle
             Vector2Int direction1 = pathDirections[j];

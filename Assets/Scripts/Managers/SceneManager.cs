@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -31,10 +32,10 @@ public class SceneManager : MonoBehaviour
         userInterfaceMgr = uim;
     }
 
-    public void LoadPayerAndUserInterfaceScenes()
+    public void LoadPlayerAndUserInterfaceScenes()
     {
         StartCoroutine(LoadUserInterfaceScene());
-        StartCoroutine(LoadPlayerScene());
+        // StartCoroutine(LoadPlayerScene());
     }
 
     public void LoadSceneByName(string sceneName)
@@ -85,12 +86,11 @@ public class SceneManager : MonoBehaviour
         yield return null;
 
         asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        asyncLoad.allowSceneActivation = false;
-
+        // asyncLoad.allowSceneActivation = false;
 
         while (!asyncLoad.isDone)
         {
-            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            /*float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
             userInterfaceMgr.updateProgressBar(progress);
 
             if (asyncLoad.progress >= 0.9f)
@@ -98,9 +98,23 @@ public class SceneManager : MonoBehaviour
                 asyncLoad.allowSceneActivation = true;
 
                 gameManager.GameStart();
-            }
+            }*/
 
             yield return null;
         }
+
+        ProceduralLevel currLevel = GameObject.Find("ProceduralLevel").GetComponent<ProceduralLevel>();
+
+        Task levelGeneration = currLevel.GenerateLevelAsync();
+
+        while (!levelGeneration.IsCompleted)
+        {
+            yield return null;
+        }
+
+        currLevel.LoadLevel();
+        gameManager.GameStart();
+
+        yield return null;
     }
 }

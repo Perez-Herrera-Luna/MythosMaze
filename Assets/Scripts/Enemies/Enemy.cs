@@ -75,6 +75,7 @@ public class Enemy : MonoBehaviour
             gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
 
+        playerObject = GameObject.Find("Player");
         moveScript = playerObject.GetComponent<PlayerMovement>();
     }
 

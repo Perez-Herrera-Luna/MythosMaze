@@ -79,8 +79,9 @@ public class LevelGrid
         int maxY = currLevel.gridCols - minY;
 
         // randomly generate center of arena (within smaller box constrained by arena proportions)
-        int locX = Random.Range(minX, maxX);
-        int locY = Random.Range(minY, maxY);
+        int locX = ThreadSafeRandom.GetRandom(minX, maxX);
+        int locY = ThreadSafeRandom.GetRandom(minY, maxY);
+
         return new Vector2Int(locX, locY);
     }
 

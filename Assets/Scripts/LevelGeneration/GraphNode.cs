@@ -53,7 +53,7 @@ public class GraphNode
         playerLoc.z -= offset;
         playerLoc.y += 1.4f;
 
-        // Debug.Log(playerLoc);
+        // Debug.Log("player initial position: " + playerLoc);
         return playerLoc;
     }
 
@@ -103,12 +103,6 @@ public class GraphNode
                 
                 sortedDoors.Add(doorKey, door);
             }
-
-            /* Debug.Log("Sorted Doors Arena: " + gridLocation.x + ", " + gridLocation.y);
-            Debug.Log("Available Doors: " + availableDoors.Count);
-            foreach(var doorL in sortedDoors.Values){
-                Debug.Log("Door: " + doorL.x + ", " + doorL.y);
-            } */
 
             return sortedDoors.Values.ToList();
         }else{

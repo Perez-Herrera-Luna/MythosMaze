@@ -119,6 +119,19 @@ public class PlayerMovement : MonoBehaviour
 
     public int weaponSelected = 1;
 
+    private bool levelLoad = false;
+    public bool LevelLoad
+    {
+        get => levelLoad;
+        set => levelLoad = value;
+    }
+    private Vector3 initLoc;
+    public Vector3 InitLoc
+    {
+        get => initLoc;
+        set => initLoc = value;
+    }
+
     public enum MovementState
     {
         walking,
@@ -190,6 +203,12 @@ public class PlayerMovement : MonoBehaviour
         if (dashCooldownTimer > 0) // Decrement dash cooldown timer
         {
             dashCooldownTimer -= Time.deltaTime;
+        }
+
+        if (levelLoad)
+        {
+            transform.position = initLoc;
+            levelLoad = false;
         }
     }
 

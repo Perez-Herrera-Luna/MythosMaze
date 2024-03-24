@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class ProceduralLevel : MonoBehaviour
 {
@@ -21,33 +22,26 @@ public class ProceduralLevel : MonoBehaviour
 
     public LevelGraph GetLevelGraph => levelGraph;
 
-    private GameObject playerObj;
-
-    private bool initialLoad = true;
+    public GameObject playerObj;
 
     // Start is called before the first frame update
     // calls necessary functions for procedural level generation
     void Start()
     {
         InitialSetup();
-        GenerateArenas();
-
-        // levelGrid.PrintGrid(); (debugging)
-
-        GeneratePaths();
-
-        LoadLevel();
     }
 
-    void Update()
+    // asynchronous function to load the player level
+    public async Task GenerateLevelAsync()
     {
+        await Task.Run(() => GenerateLevel());
+    }
 
-        // current work-around for player location not setting right 100% of the time (still need to debug that)
-        if (initialLoad) {
-            initialLoad = false;
+    private void GenerateLevel()
+    {
+        GenerateArenas();
 
-            SetupPlayer();
-        }
+        GeneratePaths();
     }
 
     // initialize grid and graph according to levelData
@@ -125,8 +119,6 @@ public class ProceduralLevel : MonoBehaviour
         // run dijkstras on generated graph
         levelGraph.GenerateShortestPathTree();
 
-        // Debug.Log("GeneratePaths");
-
         // Initial Paths
         GraphNode srcArena, targetArena;
 
@@ -134,16 +126,10 @@ public class ProceduralLevel : MonoBehaviour
         foreach(KeyValuePair<int, int> kvp in levelGraph.ShortestPath){
             // try to generate path from prevNode to currNode in ShortestPath
             if(kvp.Key != levelGraph.SrcArenaIndex){
-                // Debug.Log("generating initial path between src " + kvp.Value + " and dest " + kvp.Key);
-
                 srcArena = levelGraph.GeneratedArenas[kvp.Value];
                 targetArena = levelGraph.GeneratedArenas[kvp.Key];
 
-                bool pathGenerated = levelGrid.GeneratePath(true, srcArena, targetArena);
-
-                /*if(!pathGenerated)
-                    Debug.Log("Error adding initial path");*/
-                
+                bool pathGenerated = levelGrid.GeneratePath(true, srcArena, targetArena);                
             }
         }
 
@@ -163,12 +149,10 @@ public class ProceduralLevel : MonoBehaviour
             // if currArena was the last one in availableArenas
             if(availableArenas.Count == 0){
                 if(currArena.NumDoors < 2){
-                    // Debug.Log("Error: Detached arena!");
+                    Debug.Log("Error: Arena with only one door");
                 }
             }else{
                 foreach(GraphNode availableArena in availableArenas){
-                    // Debug.Log("Adding secondary path");
-
                     // try and add a secondary path connection between currArena and availableArena
                     if (levelGrid.GeneratePath(false, currArena, availableArena))
                     {
@@ -183,10 +167,6 @@ public class ProceduralLevel : MonoBehaviour
                         // break out of foreach loop
                         break;
                     }
-                    /*else
-                    {
-                        Debug.Log("Error adding secondary path");
-                    }*/
                 }
             }
         }
@@ -194,11 +174,10 @@ public class ProceduralLevel : MonoBehaviour
     }
 
     // function which makes necessary calls to instantiate all arenas and paths in the level
-    private void LoadLevel()
+    public void LoadLevel()
     {
         LoadArenas();
 
-        // levelGrid.PrintGrid();
         LoadPaths();
     }
 
@@ -242,8 +221,6 @@ public class ProceduralLevel : MonoBehaviour
                 GridNode currNode = new GridNode();
                 currNode = levelGrid.GetNode(location);
 
-                // Debug.Log("checking currNode");
-
                 int rotValue = currNode.GetRotation();
                 Quaternion rotation = Quaternion.identity;
                 rotation.eulerAngles = new Vector3(0, rotValue, 0);
@@ -262,10 +239,9 @@ public class ProceduralLevel : MonoBehaviour
                 }
             }
         }
-
     }
 
-    private void SetupPlayer()
+    public void SetupPlayer()
     {
         playerObj = GameObject.Find("Player");
         if (playerObj == null)
@@ -274,6 +250,8 @@ public class ProceduralLevel : MonoBehaviour
             return;
         }
 
-        playerObj.transform.position = levelGraph.CalculatePlayerInitLoc(levelGrid.GridScale);
+        PlayerMovement playerMovController = playerObj.GetComponent<PlayerMovement>();
+        playerMovController.LevelLoad = true;
+        playerMovController.InitLoc = levelGraph.CalculatePlayerInitLoc(levelGrid.GridScale);
     }
 }
