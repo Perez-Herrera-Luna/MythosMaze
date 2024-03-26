@@ -818,7 +818,6 @@ MonoBehaviour:
   weaponSelect: 2
   daggerObject: {fileID: 1688818316}
   throwingKnifeObject: {fileID: 1951052400}
-  throwingKnifePlaceHolder: {fileID: 2054271063}
   bowAndArrowObject: {fileID: 0}
   knifeXOffset: -90
   knifeYOffset: 0
@@ -2094,6 +2093,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 271907706c5b9764a9fe8d65228fc703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &1377058960
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.34564158
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.34564158
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.34564158
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.20004
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.0103
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.78656
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
+      propertyPath: m_Name
+      value: Bow and Arrow - Animated
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5b62f0eb70c51d0468825c011e403e08, type: 3}
 --- !u!1 &1391594690
 GameObject:
   m_ObjectHideFlags: 0
@@ -2959,11 +3027,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951052400}
   m_Mesh: {fileID: -6799329192563040293, guid: f059d55d88bf4774c82c81a787489dfc, type: 3}
---- !u!1 &2054271063 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2715959806479996454, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
-  m_PrefabInstance: {fileID: 1782833823}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2069373965
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,3 +3091,4 @@ SceneRoots:
   - {fileID: 228057833}
   - {fileID: 1823506931}
   - {fileID: 1782833823}
+  - {fileID: 1377058960}
