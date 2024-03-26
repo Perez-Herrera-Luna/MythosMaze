@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8803f1406b00b034ca83f8f2d1e9b43d, type: 3}
-  m_Name: LevelOne
+  m_Name: Level1
   m_EditorClassIdentifier: 
   level: 1
-  gridRows: 27
-  gridCols: 27
-  gridScale: 1
+  gridRows: 31
+  gridCols: 31
+  gridScale: 2
   gridRings:
   - 10
   - 20
-  maxNumArenas: 4
+  maxNumArenas: 5
   maxTriesGenArena: 2000
   arenaDistanceBuff: 0
   maxTriesGenLoc: 2000
-  drunkenRatio: 3
+  drunkenRatio: 4
   maxPathLength: 0
