@@ -204,12 +204,6 @@ public class PlayerMovement : MonoBehaviour
         {
             dashCooldownTimer -= Time.deltaTime;
         }
-
-        if (levelLoad)
-        {
-            transform.position = initLoc;
-            levelLoad = false;
-        }
     }
 
     void FixedUpdate()
@@ -219,6 +213,12 @@ public class PlayerMovement : MonoBehaviour
         if (isSliding) // If the player is sliding, apply sliding movement
         {
             SlidingMovement();
+        }
+
+        if (levelLoad)
+        {
+            transform.position = initLoc;
+            levelLoad = false;
         }
     }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -323,6 +323,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1363305569011410708, guid: 767ee8c17f598db4e8e7b959576f3c08, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2716340207378726050, guid: 767ee8c17f598db4e8e7b959576f3c08, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
     - target: {fileID: 6016228903483307619, guid: 767ee8c17f598db4e8e7b959576f3c08, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -418,7 +426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userInterfaceMgr: {fileID: 0}
   sceneMgr: {fileID: 0}
-  firstLevelName: PrototypeLevel
+  firstLevelName: Level1
   numLevels: 0
   numLevelsCompleted: 0
 --- !u!1660057539 &9223372036854775807

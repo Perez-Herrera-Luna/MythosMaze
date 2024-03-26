@@ -10,6 +10,7 @@ public class Arena : MonoBehaviour
     private bool isBossArena;    // designates if combatArena is boss level or not
     private bool hasCharacter;   // designates if this arena has a quest character within it or not   
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
+    public bool arenaCompleted = false;
 
     public List<GameObject> enemyPrefabs;    // list of monster prefabs that can appear in this level
     public List<GameObject> powerupPrefabs;   // list of enemyPrefabs that can appear in this level
@@ -28,7 +29,7 @@ public class Arena : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -53,29 +54,47 @@ public class Arena : MonoBehaviour
             SetupCharacter();
     }
 
-    public void SetupDoors()
+    private GameObject GetDoor(int x, int y)
     {
-        foreach(Vector2Int door in activeDoors)
+        // north/south doors
+        if (x == 0)
         {
-            // north/south doors
-            if(door.x == 0)
-            {
-                if (door.y > 0)
-                    doorGameObjects[0].SetActive(false);
-                else
-                    doorGameObjects[1].SetActive(false);
+            if (y > 0)
+                return doorGameObjects[0];
+            else
+                return doorGameObjects[1];
 
-            }else if(door.y == 0)   // East/West Doors
-            {
-                if (door.x > 0)
-                    doorGameObjects[2].SetActive(false);
-                else
-                    doorGameObjects[3].SetActive(false);
-            }
+        }
+        else if (y == 0)   // East/West Doors
+        {
+            if (x > 0)
+                return doorGameObjects[2];
+            else
+                return doorGameObjects[3];
+        }
+        else
+        {
+            return null;
         }
     }
 
-    public void SetupEnemies()
+    private void SetupDoors()
+    {
+        foreach(Vector2Int door in activeDoors)
+        {
+            GetDoor(door.x, door.y).SetActive(false);
+        }
+    }
+
+    private void CloseDoors()
+    {
+        foreach(GameObject door in doorGameObjects)
+        {
+            door.SetActive(true);
+        }
+    }
+
+    private void SetupEnemies()
     {
         // procedurally generate enemy locations
 
@@ -108,7 +127,8 @@ public class Arena : MonoBehaviour
     {
         return Vector2.zero;
     } */
-    public void SetupPowerups()
+
+    private void SetupPowerups()
     {
         // procedurally generate pickup locations
 
@@ -119,8 +139,20 @@ public class Arena : MonoBehaviour
         }*/
     }
 
-    public void SetupCharacter()
+    private void SetupCharacter()
     {
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "player")
+        {
+            if (!arenaCompleted)
+            {
+                arenaActive = true;
+                // CloseDoors();
+            }
+        }
     }
 }

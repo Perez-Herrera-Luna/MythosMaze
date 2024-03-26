@@ -86,20 +86,9 @@ public class SceneManager : MonoBehaviour
         yield return null;
 
         asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        // asyncLoad.allowSceneActivation = false;
 
         while (!asyncLoad.isDone)
         {
-            /*float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            userInterfaceMgr.updateProgressBar(progress);
-
-            if (asyncLoad.progress >= 0.9f)
-            {
-                asyncLoad.allowSceneActivation = true;
-
-                gameManager.GameStart();
-            }*/
-
             yield return null;
         }
 
