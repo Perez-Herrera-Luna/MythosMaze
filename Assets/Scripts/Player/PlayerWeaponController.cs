@@ -78,6 +78,7 @@ public class PlayerWeaponController : MonoBehaviour
                 //throwing knife
                 if(playerAttack && attackEnabled)
                 {
+                    throwingKnifeObject.GetComponent<Renderer>().enabled = false;
                     Quaternion finalRotation = Quaternion.Euler(
                         knifeSpawnPoint.rotation.eulerAngles.x + knifeXOffset,
                         knifeSpawnPoint.rotation.eulerAngles.y + knifeYOffset,
@@ -86,12 +87,16 @@ public class PlayerWeaponController : MonoBehaviour
                     attackEnabled = false;
                     var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, finalRotation);
                     knife.GetComponent<Rigidbody>().velocity = knifeSpawnPoint.forward * knifeSpeed;
-                    StartCoroutine(attackCoolDown(daggerDuration));
+                    StartCoroutine(attackCoolDown(2));
+                    
                     Destroy(knife, 2);
+                }
+                else
+                {
+                    throwingKnifeObject.GetComponent<Renderer>().enabled = true;
                 }
 
                 throwingKnifeObject.SetActive(true);
-
                 daggerObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 break;

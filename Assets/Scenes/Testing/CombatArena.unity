@@ -818,6 +818,7 @@ MonoBehaviour:
   weaponSelect: 2
   daggerObject: {fileID: 1688818316}
   throwingKnifeObject: {fileID: 1951052400}
+  throwingKnifePlaceHolder: {fileID: 2054271063}
   bowAndArrowObject: {fileID: 0}
   knifeXOffset: -90
   knifeYOffset: 0
@@ -2958,6 +2959,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951052400}
   m_Mesh: {fileID: -6799329192563040293, guid: f059d55d88bf4774c82c81a787489dfc, type: 3}
+--- !u!1 &2054271063 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2715959806479996454, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+  m_PrefabInstance: {fileID: 1782833823}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2069373965
 GameObject:
   m_ObjectHideFlags: 0
