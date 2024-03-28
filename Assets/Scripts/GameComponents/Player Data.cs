@@ -8,6 +8,8 @@ public class PlayerData : ScriptableObject
      [Header("Movement")]
     public float moveSpeed; // Player's movement speed
 
+    public bool isMoving; 
+
     public float groundDrag; // Player's drag when on the ground
 
     public float jumpForce; // Player's jump force
