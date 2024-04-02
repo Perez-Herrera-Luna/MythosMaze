@@ -1,6 +1,7 @@
 //using System.Diagnostics;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerWeaponController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerWeaponController : MonoBehaviour
     //public GameObject playerHolder;
     private Animator daggerAnim;
 
+    private Animator bowAnim;
     public int weaponSelect = 0;
 
     [Header("Weapon Game Objects")]
@@ -30,20 +32,34 @@ public class PlayerWeaponController : MonoBehaviour
     public float kifeCoolDown = 1.0f;
     public float daggerCoolDown = 0.25f;
 
+    public float chargeEndTime;
+    private float chargeStartTime;
+
+    public bool bowCharging = false;
+
     public Transform knifeTransform;
+
 
     private bool attackEnabled = true;
 
 
     [Header("Weapon animation durations")]
     public float daggerDuration = 0.4f;
-    
+
+    //private InputAction attackAction;
+    //private InputActionAsset playerControls;
 
 
     // Start is called before the first frame update
     void Start()
     {
         daggerAnim = GameObject.Find("Dagger").GetComponent<Animator>();
+        bowAnim = GameObject.Find("Bow and Arrow - Animated").GetComponent<Animator>();
+    }
+
+    private void Awake()
+    {
+        //attackAction = playerControls.FindAction("Attack");
     }
 
     // Update is called once per frame
@@ -51,16 +67,36 @@ public class PlayerWeaponController : MonoBehaviour
     {
         bool playerAttack = playerData.isAttacking;
         weaponSelect = playerData.activeWeapon;
+        Debug.Log(weaponSelect);
 
         switch(weaponSelect)
         {
             case 1:
                 //dagger selected
+                if(playerData.isMoving)
+                {
+                    daggerAnim.SetBool("isIdle", false);
+                    daggerAnim.SetBool("isWalking", true);
+                    //StartCoroutine(walkAnim());
+                }
+                // else
+                // {
+                //     daggerAnim.SetBool("isWalking", false);
+                // }
+
+                if(!playerAttack && !playerData.isMoving)
+                {
+                    daggerAnim.SetBool("isWalking", false);  
+                    daggerAnim.SetBool("isAttacking", false);  
+                    daggerAnim.SetBool("isIdle", true);
+                }
+
                 if(playerAttack)
                 {
                     attackEnabled = false;
                     //Debug.Log("playerAttackTriggered");
                     daggerAnim.SetBool("isIdle", false);  
+                    daggerAnim.SetBool("isWalking", false);
                     daggerAnim.SetBool("isAttacking", true);  
 
                     StartCoroutine(attackAnim());
@@ -103,6 +139,41 @@ public class PlayerWeaponController : MonoBehaviour
 
             case 3:
                 //bow and arrow
+                if(playerData.isMoving)
+                {
+                    bowAnim.SetBool("isIdle", false);
+                    bowAnim.SetBool("isWalking", true);
+                    //StartCoroutine(walkAnim());
+                }
+
+                if(!playerAttack && !playerData.isMoving && !bowCharging)
+                {
+                    bowAnim.SetBool("isWalking", false);  
+                    bowAnim.SetBool("isCharging", false);  
+                    bowAnim.SetBool("isIdle", true);
+                }
+
+                if(Input.GetKeyDown(KeyCode.Mouse0) && attackEnabled)
+                {
+                    chargeStartTime = Time.time;
+                    attackEnabled = false;
+                    bowCharging = true;
+                    bowAnim.SetBool("isIdle", false);
+                    bowAnim.SetBool("isWalking", false);
+                    bowAnim.SetBool("isCharging", true);
+
+                    //StartCoroutine(chargeCounter())
+                }
+
+                if(bowCharging && !playerAttack)
+                {
+                    chargeEndTime = Time.time - chargeStartTime;
+                    Debug.Log(chargeEndTime);
+                    bowCharging = false;
+                    bowAnim.SetBool("isCharging", false);
+                    attackEnabled = true;
+                }
+
                 bowAndArrowObject.SetActive(true);
 
                 daggerObject.SetActive(false);
@@ -133,5 +204,14 @@ public class PlayerWeaponController : MonoBehaviour
         daggerAnim.SetBool("isAttacking", false);  
         //gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
         //playerData.isAttacking = false;
+    }
+
+
+    IEnumerator walkAnim()
+    {
+        yield return new WaitForSeconds(1);
+
+        daggerAnim.SetBool("isIdle", true);  
+        daggerAnim.SetBool("isWalking", false);  
     }
 }

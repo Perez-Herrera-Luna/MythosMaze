@@ -94,13 +94,13 @@ AnimatorStateMachine:
     m_Position: {x: 260, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1740999266648059909}
-    m_Position: {x: 260, y: 230, z: 0}
+    m_Position: {x: 50, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8353625334837773732}
     m_Position: {x: 260, y: 350, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6744635243132369112}
-    m_Position: {x: 520, y: 120, z: 0}
+    m_Position: {x: 500, y: 220, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -185,12 +185,6 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: isCharging
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: isReleased
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0

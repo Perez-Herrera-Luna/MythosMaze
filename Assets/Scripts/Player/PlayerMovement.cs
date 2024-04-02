@@ -285,8 +285,17 @@ public class PlayerMovement : MonoBehaviour
             
         }
         
-        //weapon select
-        
+        //movement detection
+        if(horizontalInput != 0 || verticalInput != 0)
+        {
+            playerData.isMoving = true;
+        }
+        else
+        {
+            playerData.isMoving = false;
+        }
+
+        //weapon select   
         if(weapon1.triggered)
         {
             Debug.Log("weapon 1 selected");
@@ -311,7 +320,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator attackDelay()
     {
         //Debug.Log("Delay start");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.0f);
         //Debug.Log("Delay end");
         playerData.isAttacking = false;
     }
