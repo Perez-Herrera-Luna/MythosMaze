@@ -47,6 +47,7 @@ public class PlayerWeaponController : MonoBehaviour
 
 
     private bool attackEnabled = true;
+    private bool bowEnabled = true;
 
 
     [Header("Weapon animation durations")]
@@ -152,50 +153,31 @@ public class PlayerWeaponController : MonoBehaviour
                 {
                     bowAnim.SetBool("isIdle", false);
                     bowAnim.SetBool("isWalking", true);
-                    //StartCoroutine(walkAnim());
                 }
-
-                /*if(!playerAttack && !playerData.isMoving && !bowCharging)
+                else
                 {
-                    bowAnim.SetBool("isWalking", false);  
-                    bowAnim.SetBool("isCharging", false);  
                     bowAnim.SetBool("isIdle", true);
-                }
-
-                if(Input.GetKeyDown(KeyCode.Mouse0) && attackEnabled)
-                {
-                    chargeStartTime = Time.time;
-                    attackEnabled = false;
-                    bowCharging = true;
-                    bowAnim.SetBool("isIdle", false);
                     bowAnim.SetBool("isWalking", false);
-                    bowAnim.SetBool("isCharging", true);
-
-                    //StartCoroutine(chargeCounter())
                 }
-
-                if(bowCharging && !playerAttack)
-                {
-                    chargeEndTime = Time.time - chargeStartTime;
-                    Debug.Log(chargeEndTime);
-                    bowCharging = false;
-                    bowAnim.SetBool("isCharging", false);
-                    attackEnabled = true;
-                }*/
 
                 //detect key down
-                if(Input.GetMouseButtonDown(0))
+                if(Input.GetMouseButtonDown(0) && bowEnabled)
                 {
                     bowData.charging = true;
                     bowChargeTime = 0f;
 
                     bowAnim.SetBool("isCharging", true);
                 }
-                else if(Input.GetMouseButtonUp(0) && bowData.charging)
-                {
+                else if(Input.GetMouseButtonUp(0) && bowData.charging && bowEnabled) //arrow launched
+                { 
                     bowData.charging = false;
                     bowAnim.SetBool("isCharging", false);
+
+                    //arrowPrefab.SetActive(false);
                     fireArrow();
+
+                    bowEnabled = false;
+                    StartCoroutine(bowCoolDown());
                 }
 
                 if(bowData.charging)
@@ -204,7 +186,8 @@ public class PlayerWeaponController : MonoBehaviour
                 }
 
                 bowAndArrowObject.SetActive(true);
-                arrowPrefab.SetActive(false);
+                arrowPrefab.SetActive(true);
+
                 daggerObject.SetActive(false);
                 throwingKnifeObject.SetActive(false);
                 break;
@@ -223,16 +206,32 @@ public class PlayerWeaponController : MonoBehaviour
 
     void fireArrow()
     {
-        arrowPrefab.SetActive(true);
         // Instantiate and launch the arrow based on chargeTime
         GameObject arrow = Instantiate(arrowPrefab, arrowFirePoint.position, arrowFirePoint.rotation);
         Rigidbody rb = arrow.GetComponent<Rigidbody>();
         // Adjust arrow velocity based on chargeTime
-        rb.velocity = arrowFirePoint.forward * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
 
-        arrow.transform.forward = Vector3.Slerp(arrow.transform.forward, arrow.GetComponent<Rigidbody>().velocity.normalized, Time.deltaTime);
+        Vector3 arrowVelocity = arrowFirePoint.forward * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
 
-        Destroy(arrow, 2);
+        // Adjust arrow rotation to align with game world's forward direction
+        arrow.transform.forward = arrowVelocity.normalized;
+
+        // Apply velocity to the arrow
+        rb.velocity = arrowVelocity;
+
+        // Rotate the arrow to align with its velocity
+        if (rb.velocity != Vector3.zero)
+        {
+            arrow.transform.rotation = Quaternion.LookRotation(rb.velocity);
+        }
+
+        Destroy(arrow, bowData.arrowDuration);
+    }
+
+    IEnumerator bowCoolDown()
+    {
+        yield return new WaitForSeconds(bowData.coolDown);
+        bowEnabled = true;
     }
 
     IEnumerator attackCoolDown(float delayTime)
@@ -249,14 +248,5 @@ public class PlayerWeaponController : MonoBehaviour
         daggerAnim.SetBool("isAttacking", false);  
         //gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
         //playerData.isAttacking = false;
-    }
-
-
-    IEnumerator walkAnim()
-    {
-        yield return new WaitForSeconds(1);
-
-        daggerAnim.SetBool("isIdle", true);  
-        daggerAnim.SetBool("isWalking", false);  
     }
 }
