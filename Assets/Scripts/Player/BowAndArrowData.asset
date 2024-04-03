@@ -15,5 +15,5 @@ MonoBehaviour:
   bowPivot: {fileID: 0}
   charging: 0
   maxChargeTime: 3
-  minArrowSpeed: 10
-  maxArrowSpeed: 30
+  minArrowSpeed: 2
+  maxArrowSpeed: 60

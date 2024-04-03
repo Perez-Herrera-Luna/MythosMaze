@@ -9,6 +9,6 @@ public class BowAndArrowData : ScriptableObject
 
     public bool charging = false;
     public float maxChargeTime = 3f; 
-    public float minArrowSpeed = 10f; 
-    public float maxArrowSpeed = 30f; 
+    public float minArrowSpeed = 1f; 
+    public float maxArrowSpeed = 60f; 
 }

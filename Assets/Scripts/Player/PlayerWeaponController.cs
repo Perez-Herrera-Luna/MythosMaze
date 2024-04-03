@@ -51,6 +51,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     [Header("Weapon animation durations")]
     public float daggerDuration = 0.4f;
+    public float bowDuration = 3.0f;
 
     //private InputAction attackAction;
     //private InputActionAsset playerControls;
@@ -187,10 +188,13 @@ public class PlayerWeaponController : MonoBehaviour
                 {
                     bowData.charging = true;
                     bowChargeTime = 0f;
+
+                    bowAnim.SetBool("isCharging", true);
                 }
                 else if(Input.GetMouseButtonUp(0) && bowData.charging)
                 {
                     bowData.charging = false;
+                    bowAnim.SetBool("isCharging", false);
                     fireArrow();
                 }
 
@@ -214,6 +218,7 @@ public class PlayerWeaponController : MonoBehaviour
                 break;
 
         }
+
     }
 
     void fireArrow()
@@ -225,7 +230,9 @@ public class PlayerWeaponController : MonoBehaviour
         // Adjust arrow velocity based on chargeTime
         rb.velocity = arrowFirePoint.forward * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
 
-        Destroy(rb, 2);
+        arrow.transform.forward = Vector3.Slerp(arrow.transform.forward, arrow.GetComponent<Rigidbody>().velocity.normalized, Time.deltaTime);
+
+        Destroy(arrow, 2);
     }
 
     IEnumerator attackCoolDown(float delayTime)
