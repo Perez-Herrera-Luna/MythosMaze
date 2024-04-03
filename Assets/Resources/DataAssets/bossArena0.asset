@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 662403548de64f44784a376b9b198783, type: 3}
-  m_Name: squareArena
+  m_Name: bossArena0
   m_EditorClassIdentifier: 
-  height: 10
-  width: 10
-  collisionRadius: 3.5355
+  height: 14
+  width: 14
+  collisionRadius: 4.9497
+  isBossArena: 1
   doorLocations:
-  - {x: 0, y: 2}
-  - {x: 0, y: -2}
-  - {x: 2, y: 0}
-  - {x: -2, y: 0}
+  - {x: 0, y: -3}
+  - {x: -3, y: 0}
+  - {x: 0, y: 3}
+  - {x: 3, y: 0}
   enemyPrefabNames:
   - BasicMeleeEnemyPrefab
-  maxNumEnemies: 8
+  maxNumEnemies: 1
   powerupPrefabNames: []
   charPrefabNames: []

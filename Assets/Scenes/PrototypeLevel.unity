@@ -178,7 +178,11 @@ PrefabInstance:
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: currLevel
       value: 
-      objectReference: {fileID: 11400000, guid: b671d3caef03c3d46941136601f5d4fe, type: 2}
+      objectReference: {fileID: 11400000, guid: 92dee1b52eeda5f43af5af45105b6a29, type: 2}
+    - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
+      propertyPath: srcArenaData
+      value: 
+      objectReference: {fileID: 11400000, guid: ae940306fe1492b4b8ee22594d98b12c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

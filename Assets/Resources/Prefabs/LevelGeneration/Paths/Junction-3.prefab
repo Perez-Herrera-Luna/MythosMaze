@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5476856136736948707}
   - component: {fileID: 6941166159950978171}
   m_Layer: 10
-  m_Name: Ground (1)
+  m_Name: SideGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 7257141069043714579}
   - component: {fileID: 9018138314436139839}
   m_Layer: 10
-  m_Name: Ground
+  m_Name: MainGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 662403548de64f44784a376b9b198783, type: 3}
-  m_Name: squareArena
+  m_Name: arena2
   m_EditorClassIdentifier: 
-  height: 10
-  width: 10
-  collisionRadius: 3.5355
+  height: 12
+  width: 8
+  collisionRadius: 3.1622
   doorLocations:
-  - {x: 0, y: 2}
-  - {x: 0, y: -2}
-  - {x: 2, y: 0}
-  - {x: -2, y: 0}
+  - {x: 1, y: -2}
+  - {x: -2, y: -2}
   enemyPrefabNames:
   - BasicMeleeEnemyPrefab
-  maxNumEnemies: 8
+  maxNumEnemies: 4
   powerupPrefabNames: []
   charPrefabNames: []

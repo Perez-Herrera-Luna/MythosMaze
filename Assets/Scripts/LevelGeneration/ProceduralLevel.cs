@@ -2,12 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using System;
 
 public class ProceduralLevel : MonoBehaviour
 {
     public LevelData currLevel;
+
+    public ArenaData bossArenaData;
     public GameObject bossArenaPrefab;
+
+    public ArenaData srcArenaData;
+    public GameObject srcArenaPrefab;
+
+    public List<ArenaData> arenasData;
     public List<GameObject> arenaPrefabs;
+
     public GameObject questCharPrefab;
 
     public GameObject pathPrefab;
@@ -15,14 +24,16 @@ public class ProceduralLevel : MonoBehaviour
     public GameObject threeJunctionPrefab;
     public GameObject fourJunctionPrefab;
 
-    public ArenaData bossArenaData;
-    public List<ArenaData> arenasData;
+    public LevelGraph GetLevelGraph => levelGraph;  // for unit/integration testing 
+
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
 
-    public LevelGraph GetLevelGraph => levelGraph;
+    private GameObject playerObj;
 
-    public GameObject playerObj;
+    private int maxTriesGenLoc = 500;
+    private int maxTriesGenArena = 20;
+    private int maxTriesLevelGen = 3;
 
     // Start is called before the first frame update
     // calls necessary functions for procedural level generation
@@ -39,143 +50,262 @@ public class ProceduralLevel : MonoBehaviour
 
     private void GenerateLevel()
     {
-        GenerateArenas();
+        bool noDeadEnds = true;
+        int numTries = 1;
 
-        GeneratePaths();
+        do
+        {
+            if (!noDeadEnds)
+            {
+                levelGrid.ResetGrid();
+                levelGraph.ResetGraph();
+            }
+
+            GenerateArenas();
+
+            noDeadEnds = GeneratePaths();
+        } while (!noDeadEnds & (numTries++ < maxTriesLevelGen));
+
+        if (numTries == (maxTriesLevelGen + 1))
+            Debug.Log("error: reached maxTriesLevelGen => generated level has at least one dead end");
+       
     }
 
     // initialize grid and graph according to levelData
     private void InitialSetup()
     {
         levelGrid = new LevelGrid(currLevel);
-        levelGraph = new LevelGraph(currLevel);
+        levelGraph = new LevelGraph(currLevel, srcArenaData);
     }
 
-    // helper function
-    // given available arenaData, calculate max dimension of all arenas
-    private void CalculateMaxCollisionRadius()
+    private ArenaData GenerateRandomArenaPrefab()
     {
-        float maxCollisionRadius = 0;
-        foreach(ArenaData arena in arenasData){
-            int arenaRows = arena.height / levelGrid.GridScale;
-            int arenaCols = arena.width / levelGrid.GridScale;
+        int randNum = ThreadSafeRandom.GetRandom(0, arenasData.Count);
 
-            Vector2Int arenaDimensions = new Vector2Int(arenaRows, arenaCols);
-            arena.collisionRadius = arenaDimensions.magnitude;
-            maxCollisionRadius = arena.collisionRadius > maxCollisionRadius ? arena.collisionRadius : maxCollisionRadius;
-        }
+        return arenasData[randNum];
     }
 
     // randomly generate arenas (< maxNumberArenas) in grid
     private void GenerateArenas()
-    {        
-        // set boss arena: center of grid, 1 door
-        levelGraph.AddArena(bossArenaData, levelGrid.GridCenter, levelGrid.GridScale);
-        levelGrid.AddArena(levelGrid.GridCenter, bossArenaData.height, bossArenaData.width);
+    {
+        bool generateArenasSuccess = true;
+        int maxTries = 10;
+        int numTries = 0;
 
-        Vector2Int arenaLocation;
-        int numTriesArena = 0;
-        int numTriesLoc = 0;
-        bool validLoc = false, success = false;
-
-        // loop for each arena (until success or maxNumTries)
-        while((levelGraph.NumArenasAdded < currLevel.maxNumArenas) & (numTriesArena++ < currLevel.maxTriesGenArena))
+        do
         {
-            numTriesLoc = 0;
-            validLoc = false;
-            do{
-                // currently only using one type of arena prefab
-                arenaLocation = levelGrid.GenerateArenaLocation(arenasData[0]);
+            generateArenasSuccess = true;
+            int currArenaIndex = -1;
 
-                // try adding arena node to graph (checks if far enough distance from other arenas)
-                validLoc = levelGraph.AddArena(arenasData[0], arenaLocation, levelGrid.GridScale);
-            } while (!validLoc & (numTriesLoc++ < currLevel.maxTriesGenLoc));
+            // set boss arena: center of grid, 1 door
+            levelGraph.AddArena(bossArenaData, 0, levelGrid.GridCenter, levelGrid.PathWidth, levelGrid.GridRadius);
+            levelGrid.AddArena(levelGrid.GridCenter, currArenaIndex, bossArenaData);
 
-            if(numTriesLoc > currLevel.maxTriesGenLoc){
-                Debug.Log("Reached maxNumTries while trying to generate valid arena location");
-            }
+            Vector2Int arenaLocation;
+            int numTriesArena = 0;
+            int numTriesLoc = 0;
+            bool validLoc = false, locSuccess = false;
+            int randomArenaIndex = 0;
 
-            // if managed to generate a valid location (within bounds, far enough from other arenas)
-            if(validLoc){
-                // try adding arena representation to grid
-                success = levelGrid.AddArena(arenaLocation, arenasData[0].height, arenasData[0].width);
-                if(!success){
-                    Debug.Log("error adding arena to grid");
-                    return;
+            // loop for each arena (until success or maxNumTries)
+            while((levelGraph.NumArenasAdded < currLevel.maxNumArenas) & (numTriesArena++ < maxTriesGenArena))
+            {
+                numTriesLoc = 0;
+                validLoc = false;
+                do{
+                    if (levelGraph.NumArenasAdded < arenasData.Count + 1)
+                        randomArenaIndex = levelGraph.NumArenasAdded - 1;
+                    else
+                        randomArenaIndex = ThreadSafeRandom.GetRandom(0, arenasData.Count);
+
+                    arenaLocation = levelGrid.GenerateArenaLocation(arenasData[randomArenaIndex]);
+
+                    // try adding arena node to graph (checks if far enough distance from other arenas)
+                    validLoc = levelGraph.AddArena(arenasData[randomArenaIndex], randomArenaIndex, arenaLocation, levelGrid.PathWidth, levelGrid.GridRadius);
+                } while (!validLoc & (numTriesLoc++ < maxTriesGenLoc));
+
+                if(numTriesLoc > maxTriesGenLoc){
+                    Debug.Log("Reached maxNumTries while trying to generate valid arena location");
+                    validLoc = false;
                 }
-                
-                numTriesArena = 0;
-            }
-        }
 
-        if(numTriesArena > currLevel.maxTriesGenArena){
-            Debug.Log("Reached maxNumTries while trying to generate new arena");
-        }
+                // if managed to generate a valid location (within bounds, far enough from other arenas)
+                if(validLoc){
+                    currArenaIndex++;
+                    // try adding arena representation to grid
+                    locSuccess = levelGrid.AddArena(arenaLocation, currArenaIndex, arenasData[randomArenaIndex]);
+                    if(!locSuccess){
+                        currArenaIndex--;
+                        Debug.Log("error adding arena to grid");
+                        generateArenasSuccess = false;
+                    }
+                
+                    numTriesArena = 0;
+                }
+            }
+
+            if(numTriesArena > maxTriesGenArena){
+                Debug.Log("Reached maxNumTries while trying to generate new arena");
+                generateArenasSuccess = false;
+            }
+
+            // calculate source arena index of generated level graph
+            if (generateArenasSuccess)
+                generateArenasSuccess = levelGraph.CalculateSourceArenaIndex(levelGrid.PathWidth);
+
+            int srcIndex = levelGraph.SrcArenaIndex;
+            int previousPrefabIndex = levelGraph.GeneratedArenas[srcIndex].ArenaPrefabIndex;
+
+            if (generateArenasSuccess)
+                generateArenasSuccess = levelGrid.UpdateArena(levelGraph.GeneratedArenas[srcIndex].GridLocation, srcIndex, srcArenaData, arenasData[previousPrefabIndex]);
+
+        } while (!generateArenasSuccess & (numTries++ < maxTries));
+
+        if(numTries == maxTries)
+            Debug.Log("error: reached maxTries in generating arenas");
     }
 
     // procedurally generate paths
-    private void GeneratePaths()
+    private bool GeneratePaths()
     {
         // run dijkstras on generated graph
         levelGraph.GenerateShortestPathTree();
-
+        
         // Initial Paths
         GraphNode srcArena, targetArena;
 
         // iterate through shortest path tree, generate initial paths
         foreach(KeyValuePair<int, int> kvp in levelGraph.ShortestPath){
+
             // try to generate path from prevNode to currNode in ShortestPath
             if(kvp.Key != levelGraph.SrcArenaIndex){
                 srcArena = levelGraph.GeneratedArenas[kvp.Value];
                 targetArena = levelGraph.GeneratedArenas[kvp.Key];
 
-                bool pathGenerated = levelGrid.GeneratePath(true, srcArena, targetArena);                
+                bool pathGenerated = levelGrid.GeneratePath(true, srcArena, kvp.Value, targetArena, kvp.Key);                
             }
         }
 
         // Secondary Paths
-        List<GraphNode> availableArenas = new List<GraphNode>();
 
-        foreach(GraphNode arena in levelGraph.GeneratedArenas){
-            if(arena.NumDoors < arena.MaxNumDoors)
-                availableArenas.Add(arena);
+        SortedList<float, (int, GraphNode)> availableArenas = new SortedList<float, (int, GraphNode)>();
+
+        for(int i = 0; i < levelGraph.GeneratedArenas.Count; i++)
+        {
+            GraphNode arena = levelGraph.GeneratedArenas[i];
+            (int, GraphNode) availableArena = (i, arena);
+
+            if (arena.NumDoors < arena.MaxNumDoors)
+            {
+                float numDoors = arena.NumDoors;
+
+                // ensure sortedList key is unique
+                if (availableArenas.ContainsKey(numDoors))
+                    numDoors -= 0.1f * i;
+
+                availableArenas.Add(numDoors, availableArena);
+            }
         }
 
-        while(availableArenas.Count > 0){
-            // get first arena from availableArenas
-            GraphNode currArena = availableArenas[0];
+        while (availableArenas.Count > 0){
+            (int srcIndex, GraphNode srcArena) source = availableArenas.Values[0];
             availableArenas.RemoveAt(0);
 
-            // if currArena was the last one in availableArenas
-            if(availableArenas.Count == 0){
-                if(currArena.NumDoors < 2){
+            if (source.srcIndex >= levelGraph.GeneratedArenas.Count)
+            {
+                Debug.Log("Error: Incorect values for arena indexes");
+                return false;
+            }
+            else if (availableArenas.Count == 0)
+            {
+                if (source.srcArena.NumDoors < 2)
+                {
                     Debug.Log("Error: Arena with only one door");
+                    return false;
                 }
-            }else{
-                foreach(GraphNode availableArena in availableArenas){
-                    // try and add a secondary path connection between currArena and availableArena
-                    if (levelGrid.GeneratePath(false, currArena, availableArena))
+                else
+                {
+                    return true;
+                }
+            }
+
+            bool addDoorSuccess = false;
+            (int index, GraphNode arena) endArena = (source.srcIndex, source.srcArena);
+
+            foreach((int index, GraphNode arena) in availableArenas.Values){
+                // try and add a secondary path connection between currArena and availableArena
+                if (levelGrid.GeneratePath(false, source.srcArena, source.srcIndex, arena, index))
+                {
+                    // if successful path, break out of foreach loop
+                    addDoorSuccess = true;
+                    endArena = (index, arena);
+                    break;
+                }
+            }
+
+            if (addDoorSuccess)
+            {
+                // check updated curr arena to see if can still add door(s)
+                if (source.srcArena.NumDoors < source.srcArena.MaxNumDoors)
+                {
+                    float numDoors = source.srcArena.NumDoors;
+
+                    // ensure sortedList key is unique
+                    while (availableArenas.ContainsKey(numDoors))
                     {
-                        // check curr arena to see if can still add door
-                        if (currArena.NumDoors < currArena.MaxNumDoors)
-                            availableArenas.Add(currArena);
+                        numDoors -= 0.1f;
+                    }
 
-                        // check availableArena to see if need to remove
-                        if (availableArena.NumDoors == availableArena.MaxNumDoors)
-                            availableArenas.Remove(availableArena);
+                    availableArenas.Add(numDoors, (source.srcIndex, source.srcArena));
+                }
 
-                        // break out of foreach loop
-                        break;
+                // check endArena to see if need to remove from availableArenas
+                if (endArena.arena.NumDoors == endArena.arena.MaxNumDoors)
+                {
+                    int removeIndex = availableArenas.IndexOfValue(endArena);
+
+                    if (removeIndex == -1)
+                        Debug.Log("Error: cannot find targetArena in sortedList of availableArenas");
+                    else
+                        availableArenas.RemoveAt(removeIndex);
+                }
+            } else if(availableArenas.Count == 1)
+            {
+                (int index, GraphNode arena) remaining = availableArenas.Values[0];
+                availableArenas.RemoveAt(0);
+
+                // try adding path between final arenas in opposite direction
+                if(!levelGrid.GeneratePath(false, remaining.arena, remaining.index, source.srcArena, source.srcIndex))
+                {
+                    Debug.Log("Error: Arena(s) with only one door");
+                    return false;
+                }
+                else
+                {
+                    if (remaining.arena.NumDoors < remaining.arena.MaxNumDoors)
+                    {
+                        float numDoors = remaining.arena.NumDoors;
+
+                        // ensure sortedList key is unique
+                        while (availableArenas.ContainsKey(numDoors))
+                        {
+                            numDoors -= 0.1f;
+                        }
+
+                        availableArenas.Add(numDoors, remaining);
                     }
                 }
             }
         }
 
+        return true;
     }
 
     // function which makes necessary calls to instantiate all arenas and paths in the level
     public void LoadLevel()
     {
+        // levelGrid.PrintGrid();
+        
         LoadArenas();
 
         LoadPaths();
@@ -187,23 +317,36 @@ public class ProceduralLevel : MonoBehaviour
         GameObject arenaInstance;
         Arena arenaScript;
         Vector3 arenaLocation;
-        bool bossArena = false;
 
         for(int i = 0; i < levelGraph.NumArenasAdded; i++){
-            arenaLocation = levelGraph.GeneratedArenas[i].ConvertArenaLocation(levelGrid.GridScale);
-            arenaInstance = Instantiate(arenaPrefabs[0], arenaLocation, Quaternion.identity, gameObject.transform);
+            arenaLocation = levelGraph.GeneratedArenas[i].ConvertArenaLocation(levelGrid.PathWidth);
 
-            if (i == 0)
-                bossArena = true;
-            else if (i == levelGraph.SrcArenaIndex)
+            GameObject arenaPrefab;
+            Quaternion rotation = Quaternion.identity;
+            bool sourceArena = false;
+
+            if (i == 0) {
+                arenaPrefab = bossArenaPrefab;
+                rotation.eulerAngles = new Vector3(0, levelGraph.GeneratedArenas[i].GetRotation(bossArenaData.doorLocations), 0);
+            }
+            else if (i == levelGraph.SrcArenaIndex) {
+                arenaPrefab = srcArenaPrefab;
+                sourceArena = true;
+            }else {
+                arenaPrefab = arenaPrefabs[levelGraph.GeneratedArenas[i].ArenaPrefabIndex];
+            }
+               
+            arenaInstance = Instantiate(arenaPrefab, arenaLocation, rotation, gameObject.transform);
+
+            if (sourceArena)
+            {
                 SetupPlayer();
+            }
 
             arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
 
-            // set arena initial values (isBossArena, hasCharacter, arenaLevel, availableDoorLocations)
-            arenaScript.SetInitialValues(bossArena, false, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
-
-            bossArena = false;
+            // set arena initial values (isSourceArena, hasCharacter, arenaLevel, availableDoorLocations)
+            arenaScript.SetInitialValues(sourceArena, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
         }
 
         if(levelGraph.NumArenasAdded != levelGraph.GeneratedArenas.Count){
@@ -252,6 +395,6 @@ public class ProceduralLevel : MonoBehaviour
 
         PlayerMovement playerMovController = playerObj.GetComponent<PlayerMovement>();
         playerMovController.LevelLoad = true;
-        playerMovController.InitLoc = levelGraph.CalculatePlayerInitLoc(levelGrid.GridScale);
+        playerMovController.InitLoc = levelGraph.CalculatePlayerInitLoc(levelGrid.PathWidth);
     }
 }

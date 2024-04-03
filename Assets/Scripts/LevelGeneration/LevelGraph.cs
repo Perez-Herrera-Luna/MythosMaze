@@ -7,6 +7,7 @@ using UnityEngine;
 public class LevelGraph
 {
     private LevelData currLevel;
+    private ArenaData srcArenaData;
     // Graph Attributes (list of nodes + adjacency list)
     private int numArenasAdded = 0;
     public int  NumArenasAdded => numArenasAdded;
@@ -15,6 +16,7 @@ public class LevelGraph
     public List<GraphNode> GeneratedArenas => generatedArenas; 
     private List<(int, float)>[] arenaAdjacencyList;    // array of Lists
     private float maxCollisionRadius = 0;
+    public float MaxCollisionRadius => maxCollisionRadius;
 
     public GraphNode GetBossArena => generatedArenas[0];
 
@@ -26,9 +28,10 @@ public class LevelGraph
     private bool[] visited;
     private NodePriorityQueue nodePriorityQueue;    // priority queue with minDistances to boss
 
-    public LevelGraph(LevelData level)
+    public LevelGraph(LevelData level, ArenaData sourcArenaData)
     {
         currLevel = level;
+        srcArenaData = sourcArenaData;
         // dijkstra's algo setup
         shortestPath = new Dictionary<int, int>();
         nodePriorityQueue = new NodePriorityQueue();
@@ -36,17 +39,34 @@ public class LevelGraph
         visited = new bool[currLevel.maxNumArenas];
     }
 
+    public void ResetGraph()
+    {
+        shortestPath = new Dictionary<int, int>();
+        nodePriorityQueue = new NodePriorityQueue();
+        arenaAdjacencyList = new List<(int, float)>[currLevel.maxNumArenas];
+        visited = new bool[currLevel.maxNumArenas];
+
+        generatedArenas = new List<GraphNode>();
+        maxCollisionRadius = 0;
+        numArenasAdded = 0;
+    }
+
     // Try adding new arena node to graph (compare location with already generated arenas)
     // called from ProceduralLevel
-    public bool AddArena(ArenaData arena, Vector2Int newLoc, int gridScale)
+    public bool AddArena(ArenaData arena, int arenaPrefabIndex, Vector2Int newLoc, int pathWidth, float gridRadius)
     {
         // check if boss arena (1st arena to be added)
         if(numArenasAdded == 0){
 
-            // create graphNode with distToBoss = 0 and only has 1 door
+            if (!arena.isBossArena)
+            {
+                Debug.Log("Error: trying to assign non-boss arena as boss arena");
+            }
+
+            // create graphNode with distToBoss = 0, maxNumDoors = 1
             GraphNode currNode = new GraphNode(0, 1);
             // set initial arena data in graphNode
-            currNode.SetInitialNodeValues(newLoc, arena, gridScale);
+            currNode.SetInitialNodeValues(newLoc, arena, pathWidth, -1);
             generatedArenas.Add(currNode);
             
             // initially, boss arena has no connections ( no other arenas generated )
@@ -56,89 +76,122 @@ public class LevelGraph
 
             // if everything worked correctly
             numArenasAdded++;
-            return true;
         }
-
-        // otherwise (i.e. arena is not boss arena)
-        List<(int, float)> adjArenas = new List<(int, float)>();
-        float distance = 0, distToBoss = float.MaxValue;
-        int existingArenaIndex = 0;
-        int numDoors = 0;
-
-        // check if new arena location is far enough away from already generated arenas
-        foreach(GraphNode existingArena in generatedArenas){
-            // calculate distance between generated grid location and existing arenas
-            distance = Vector2.Distance(newLoc, existingArena.GridLocation);
-
-            // basic check comparing 'radius' of arena w/ maxCollisionRadius
-            if(distance < arena.collisionRadius + maxCollisionRadius + currLevel.arenaDistanceBuff){
-                // large likelihood of overlap between arena and already generated arenas
-                return false;
-            }
-
-            distance = distance * 2; // buff distance
-
-            // if arena just checked is the boss arena (index 0)
-            if(existingArenaIndex == 0){
-                // buff distance to boss arena
-                distance *= 4;
-                distToBoss = distance;
-            }
-
-            // add generated arena to curr list of adjacent arenas
-            adjArenas.Add((existingArenaIndex, distance));
-            existingArenaIndex++;
-        }
-
-        // if reached here, then arena location is far enough from all previously generated arenas
-        // can therefore add arena to generatedArenas, arenaAdjacencyList
-
-        // add edge to existing arenas connecting newly added arena with distance just calculated
-        foreach((int index, float dist) connection in adjArenas){
-            // numArenas, since incremented at the end of AddArena(), currently represents index of new arena
-            arenaAdjacencyList[connection.index].Add((numArenasAdded, connection.dist));
-        }
-
-        // (1) calculate num doors based on distToBoss
-        if (distToBoss < (currLevel.gridRings[0] * currLevel.gridRings[0]))    // arenas closest to boss 
-            numDoors = ThreadSafeRandom.GetRandom(3, 5);
-        else if (distToBoss < (currLevel.gridRings[1] * currLevel.gridRings[1]))
-            numDoors = ThreadSafeRandom.GetRandom(2, 4);
         else
-            numDoors = 2;   // all other arenas must have at least 2 doors
-        
+        {
+            List<(int, float)> adjArenas = new List<(int, float)>();
+            float distance = 0, distToBoss = float.MaxValue;
+            int existingArenaIndex = 0;
 
-        // set Graph node for arena with appropriate parameters
-        GraphNode newNode = new GraphNode(distToBoss, numDoors);
-        newNode.SetInitialNodeValues(newLoc, arena, gridScale);
+            // check if new arena location is far enough away from already generated arenas
+            foreach (GraphNode existingArena in generatedArenas)
+            {
+                // calculate distance between generated grid location and existing arenas
+                distance = Vector2.Distance(newLoc, existingArena.GridLocation);
 
-        generatedArenas.Add(newNode);
-        arenaAdjacencyList[numArenasAdded] = adjArenas;
-        maxCollisionRadius = arena.collisionRadius > maxCollisionRadius ? arena.collisionRadius : maxCollisionRadius;
+                // basic check comparing 'radius' of arena w/ maxCollisionRadius
+                if (distance < arena.collisionRadius + maxCollisionRadius + currLevel.arenaDistanceBuff)
+                {
+                    // large likelihood of overlap between arena and already generated arenas
+                    return false;
+                }
 
-        numArenasAdded++;
+                distance = distance * 2; // buff distance
+
+                // if arena just checked is the boss arena (index 0)
+                if (existingArenaIndex == 0)
+                {
+                    // buff distance to boss arena
+                    distance *= 4;
+                    distToBoss = distance;
+                }
+
+                // add generated arena to curr list of adjacent arenas
+                adjArenas.Add((existingArenaIndex, distance));
+                existingArenaIndex++;
+            }
+
+            // add edge to existing arenas connecting newly added arena with distance just calculated
+            foreach ((int index, float dist) connection in adjArenas)
+            {
+                // numArenas, since incremented at the end of AddArena(), currently represents index of new arena
+                arenaAdjacencyList[connection.index].Add((numArenasAdded, connection.dist));
+            }
+
+            // if collision was detected
+            if (distToBoss == -1)
+                return false;
+
+            // buff gridRadius (same amount as buff arena distToBoss above
+            gridRadius *= 8;
+
+            // Debug.Log("adding arena: " + numArenasAdded + " w/ distToBoss, loc = " + distToBoss + ", " + newLoc);
+
+            // set Graph node for arena with appropriate parameters
+            GraphNode newNode = new GraphNode(distToBoss, -1);
+            newNode.SetInitialNodeValues(newLoc, arena, pathWidth, arenaPrefabIndex);
+
+            generatedArenas.Add(newNode);
+            arenaAdjacencyList[numArenasAdded] = adjArenas;
+            maxCollisionRadius = arena.collisionRadius > maxCollisionRadius ? arena.collisionRadius : maxCollisionRadius;
+
+            numArenasAdded++;
+        }
+
         return true;
     }
 
-    // public function called by proceduralLevel to generate shortest path
-    public void GenerateShortestPathTree()
+    // returns true if no collision detected
+    private bool CheckForArenaCollision(ArenaData arena, Vector2Int arenaLoc)
     {
-        // PrintArenaAdjacencyList();
+        float distance = 0;
 
+        // check if new arena location is far enough away from already generated arenas
+        foreach (GraphNode existingArena in generatedArenas)
+        {
+            // calculate distance between generated grid location and existing arenas
+            distance = Vector2.Distance(arenaLoc, existingArena.GridLocation);
+
+            if(distance != 0)
+            {
+                // basic check comparing 'radius' of arena w/ maxCollisionRadius
+                if (distance < arena.collisionRadius + maxCollisionRadius + currLevel.arenaDistanceBuff)
+                {
+                    // large likelihood of overlap between arena and already generated arenas
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public bool CalculateSourceArenaIndex(int pathWidth)
+    {
         // compute srcArena index = index of arena furthest distance from gridCenter (bossArena)
         float largestDist = 0;
-        for(int i = 0; i < numArenasAdded; i++){
+        for (int i = 0; i < numArenasAdded; i++)
+        {
             float arenaDist = generatedArenas[i].DistToBoss;
 
-            if(arenaDist > largestDist){
+            if (arenaDist > largestDist)
+            {
                 srcArenaIndex = i;
                 largestDist = arenaDist;
             }
         }
 
-        // set source arena max number of doors to 4
-        generatedArenas[srcArenaIndex].MaxNumDoors = 4;
+        generatedArenas[srcArenaIndex].UpdateArenaDataValue(srcArenaData, pathWidth);
 
+        if (CheckForArenaCollision(srcArenaData, generatedArenas[srcArenaIndex].GridLocation))
+            return true;
+        else
+            return false;
+    }
+
+    // public function called by proceduralLevel to generate shortest path
+    public void GenerateShortestPathTree()
+    {
         // initialize dijkstra algorithm helper attributes
 
         // reset shortest path values
@@ -206,17 +259,8 @@ public class LevelGraph
         }
     }
 
-    public void PrintArenaAdjacencyList()
+    public Vector3 CalculatePlayerInitLoc(int pathWidth)
     {
-        for(int i = 0; i < numArenasAdded; i++){
-            for(int j = 0; j < arenaAdjacencyList[i].Count; j++){
-                Debug.Log("index: " + i + ", adjNode: " + arenaAdjacencyList[i][j].Item1 + ", dist: " + arenaAdjacencyList[i][j].Item2);
-            }
-        }
-    }
-
-    public Vector3 CalculatePlayerInitLoc(int gridScale)
-    {
-        return generatedArenas[srcArenaIndex].PlayerInitLoc(gridScale);
+        return generatedArenas[srcArenaIndex].PlayerInitLoc(pathWidth);
     }
 }

@@ -7,28 +7,46 @@ public class GridNode
     private int numConnections = 0;
     private List<Vector2Int> currConnections = new List<Vector2Int>();   // stores Vector2Int.up, .down, .left, and .right
     private List<Vector2Int> currCorners = new List<Vector2Int>();
-    public List<Vector2Int> CurrCorners => currCorners;
     private Queue<Vector2Int> pathExplorationOrder = new Queue<Vector2Int>();
-    public Queue<Vector2Int> PathExplorationOrder => pathExplorationOrder;
+    private HashSet<int> arenaConnections = new HashSet<int>();
 
     public GridNode() => nodeValue = 'I';
 
-    public GridNode(char val) => nodeValue = val;
+    public GridNode(char val)
+    {
+        if(val == 'E' |  val == 'X' | val == 'A')
+        {
+            nodeValue = val;
+        }
+        else
+        {
+            nodeValue = 'X';
+        }
+    }
+
+    public GridNode(char val, int arena)
+    {
+        if(val == 'D')
+        {
+            nodeValue = val;
+            arenaConnections.Add(arena);
+        }
+    }
 
     public char NodeValue => nodeValue;
     public int NumConnections => numConnections;
-
-    // helper function called in process of adding new path connection
-    // blocks corner if not already in use
-    public void BlockCorner()
-    {
-        if(nodeValue == 'E')
-            nodeValue = 'X';
-    }
+    public List<Vector2Int> CurrCorners => currCorners;
+    public Queue<Vector2Int> PathExplorationOrder => pathExplorationOrder;
+    public HashSet<int> ArenaConnections => arenaConnections;
 
     // function which adds path connection in given direction to currNode
     // returns true if successful, false if unable to add connection
-    public bool AddConnection(Vector2Int newConnection){
+    public bool AddConnection(Vector2Int newConnection, int startArena, int endArena, bool reachedEndArena){
+
+        arenaConnections.Add(startArena);
+
+        if (reachedEndArena) 
+            arenaConnections.Add(endArena);
 
         // if node is currently empty, add connection, change node to path
         if (nodeValue == 'E')
@@ -107,7 +125,7 @@ public class GridNode
                 currConnections.Add(newConnection);
 
                 // add appropriate corner to list
-                if(Vector2.Dot(currConnections[0], newConnection) == 0){
+                if (Vector2.Dot(currConnections[0], newConnection) == 0){
                     currCorners.Add(currConnections[0] + newConnection);
                 }else if(Vector2.Dot(currConnections[1], newConnection) == 0){
                     currCorners.Add(currConnections[1] + newConnection);
@@ -146,13 +164,15 @@ public class GridNode
         }
 
         // if reached here, error
-        Debug.Log("Error: trying to connect to invalid nodeType");
+        Debug.Log("Error: trying to connect to invalid nodeType: " + nodeValue);
         return false;   
     }
 
     // generate order of path direction
     public void CalculateExplorationOrder(Vector2Int targetDir, int drunkenRatio)
     {
+        pathExplorationOrder.Clear();
+
         // check if target is nearby
         if (targetDir.magnitude < 3)
         {

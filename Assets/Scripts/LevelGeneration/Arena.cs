@@ -8,20 +8,18 @@ public class Arena : MonoBehaviour
     private LevelData arenaLevel;      // arena level data (determines max enemy power/arena setup)
     public ArenaData arenaData;
     private bool isBossArena;    // designates if combatArena is boss level or not
+    private bool isSourceArena;
     private bool hasCharacter;   // designates if this arena has a quest character within it or not   
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
-    public bool arenaCompleted = false;
-
-    public List<GameObject> enemyPrefabs;    // list of monster prefabs that can appear in this level
-    public List<GameObject> powerupPrefabs;   // list of enemyPrefabs that can appear in this level
-    
-    public List<GameObject> bossPrefabs;      // boss
-    public List<GameObject> charPrefabs;       // quest character prefab
-    public List<GameObject> itemPrefabs;       // quest item prefab
+    public bool arenaCompleted = false; // arena is completed once player defeats all enemies within
 
     private List<Vector2Int> activeDoors = new List<Vector2Int>();
     public List<GameObject> doorGameObjects;
+    private List<Vector2Int> doorLocations = new List<Vector2Int>();
 
+    private List<GameObject> enemyPrefabs = new List<GameObject>();
+
+    public bool IsSourceArena => isSourceArena;
     public bool IsBossArena => isBossArena;
     public bool HasCharacter => hasCharacter;
     public int GetLevel => arenaLevel.level;
@@ -38,14 +36,34 @@ public class Arena : MonoBehaviour
         
     }
 
-    public void SetInitialValues(bool bossArena, bool hasChar, LevelData currLevel, List<Vector2Int> availableDoorLocs)
+    public void SetInitialValues(bool isSrcArena, LevelData currLevel, List<Vector2Int> availableDoorLocs)
     {
-        isBossArena = bossArena;
-        hasCharacter = hasChar;
+        if (arenaData.isBossArena)
+            isBossArena = true;
+
+        if (arenaData.charPrefabNames.Count > 0)
+            hasCharacter = true;
+
+        isSourceArena = isSrcArena;
         arenaLevel = currLevel;
         activeDoors = arenaData.doorLocations.Except(availableDoorLocs).ToList();
 
+        doorLocations = isBossArena ? activeDoors : arenaData.doorLocations;
+
+        if (doorLocations.Count != doorGameObjects.Count)
+            Debug.Log("Error: mismatch in arena door locations / door game objects");
+
+        /*Debug.Log("arena active doors: ");
+
+        foreach(var door in activeDoors)
+        {
+            Debug.Log(door);
+
+        }*/
+
         SetupDoors();
+
+        LoadPrefabs();
 
         SetupEnemies();
         SetupPowerups();
@@ -54,35 +72,33 @@ public class Arena : MonoBehaviour
             SetupCharacter();
     }
 
-    private GameObject GetDoor(int x, int y)
+    private GameObject GetDoor(Vector2Int door)
     {
-        // north/south doors
-        if (x == 0)
+        int doorIndex = -1;
+        for(int i = 0; i < doorLocations.Count; i++)
         {
-            if (y > 0)
-                return doorGameObjects[0];
-            else
-                return doorGameObjects[1];
-
+            if (doorLocations[i] == door)
+                doorIndex = i;
         }
-        else if (y == 0)   // East/West Doors
+
+        if (doorIndex == -1)
         {
-            if (x > 0)
-                return doorGameObjects[2];
-            else
-                return doorGameObjects[3];
+            Debug.Log("error, incorrect door location");
+            return null;
         }
         else
         {
-            return null;
+            return doorGameObjects[doorIndex];
         }
     }
 
     private void SetupDoors()
     {
+        CloseDoors();
+
         foreach(Vector2Int door in activeDoors)
         {
-            GetDoor(door.x, door.y).SetActive(false);
+            GetDoor(door).SetActive(false);
         }
     }
 
@@ -91,6 +107,19 @@ public class Arena : MonoBehaviour
         foreach(GameObject door in doorGameObjects)
         {
             door.SetActive(true);
+        }
+    }
+
+    private void LoadPrefabs()
+    {
+        foreach(string enemyName in arenaData.enemyPrefabNames)
+        {
+            GameObject enemyPrefab = Resources.Load<GameObject>("Prefabs/Enemies/" + enemyName);
+
+            if (enemyPrefab == null)
+                Debug.Log("Error finding enemy prefab in Assets/Resources/Prefabs/Enemies folder");
+            else
+                enemyPrefabs.Add(enemyPrefab);
         }
     }
 

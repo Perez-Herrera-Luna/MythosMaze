@@ -15,13 +15,8 @@ MonoBehaviour:
   level: 0
   gridRows: 41
   gridCols: 41
-  gridScale: 2
-  gridRings:
-  - 20
-  - 30
+  pathWidth: 2
   maxNumArenas: 5
-  maxTriesGenArena: 15
   arenaDistanceBuff: 2
-  maxTriesGenLoc: 1000
   drunkenRatio: 6
-  maxPathLength: 0
+  maxPathLength: 20
