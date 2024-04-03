@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerWeaponController : MonoBehaviour
 {
     public PlayerData playerData;
+    public BowAndArrowData bowData;
     public PlayerMovement moveScript;
     //public GameObject playerHolder;
     private Animator daggerAnim;
@@ -17,6 +18,7 @@ public class PlayerWeaponController : MonoBehaviour
     public GameObject daggerObject;
     public GameObject throwingKnifeObject;
     public GameObject bowAndArrowObject;
+    public GameObject arrowPrefab;
     //public GameObject throwingSpearObject;
     //public GameObject slingshotObject;
     //public GameObject boomerangObject;
@@ -27,10 +29,14 @@ public class PlayerWeaponController : MonoBehaviour
     public float knifeZOffset;
 
     public Transform knifeSpawnPoint;
+    public Transform arrowFirePoint;
+
     public GameObject knifePrefab;
     public float knifeSpeed = 20.0f;
     public float kifeCoolDown = 1.0f;
     public float daggerCoolDown = 0.25f;
+
+    private float bowChargeTime = 0f;
 
     public float chargeEndTime;
     private float chargeStartTime;
@@ -108,6 +114,7 @@ public class PlayerWeaponController : MonoBehaviour
 
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
+                arrowPrefab.SetActive(false);
                 break;
             
             case 2:
@@ -135,6 +142,7 @@ public class PlayerWeaponController : MonoBehaviour
                 throwingKnifeObject.SetActive(true);
                 daggerObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
+                arrowPrefab.SetActive(false);
                 break;
 
             case 3:
@@ -146,7 +154,7 @@ public class PlayerWeaponController : MonoBehaviour
                     //StartCoroutine(walkAnim());
                 }
 
-                if(!playerAttack && !playerData.isMoving && !bowCharging)
+                /*if(!playerAttack && !playerData.isMoving && !bowCharging)
                 {
                     bowAnim.SetBool("isWalking", false);  
                     bowAnim.SetBool("isCharging", false);  
@@ -172,10 +180,27 @@ public class PlayerWeaponController : MonoBehaviour
                     bowCharging = false;
                     bowAnim.SetBool("isCharging", false);
                     attackEnabled = true;
+                }*/
+
+                //detect key down
+                if(Input.GetMouseButtonDown(0))
+                {
+                    bowData.charging = true;
+                    bowChargeTime = 0f;
+                }
+                else if(Input.GetMouseButtonUp(0) && bowData.charging)
+                {
+                    bowData.charging = false;
+                    fireArrow();
+                }
+
+                if(bowData.charging)
+                {
+                    bowChargeTime += Time.deltaTime;
                 }
 
                 bowAndArrowObject.SetActive(true);
-
+                arrowPrefab.SetActive(false);
                 daggerObject.SetActive(false);
                 throwingKnifeObject.SetActive(false);
                 break;
@@ -185,9 +210,22 @@ public class PlayerWeaponController : MonoBehaviour
                 daggerObject.SetActive(false);
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
+                arrowPrefab.SetActive(false);
                 break;
 
         }
+    }
+
+    void fireArrow()
+    {
+        arrowPrefab.SetActive(true);
+        // Instantiate and launch the arrow based on chargeTime
+        GameObject arrow = Instantiate(arrowPrefab, arrowFirePoint.position, arrowFirePoint.rotation);
+        Rigidbody rb = arrow.GetComponent<Rigidbody>();
+        // Adjust arrow velocity based on chargeTime
+        rb.velocity = arrowFirePoint.forward * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
+
+        Destroy(rb, 2);
     }
 
     IEnumerator attackCoolDown(float delayTime)
