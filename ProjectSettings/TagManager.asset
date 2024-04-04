@@ -15,6 +15,11 @@ TagManager:
   - melee_enemy
   - meleeWeapon
   - playerWeapon
+  - skeleton
+  - bat
+  - centaur
+  - spartan
+  - Stymphalian
   layers:
   - Default
   - TransparentFX

@@ -142,17 +142,24 @@ public class PlayerWeaponController : MonoBehaviour
 
             case 3:
                 //bow and arrow
-                if(playerData.isMoving)
+                if(playerData.isMoving && bowEnabled)
                 {
                     bowAnim.SetBool("isIdle", false);
                     bowAnim.SetBool("isWalking", true);
                 }
-                else
+                
+                if(!playerData.isMoving && bowEnabled)
                 {
                     bowAnim.SetBool("isIdle", true);
                     bowAnim.SetBool("isWalking", false);
                 }
 
+                if(!bowEnabled)
+                {
+                    bowAnim.SetBool("isIdle", false);
+                    bowAnim.SetBool("isWalking", false);
+                }
+                
                 //detect key down
                 if(Input.GetMouseButtonDown(0) && bowEnabled)
                 {

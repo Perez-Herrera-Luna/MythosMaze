@@ -3,36 +3,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Data Files")]
     public EnemyData enemy;
-    public bool hasWeapon;
     public WeaponData weapon;
-
     public PlayerData playerData;
-
-    [Header("Enemy Stats")]
-    //enemy type
-    public string enemyType = "Basic_Melee"; //Enemy type: Basic_Melee, Basic_Ranged, Sniper_Ranged, Shotgun_Ranged, 
-                             //Predictive_Ranged, Winged_Melee, Winged_Ranged, Shielded_Ranged, Bard
-    private float moveSpeed; //enemy's move speed
-    public float health;
-
-    //Attack
-    public float attackCoolDown; //time between attacks
-    public bool hasAttacked = false;   //true if currently executing an attack
-
-    //states
-    public float sightRange, attackRange;
-    bool playerInSight, playerAttackable;
-
-    public float wanderSpeed; // enemy's wandering speed
-    public float chaseSpeed; // enemy's run speed
-
-    public float enemyTurnSpeed; // how fast the enemy can turn
-
-    public float groundDrag; // enemy's drag when on the ground
-    public float airMultiplier; //enemy's speed multiplier in air
-    public float roamRange; //range from current position the walkpoints/flypoints can be set to
-    public float flyingHeightMax; // maximum height that a flying enemy can travel to.
 
     [Header("Transforms")]
     public Transform player;
@@ -43,19 +17,22 @@ public class Enemy : MonoBehaviour
     public LayerMask whatIsGround; // Layermask for ground detection
     bool isGrounded;
 
+    [Header("Player Detection")]
+    public GameObject playerObject;
     public LayerMask whatIsPlayer; //Layermask for player detection
 
-    Vector3 moveDirection;
+    [Header("Enemy Physics")]
     Rigidbody rb;
 
+    [Header("Attacking")]
+    public bool isAttacking;
+
     //wandering
-    public Vector3 walkPoint; //point on the ground to walk to
-    bool pointChosen;   //true if a new walkpoint is set
+    private Vector3 moveDirection;
+    private Vector3 walkPoint; //point on the ground to walk to
+    private bool pointChosen;   //true if a new walkpoint is set
 
-    public PlayerMovement moveScript; 
-
-    public GameObject playerObject;
-
+    //player attacking
     public bool invulnerable = false;
 
     private void Awake()
@@ -70,32 +47,28 @@ public class Enemy : MonoBehaviour
         rb.freezeRotation = true;
 
         //disable gravity if flight enemy
-        if(enemyType == "Winged_Melee" || enemyType == "Winged_Ranged")
+        if(enemy.canFly)
         {
             gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
 
-        playerObject = GameObject.Find("Player");
-        moveScript = playerObject.GetComponent<PlayerMovement>();
+        enemy.health = enemy.maxHealth;
+        enemy.hasAttacked = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(moveScript == null)
-        {
-            //Debug.Log("moveScript Null!");
-        }
         //check enemy health
         checkHealth();
-        //raycasting for ground detection
 
+        //raycasting for ground detection
         isGrounded = Physics.Raycast(transform.position, Vector3.down, enemyHeight * 0.5f + 0.2f, whatIsGround);
 
         //apply drag
         if(isGrounded)
         {
-            rb.drag = groundDrag;
+            rb.drag = enemy.groundDrag;
         }
         else
         {
@@ -107,45 +80,40 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance (transform.position, player.position);
 
-        if(distance < sightRange && distance > attackRange)
+        if(distance < enemy.sightRange && distance > enemy.attackRange)
         {
-            playerInSight = true;
-            playerAttackable = false;
+            enemy.playerInSight = true;
+            enemy.playerAttackable = false;
         }
-        if(distance < sightRange && distance < attackRange)
+        if(distance < enemy.sightRange && distance < enemy.attackRange)
         {
-            playerAttackable = true;
-            playerInSight = true;
+            enemy.playerAttackable = true;
+            enemy.playerInSight = true;
         }
-        if(distance > sightRange)
+        if(distance > enemy.sightRange)
         {
-            playerInSight = false;
-            playerAttackable = false;
+            enemy.playerInSight = false;
+            enemy.playerAttackable = false;
         }
 
-        if(!playerInSight && !playerAttackable)
+        if(!enemy.playerInSight && !enemy.playerAttackable)
         {
             wandering();
         }
-        if(playerInSight && !playerAttackable)
+        if(enemy.playerInSight && !enemy.playerAttackable)
         {
             chasing();
         }
-        if(playerAttackable)
+        if(enemy.playerAttackable)
         {
-            //Debug.Log("attacking");
+            //Debug.Log("enemy attacking");
             attacking();
         }
         
+        isAttacking = enemy.hasAttacked;
     }
 
-    IEnumerator coolDownTimer()
-    {
-        hasAttacked = true;
-        yield return new WaitForSeconds(attackCoolDown);
-        hasAttacked = false;
-        //Debug.Log("cooldown finished");
-    }
+    
 
     private void wandering()
     {
@@ -171,13 +139,13 @@ public class Enemy : MonoBehaviour
     private void searchForPoint()
     {
         //create a random point within wandering range
-        float randomZ = Random.Range(-roamRange, roamRange);
-        float randomX = Random.Range(-roamRange, roamRange);
-        float randomY = Random.Range(flyingHeightMax-1, flyingHeightMax);
+        float randomZ = Random.Range(-enemy.roamRange, enemy.roamRange);
+        float randomX = Random.Range(-enemy.roamRange, enemy.roamRange);
+        float randomY = Random.Range(enemy.flyingHeightMax-1, enemy.flyingHeightMax);
 
         walkPoint = new Vector3();
 
-        switch(enemyType)
+        switch(enemy.name)
         {
             case "Winged_Melee":
                 walkPoint.x = transform.position.x + randomX;
@@ -207,7 +175,7 @@ public class Enemy : MonoBehaviour
         }
 
         //check if the point chosen is valid
-        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && (enemyType != "Winged_Melee" || enemyType != "Winged_Ranged"))
+        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && (enemy.name != "Winged_Melee" || enemy.name != "Winged_Ranged"))
         {
             pointChosen = true;
         }
@@ -216,7 +184,7 @@ public class Enemy : MonoBehaviour
     private void chasing()
     {
         Vector3 target;
-        switch(enemyType)
+        switch(enemy.name)
         {
             case "Winged_Melee":
 
@@ -233,9 +201,9 @@ public class Enemy : MonoBehaviour
                     target.y = player.position.y;
                 }
 
-                if(target.y >= flyingHeightMax)
+                if(target.y >= enemy.flyingHeightMax)
                 {
-                    target.y = flyingHeightMax - (float)0.5;
+                    target.y = enemy.flyingHeightMax - (float)0.5;
                 }
                 break;
 
@@ -244,9 +212,9 @@ public class Enemy : MonoBehaviour
                 target.z = player.position.z;
                 target.y = transform.position.y;
                 
-                if(target.y >= flyingHeightMax)
+                if(target.y >= enemy.flyingHeightMax)
                 {
-                    target.y = flyingHeightMax - (float)0.5;
+                    target.y = enemy.flyingHeightMax - (float)0.5;
                 }
                 break;
 
@@ -266,18 +234,20 @@ public class Enemy : MonoBehaviour
 
     private void attacking()
     {
-        if(!hasAttacked)
+        if(!enemy.hasAttacked)
         {
-            
+            Debug.Log("Enemy Attacking!");
+            enemy.hasAttacked = true;
+            Debug.Log("setting hasAttacked to true");
             Vector3 backOff = player.position;
-            if(enemyType == "Winged_Melee")
+            if(enemy.name == "Winged_Melee")
             {
                 //attack code
                 backOff.y += 5;
                 moveEnemy(backOff, 1);
             }
 
-            if(enemyType == "Baic_Melee")
+            if(enemy.name == "Skeleton")
             {
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player
@@ -292,11 +262,11 @@ public class Enemy : MonoBehaviour
         float moveSpeed;
         if(mode == 0)
         {
-            moveSpeed = wanderSpeed;
+            moveSpeed = enemy.wanderSpeed;
         }
         else if(mode == 1)
         {
-            moveSpeed = chaseSpeed;
+            moveSpeed = enemy.chaseSpeed;
         }
         else
         {
@@ -307,7 +277,7 @@ public class Enemy : MonoBehaviour
         if (isGrounded)
         {
             //rotate to look at the target
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemyTurnSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemy.turnSpeed * Time.deltaTime);
 
             //move towards the target
             transform.position += transform.forward * Time.deltaTime * moveSpeed;
@@ -316,10 +286,10 @@ public class Enemy : MonoBehaviour
         else if (!isGrounded)
         {
              //rotate to look at the target
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemyTurnSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemy.turnSpeed * Time.deltaTime);
             
             //move towards the target
-            transform.position += transform.forward * Time.deltaTime * moveSpeed * airMultiplier;
+            transform.position += transform.forward * Time.deltaTime * moveSpeed * enemy.airMultiplier;
         }
     }
 
@@ -359,8 +329,24 @@ public class Enemy : MonoBehaviour
                         break;
                 }
             }
+            else
+            {
+                if(playerData.activeWeapon == 3)
+                {
+                    StartCoroutine(OnHit(5));
+                    Object.Destroy(other);
+                }
+            }
             
         }
+    }
+
+    IEnumerator coolDownTimer()
+    {
+        yield return new WaitForSeconds(enemy.attackSpeed);
+        enemy.hasAttacked = false;
+        Debug.Log("cooldown finished");
+        Debug.Log("setting hasAttacked to false");
     }
 
     IEnumerator OnHit(int damage)
@@ -368,8 +354,8 @@ public class Enemy : MonoBehaviour
         if(!invulnerable)
         {
             invulnerable = true;
-            health -= damage;
-            Debug.Log("Enemy Health: " + health);
+            enemy.health -= damage;
+            //Debug.Log("Enemy Health: " + enemy.health);
         }
         else
         {
@@ -391,9 +377,9 @@ public class Enemy : MonoBehaviour
 
     private void checkHealth()
     {
-        if(health <= 0)
+        if(enemy.health <= 0)
         {
-            health = 0;
+            enemy.health = 0;
             Object.Destroy(this.gameObject);
         }
     }

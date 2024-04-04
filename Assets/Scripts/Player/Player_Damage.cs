@@ -9,8 +9,7 @@ public class Player_Damage : MonoBehaviour
     public PlayerData playerData;
 
     private GameManager gameMgr;
-    private Enemy enemy_script;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -31,25 +30,21 @@ public class Player_Damage : MonoBehaviour
         }
         if(playerData.playerHealth <= 0)
         {
-            playerData.playerHealth = 0;
-            Debug.Log("Player Died");
+            playerData.playerHealth = 0;    
             gameOver();
         }
-        
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("melee_enemy"))
+        if(other.gameObject.CompareTag("skeleton"))
         {
             Debug.Log("collider triggered");
-            enemy_script = other.GetComponent<Enemy>();
-            if(enemy_script.hasAttacked)
+            if(other.gameObject.GetComponent<Enemy>().isAttacking)
             {
-                //Debug.Log("Enemy Attacked");
+                Debug.Log("Enemy Attacked");
                 StartCoroutine(OnHit(2));
             }
-            
         }
     }
 
@@ -68,5 +63,6 @@ public class Player_Damage : MonoBehaviour
     {
         //death code//
         gameMgr.GameOver();
+        Debug.Log("Player Died");
     }
 }
