@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   moveSpeed: 1
+  isMoving: 0
   groundDrag: 0
   jumpForce: 0
   jumpCooldown: 0
   airMultiplier: 0
   playerHealth: 10
+  playerMaxHealth: 10
   attackSpeedMultiplier: 1
   attackDamageMultiplier: 1
   isAttacking: 0

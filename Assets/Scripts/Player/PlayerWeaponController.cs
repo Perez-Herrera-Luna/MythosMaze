@@ -75,7 +75,7 @@ public class PlayerWeaponController : MonoBehaviour
     {
         bool playerAttack = playerData.isAttacking;
         weaponSelect = playerData.activeWeapon;
-        Debug.Log(weaponSelect);
+        //Debug.Log(weaponSelect);
 
         switch(weaponSelect)
         {

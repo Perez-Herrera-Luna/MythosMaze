@@ -18,7 +18,8 @@ public class PlayerData : ScriptableObject
     bool canJump;
 
     [Header("Health")]
-    public float playerHealth;
+    public int playerHealth;
+    public int playerMaxHealth;
 
     [Header("Attack")]
     public float attackSpeedMultiplier;

@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class Player_Damage : MonoBehaviour
 {
-    public static float playerHealth = 10.0f;
-    private float maxHealth = 10.0f;
+    public PlayerData playerData;
 
     private GameManager gameMgr;
     private Enemy enemy_script;
@@ -26,13 +25,13 @@ public class Player_Damage : MonoBehaviour
 
     private void checkHealth()
     {
-        if(playerHealth > maxHealth)
+        if(playerData.playerHealth > playerData.playerMaxHealth)
         {
-            playerHealth = maxHealth;
+            playerData.playerHealth = playerData.playerMaxHealth;
         }
-        if(playerHealth <= 0)
+        if(playerData.playerHealth <= 0)
         {
-            playerHealth = 0;
+            playerData.playerHealth = 0;
             Debug.Log("Player Died");
             gameOver();
         }
@@ -43,7 +42,7 @@ public class Player_Damage : MonoBehaviour
     {
         if(other.gameObject.CompareTag("melee_enemy"))
         {
-            //Debug.Log("collider triggered");
+            Debug.Log("collider triggered");
             enemy_script = other.GetComponent<Enemy>();
             if(enemy_script.hasAttacked)
             {
@@ -56,8 +55,8 @@ public class Player_Damage : MonoBehaviour
 
     IEnumerator OnHit(int damage)
     {
-        playerHealth -= damage;
-        Debug.Log("Player Health: " + playerHealth);
+        playerData.playerHealth -= damage;
+        Debug.Log("Player Health: " + playerData.playerHealth);
         gameMgr.DisplayDamage();
 
         yield return new WaitForSeconds(2);

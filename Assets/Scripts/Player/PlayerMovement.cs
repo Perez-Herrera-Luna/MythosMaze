@@ -119,6 +119,10 @@ public class PlayerMovement : MonoBehaviour
 
     public int weaponSelected = 1;
 
+    [Header("Health UI")]
+
+    public PlayerHealthBar healthBar;
+
     private bool levelLoad = false;
     public bool LevelLoad
     {
@@ -189,6 +193,10 @@ public class PlayerMovement : MonoBehaviour
         canJump = true; // Set jump state
         startYScale = transform.localScale.y; // Set player's starting height
         dashSpeed = walkSpeed + dashSpeedModifier; // Set player's dash speed
+
+        playerData.playerHealth = playerData.playerMaxHealth;
+        healthBar.SetMaxHealth(playerData.playerMaxHealth);
+        healthBar.SetHealth(playerData.playerHealth);
     }
 
     void Update()
@@ -204,6 +212,9 @@ public class PlayerMovement : MonoBehaviour
         {
             dashCooldownTimer -= Time.deltaTime;
         }
+
+        //setting player health
+        healthBar.SetHealth(playerData.playerHealth);
     }
 
     void FixedUpdate()
