@@ -340,6 +340,7 @@ public class Enemy : MonoBehaviour
                     case 1:
                         //dagger
                         StartCoroutine(OnHit(5));
+                        Object.Destroy(other);
                         break;
                         
                     case 2:
@@ -350,6 +351,7 @@ public class Enemy : MonoBehaviour
                     case 3:
                         //bow and arrow
                         StartCoroutine(OnHit(5));
+                        Object.Destroy(other);
                         break;
 
                     default:

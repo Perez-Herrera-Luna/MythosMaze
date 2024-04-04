@@ -85,12 +85,7 @@ public class PlayerWeaponController : MonoBehaviour
                 {
                     daggerAnim.SetBool("isIdle", false);
                     daggerAnim.SetBool("isWalking", true);
-                    //StartCoroutine(walkAnim());
                 }
-                // else
-                // {
-                //     daggerAnim.SetBool("isWalking", false);
-                // }
 
                 if(!playerAttack && !playerData.isMoving)
                 {
@@ -102,14 +97,12 @@ public class PlayerWeaponController : MonoBehaviour
                 if(playerAttack)
                 {
                     attackEnabled = false;
-                    //Debug.Log("playerAttackTriggered");
                     daggerAnim.SetBool("isIdle", false);  
                     daggerAnim.SetBool("isWalking", false);
                     daggerAnim.SetBool("isAttacking", true);  
 
                     StartCoroutine(attackAnim());
                     StartCoroutine(attackCoolDown(daggerDuration));
-                    
                 }
 
                 daggerObject.SetActive(true);
