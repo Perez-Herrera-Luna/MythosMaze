@@ -35,6 +35,9 @@ public class Enemy : MonoBehaviour
     //player attacking
     public bool invulnerable = false;
 
+    //animation
+    private Animator skeletonAnim;
+
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
@@ -54,6 +57,9 @@ public class Enemy : MonoBehaviour
 
         enemy.health = enemy.maxHealth;
         enemy.hasAttacked = false;
+
+        //animation setup
+        skeletonAnim = GameObject.Find("Skeleton Enemy").GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -117,7 +123,7 @@ public class Enemy : MonoBehaviour
 
     private void wandering()
     {
-
+        animate("wander");
         //determine what point to walk to
         if(!pointChosen)
         {
@@ -236,6 +242,7 @@ public class Enemy : MonoBehaviour
     {
         if(!enemy.hasAttacked)
         {
+            animate("attacking");
             Debug.Log("Enemy Attacking!");
             enemy.hasAttacked = true;
             Debug.Log("setting hasAttacked to true");
@@ -262,10 +269,12 @@ public class Enemy : MonoBehaviour
         float moveSpeed;
         if(mode == 0)
         {
+            animate("wander");
             moveSpeed = enemy.wanderSpeed;
         }
         else if(mode == 1)
         {
+            animate("chase");
             moveSpeed = enemy.chaseSpeed;
         }
         else
@@ -379,8 +388,48 @@ public class Enemy : MonoBehaviour
     {
         if(enemy.health <= 0)
         {
+            animate("dead");
             enemy.health = 0;
-            Object.Destroy(this.gameObject);
+            StartCoroutine(death());
+        }
+    }
+
+    IEnumerator death()
+    {
+        yield return new WaitForSeconds(0.25f);
+        Object.Destroy(this.gameObject);
+    }
+
+    private void animate(string animType)
+    {
+        switch(enemy.name)
+        {
+            case "Skeleton Enemy":
+                if(animType == "wander")
+                {
+                    skeletonAnim.SetBool("isWandering", true);
+                    skeletonAnim.SetBool("isChasing", false);
+                }
+                else if(animType == "chase")
+                {
+                    skeletonAnim.SetBool("isWandering", false);
+                    skeletonAnim.SetBool("isChasing", true);
+                }
+                else if(animType == "attack")
+                {
+                    skeletonAnim.SetBool("isWandering", false);
+                    skeletonAnim.SetBool("isChasing", false);
+                    skeletonAnim.SetBool("isAttacking", true);
+                }
+                else if(animType == "dead")
+                {
+                    skeletonAnim.SetBool("isWandering", false);
+                    skeletonAnim.SetBool("isChasing", false);
+                    skeletonAnim.SetBool("isAttacking", false);
+                    skeletonAnim.SetBool("isDead", true);
+                }
+                break;
+
         }
     }
 }
