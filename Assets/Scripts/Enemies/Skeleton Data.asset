@@ -16,13 +16,14 @@ MonoBehaviour:
   health: 10
   maxHealth: 10
   attackDamage: 1
+  maxAttackDamage: 1
   attackSpeed: 3
-  hasAttacked: 0
+  hasAttacked: 1
   sightRange: 10
-  attackRange: 1
+  attackRange: 2
   playerInSight: 0
   playerAttackable: 0
-  wanderSpeed: 2
+  wanderSpeed: 1
   chaseSpeed: 3
   turnSpeed: 5
   groundDrag: 1

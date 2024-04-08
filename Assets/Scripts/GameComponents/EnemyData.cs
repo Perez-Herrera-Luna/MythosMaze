@@ -12,6 +12,7 @@ public class EnemyData : ScriptableObject
 
     //Attacking
     public float attackDamage;
+    public float maxAttackDamage;
     public float attackSpeed;
     public bool hasAttacked = false;
 
