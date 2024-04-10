@@ -260,6 +260,10 @@ public class Enemy : MonoBehaviour
             Debug.Log("Enemy Attacking!");
             enemy.hasAttacked = true;
             Debug.Log("setting hasAttacked to true");
+            StartCoroutine(coolDownTimer(enemy.attackSpeed));
+        }
+        else
+        {
             Vector3 backOff = player.position;
             if(enemy.name == "Winged_Melee")
             {
@@ -273,8 +277,6 @@ public class Enemy : MonoBehaviour
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player
             }
-            
-            StartCoroutine(coolDownTimer());
         }
          
     }
@@ -363,9 +365,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    IEnumerator coolDownTimer()
+    IEnumerator coolDownTimer(float cd)
     {
-        yield return new WaitForSeconds(enemy.attackSpeed);
+        yield return new WaitForSeconds(cd);
         enemy.hasAttacked = false;
         Debug.Log("cooldown finished");
         Debug.Log("setting hasAttacked to false");
