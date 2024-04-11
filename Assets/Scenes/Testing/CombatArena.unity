@@ -740,7 +740,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 1
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -999,7 +999,6 @@ GameObject:
   - component: {fileID: 659535209}
   - component: {fileID: 659535210}
   - component: {fileID: 659535211}
-  - component: {fileID: 659535212}
   m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
@@ -1135,19 +1134,6 @@ MonoBehaviour:
   knifeTransform: {fileID: 603923108}
   daggerDuration: 0.6
   bowDuration: 3
---- !u!114 &659535212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 659535207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1e432d05b50d6345ae145ba42c38710, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerData: {fileID: 0}
 --- !u!1 &701879007
 GameObject:
   m_ObjectHideFlags: 0
@@ -3919,7 +3905,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 0
 --- !u!136 &2112211598
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3962,7 +3948,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 3
   m_Height: 17.380178
   m_Direction: 1
   m_Center: {x: 0, y: 8.690089, z: 0}
@@ -4018,6 +4004,10 @@ PrefabInstance:
     - target: {fileID: 178732098614023820, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 178732098614023820, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
+      propertyPath: m_TagString
+      value: enemy
       objectReference: {fileID: 0}
     - target: {fileID: 564459544743737567, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_Layer
@@ -4138,6 +4128,10 @@ PrefabInstance:
     - target: {fileID: 5392704688275809244, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392704688275809244, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
+      propertyPath: m_TagString
+      value: enemy
       objectReference: {fileID: 0}
     - target: {fileID: 6368733177077619504, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_Layer

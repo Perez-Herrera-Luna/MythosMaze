@@ -37,7 +37,7 @@ public class Player_Damage : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.tag);
+        Debug.Log(other.gameObject.name);
         if(other.gameObject.CompareTag("skeleton"))
         {
             Debug.Log("collider triggered");

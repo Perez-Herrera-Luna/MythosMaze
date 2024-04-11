@@ -32,6 +32,9 @@ public class Enemy : MonoBehaviour
     private Vector3 walkPoint; //point on the ground to walk to
     private bool pointChosen;   //true if a new walkpoint is set
 
+    //death
+    private bool enemyDead = false;
+
     //player attacking
     public bool invulnerable = false;
 
@@ -70,8 +73,7 @@ public class Enemy : MonoBehaviour
     {
         //check enemy health
         checkHealth();
-        animate(animType);
-
+    
         //raycasting for ground detection
         isGrounded = Physics.Raycast(transform.position, Vector3.down, enemyHeight * 0.5f + 0.2f, whatIsGround);
 
@@ -90,8 +92,9 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance (transform.position, player.position);
 
-        if(enemy.health > 0)
+        if(!enemyDead)
         {
+            animate(animType);
             if (distance < enemy.sightRange && distance > enemy.attackRange)
             {
                 enemy.playerInSight = true;
@@ -125,7 +128,11 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            animType = "dead";
+            animate(animType);
             moveEnemy(transform.position, 2);
+
+            StartCoroutine(death());
         }
         
         isAttacking = enemy.hasAttacked;
@@ -387,7 +394,10 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            StartCoroutine(hitDelay());
+            if(enemy.health > 0)
+            {
+                StartCoroutine(hitDelay());
+            }
         }
       
         //gameMgr.DisplayDamage();
@@ -409,13 +419,14 @@ public class Enemy : MonoBehaviour
         {
             enemy.health = 0;
             enemy.attackDamage = 0;
-            StartCoroutine(death());
+            enemyDead = true;
+            
         }
     }
 
     IEnumerator death()
     {
-        animate("dead");
+        //animate("dead");
         yield return new WaitForSeconds(2f);
         Object.Destroy(this.gameObject);
     }
