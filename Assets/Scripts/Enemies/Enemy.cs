@@ -276,6 +276,7 @@ public class Enemy : MonoBehaviour
             {
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player
+                //transform.rotation = Quaternion.identity;
             }
         }
          
@@ -298,10 +299,14 @@ public class Enemy : MonoBehaviour
         }
 
         // Apply force to the enemy. Variable airMultiplier is used to reduce the enemy's speed in the air
-        if (isGrounded)
+        if (isGrounded && target != transform.position)
         {
             //rotate to look at the target
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemy.turnSpeed * Time.deltaTime);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), enemy.turnSpeed * Time.deltaTime);
+            Vector3 direction = (target - transform.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, enemy.turnSpeed * Time.deltaTime);
 
             //move towards the target
             transform.position += transform.forward * Time.deltaTime * moveSpeed;

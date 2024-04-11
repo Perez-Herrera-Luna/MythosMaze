@@ -7,6 +7,7 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
     public float buffAmount;
+    public float buffDurration;
     object[] buffObjectArray = new object[1];
     public string buffMethodName;
 
@@ -14,11 +15,14 @@ public class Powerup : MonoBehaviour
     Type playerMgrClassType;
     MethodInfo methodReference;
 
+    public PlayerData playerData;
+
     // Start is called before the first frame update
     void Start()
     {
         float[] buff = {buffAmount};
         Array.Copy(buff, buffObjectArray, buff.Length);
+        playerData = GameObject.Find("Player").GetComponent<PlayerData>();
     }
 
     // Update is called once per frame
@@ -38,6 +42,10 @@ public class Powerup : MonoBehaviour
             methodReference.Invoke(playerMgr, buffObjectArray);
 
             Debug.Log(buffMethodName + "(" + buffAmount + ")");
+
+            playerData.powerUpName = buffMethodName;
+            playerData.powerUpDuration = buffDurration;
+            playerData.powerUpAmount = buffAmount;
 
             Destroy(gameObject);
         }

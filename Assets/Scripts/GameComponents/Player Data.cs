@@ -35,6 +35,8 @@ public class PlayerData : ScriptableObject
     [Header("Weapons")]
     public int numWeapons;  // number of weapons player is current holding [can be 0, 1, or 2]
     public int activeWeapon;    // index of active weapon
+
+
     /*public WeaponData[] weapons = new WeaponData[2];
     public float weaponDamageBuff = 0;
     public float weaponSpeedBuff = 0;
@@ -45,4 +47,11 @@ public class PlayerData : ScriptableObject
     public void buffWeaponSpeed(float buff) => weaponSpeedBuff += buff;
     public void buffWeaponCooldown(float buff) => weaponCooldownReduction += buff;
     */
+
+    [Header("Buffs")]
+    public string powerUpName = "none";
+    public float powerUpDuration;
+    public float powerUpAmount;
+    
+
 }

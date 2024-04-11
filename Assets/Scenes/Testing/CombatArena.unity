@@ -740,7 +740,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.7
+  m_Radius: 0.6
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -1000,7 +1000,7 @@ GameObject:
   - component: {fileID: 659535210}
   - component: {fileID: 659535211}
   - component: {fileID: 659535212}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1051,7 +1051,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!114 &659535210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2703,7 +2703,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1476767072}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2989,7 +2989,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1620618775}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Orientation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3901,7 +3901,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112211595}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -3912,14 +3912,14 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &2112211598
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3939,7 +3939,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 7
+  m_Radius: 9
   m_Height: 20
   m_Direction: 1
   m_Center: {x: 0, y: 8.690089, z: 0}
@@ -4073,15 +4073,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3240801004494518536, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.702249
+      value: -4.707
       objectReference: {fileID: 0}
     - target: {fileID: 3240801004494518536, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.528
+      value: 0.032
       objectReference: {fileID: 0}
     - target: {fileID: 3240801004494518536, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 20.695314
+      value: 20.623
       objectReference: {fileID: 0}
     - target: {fileID: 3240801004494518536, guid: 828656d9988b04b46ae2af6bd6547c08, type: 3}
       propertyPath: m_LocalRotation.w

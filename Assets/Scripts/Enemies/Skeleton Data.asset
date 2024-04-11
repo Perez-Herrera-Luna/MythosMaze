@@ -18,11 +18,11 @@ MonoBehaviour:
   attackDamage: 1
   maxAttackDamage: 1
   attackSpeed: 5
-  hasAttacked: 1
+  hasAttacked: 0
   sightRange: 10
-  attackRange: 1
-  playerInSight: 1
-  playerAttackable: 1
+  attackRange: 1.5
+  playerInSight: 0
+  playerAttackable: 0
   wanderSpeed: 1
   chaseSpeed: 3
   turnSpeed: 5
