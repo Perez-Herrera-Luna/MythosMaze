@@ -90,48 +90,45 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance (transform.position, player.position);
 
-        if(distance < enemy.sightRange && distance > enemy.attackRange)
+        if(enemy.health > 0)
         {
-            enemy.playerInSight = true;
-            enemy.playerAttackable = false;
-        }
-        if(distance < enemy.sightRange && distance < enemy.attackRange)
-        {
-            enemy.playerAttackable = true;
-            enemy.playerInSight = true;
-        }
-        if(distance > enemy.sightRange)
-        {
-            enemy.playerInSight = false;
-            enemy.playerAttackable = false;
-        }
+            if (distance < enemy.sightRange && distance > enemy.attackRange)
+            {
+                enemy.playerInSight = true;
+                enemy.playerAttackable = false;
+            }
+            if (distance < enemy.sightRange && distance < enemy.attackRange)
+            {
+                enemy.playerAttackable = true;
+                enemy.playerInSight = true;
+            }
+            if (distance > enemy.sightRange)
+            {
+                enemy.playerInSight = false;
+                enemy.playerAttackable = false;
+            }
 
-        if(!enemy.playerInSight && !enemy.playerAttackable)
-        {
-            animType = "wander";
-            wandering();
+            if (!enemy.playerInSight && !enemy.playerAttackable)
+            {
+                animType = "wander";
+                wandering();
+            }
+            if (enemy.playerInSight && !enemy.playerAttackable)
+            {
+                animType = "chase";
+                chasing();
+            }
+            if (enemy.playerAttackable)
+            {
+                attacking();
+            }
         }
-        if(enemy.playerInSight && !enemy.playerAttackable)
+        else
         {
-            animType = "chase";
-            chasing();
-        }
-        if(enemy.playerAttackable)
-        {
-            
-            attacking();
+            moveEnemy(transform.position, 2);
         }
         
         isAttacking = enemy.hasAttacked;
-        if(isAttacking)
-        {
-            animType = "attack";
-        }
-
-        if(enemy.health <= 0)
-        {
-            animType = "dead";
-        }
     }
 
     
@@ -276,6 +273,7 @@ public class Enemy : MonoBehaviour
             {
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player
+                animate("attack");
                 //transform.rotation = Quaternion.identity;
             }
         }
@@ -409,7 +407,6 @@ public class Enemy : MonoBehaviour
     {
         if(enemy.health <= 0)
         {
-            animType = "dead";
             enemy.health = 0;
             enemy.attackDamage = 0;
             StartCoroutine(death());
@@ -418,7 +415,8 @@ public class Enemy : MonoBehaviour
 
     IEnumerator death()
     {
-        yield return new WaitForSeconds(1f);
+        animate("dead");
+        yield return new WaitForSeconds(2f);
         Object.Destroy(this.gameObject);
     }
 
