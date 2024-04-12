@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+//using System.Collections;
+//using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -35,6 +35,7 @@ public class Powerup : MonoBehaviour
     {
         if(hit.gameObject.CompareTag("player"))
         {
+            Debug.Log("Player picked up powerup: " + buffMethodName);
             // Invokes method with name "buffMethodName" within PlayerManager class using System.Reflection
             playerMgr = hit.gameObject.GetComponent<PlayerManager>();
             playerMgrClassType = playerMgr.GetType();
