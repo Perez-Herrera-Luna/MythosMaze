@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: Skeleton Data
   m_EditorClassIdentifier: 
   name: Skeleton
-  health: 10
+  health: 0
   maxHealth: 10
-  attackDamage: 1
+  attackDamage: 0
   maxAttackDamage: 1
   attackSpeed: 5
-  hasAttacked: 1
+  hasAttacked: 0
   sightRange: 10
   attackRange: 2
   playerInSight: 1
-  playerAttackable: 1
+  playerAttackable: 0
   wanderSpeed: 1
-  chaseSpeed: 3
+  chaseSpeed: 2.5
   turnSpeed: 5
   groundDrag: 1
   airMultiplier: 1

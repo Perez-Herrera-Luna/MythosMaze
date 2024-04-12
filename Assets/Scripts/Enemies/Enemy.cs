@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Attacking")]
     public bool isAttacking;
+    public bool executedAttack;
 
     //wandering
     private Vector3 moveDirection;
@@ -62,6 +63,8 @@ public class Enemy : MonoBehaviour
 
         enemy.health = enemy.maxHealth;
         enemy.hasAttacked = false;
+        isAttacking = false;
+        executedAttack = false;
         enemy.attackDamage = enemy.maxAttackDamage;
 
         //animation setup
@@ -97,6 +100,7 @@ public class Enemy : MonoBehaviour
             animate(animType);
             if (distance < enemy.sightRange && distance > enemy.attackRange)
             {
+                executedAttack = false;
                 enemy.playerInSight = true;
                 enemy.playerAttackable = false;
             }
@@ -113,6 +117,7 @@ public class Enemy : MonoBehaviour
 
             if (!enemy.playerInSight && !enemy.playerAttackable)
             {
+                executedAttack = false;
                 animType = "wander";
                 wandering();
             }
@@ -136,13 +141,32 @@ public class Enemy : MonoBehaviour
         }
         
         isAttacking = enemy.hasAttacked;
+
+        if(isAttacking && !executedAttack)
+        {
+            StartCoroutine(executingAttack(1.0f));
+            StartCoroutine(stoppingAttack(2.0f));
+        }
     }
 
+    IEnumerator executingAttack(float dur)
+    {
+        yield return new WaitForSeconds(dur);
+        executedAttack = true;
+        Debug.Log("Attack Executed");
+    }
+
+    IEnumerator stoppingAttack(float dur)
+    {
+        yield return new WaitForSeconds(dur);
+        executedAttack = false;
+        Debug.Log("Attack finished");
+    }
     
 
     private void wandering()
     {
-        
+        executedAttack = false;
         //determine what point to walk to
         if(!pointChosen)
         {
@@ -208,6 +232,7 @@ public class Enemy : MonoBehaviour
 
     private void chasing()
     {
+        executedAttack = false;
         Vector3 target;
         switch(enemy.name)
         {
@@ -261,10 +286,10 @@ public class Enemy : MonoBehaviour
     {
         if(!enemy.hasAttacked)
         {
-            Debug.Log("Enemy Attacking!");
+            //Debug.Log("Enemy Attacking!");
             enemy.hasAttacked = true;
-            Debug.Log("setting hasAttacked to true");
-            StartCoroutine(coolDownTimer(enemy.attackSpeed));
+            //Debug.Log("setting hasAttacked to true");
+            StartCoroutine(coolDownTimer(2.0f));
         }
         else
         {
@@ -344,12 +369,13 @@ public class Enemy : MonoBehaviour
                     case 1:
                         //dagger
                         StartCoroutine(OnHit(5));
-                        Object.Destroy(other);
+                        
                         break;
                         
                     case 2:
                         //throwing knife
                         StartCoroutine(OnHit(2));
+                        Object.Destroy(other);
                         break;
 
                     case 3:
@@ -381,6 +407,7 @@ public class Enemy : MonoBehaviour
         enemy.hasAttacked = false;
         Debug.Log("cooldown finished");
         Debug.Log("setting hasAttacked to false");
+        executedAttack = false;
         //animType = "chase";
     }
 

@@ -101,7 +101,7 @@ public class PlayerWeaponController : MonoBehaviour
                     daggerAnim.SetBool("isWalking", false);
                     daggerAnim.SetBool("isAttacking", true);  
 
-                    StartCoroutine(attackAnim());
+                    StartCoroutine(attackAnim(daggerDuration));
                     StartCoroutine(attackCoolDown(daggerDuration));
                 }
 
@@ -240,9 +240,9 @@ public class PlayerWeaponController : MonoBehaviour
         attackEnabled = true;
     }
 
-    IEnumerator attackAnim()
+    IEnumerator attackAnim(float dur)
     {
-        yield return new WaitForSeconds(daggerDuration);
+        yield return new WaitForSeconds(dur);
 
         daggerAnim.SetBool("isIdle", true);  
         daggerAnim.SetBool("isAttacking", false);  

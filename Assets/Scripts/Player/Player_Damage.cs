@@ -9,7 +9,10 @@ public class Player_Damage : MonoBehaviour
     public PlayerData playerData;
 
     private GameManager gameMgr;
-    
+    private bool invulnerable = false;
+    private bool playerHit = false;
+    private bool playerInDanger = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,18 +38,26 @@ public class Player_Damage : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        Debug.Log(other.gameObject.name);
+       // Debug.Log(other.gameObject.name);
         if(other.gameObject.CompareTag("skeleton"))
         {
-            Debug.Log("collider triggered");
-            if(other.gameObject.GetComponent<Enemy>().isAttacking)
-            {
-                Debug.Log("Enemy Attacked");
+            //Debug.Log("collider triggered");
+            if(!invulnerable && other.gameObject.GetComponent<Enemy>().executedAttack && other.gameObject.GetComponent<Enemy>().isAttacking)
+            {      
+                invulnerable = true;
+                Debug.Log("Skeleton attacked player");
                 StartCoroutine(OnHit(2));
+                StartCoroutine(invulnerableDelay(2f));
             }
         }
+    }
+
+    IEnumerator invulnerableDelay(float dur)
+    {
+        yield return new WaitForSeconds(dur);
+        invulnerable = false;
     }
 
     IEnumerator OnHit(int damage)
