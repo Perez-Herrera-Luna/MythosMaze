@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     [Header("Attacking")]
     public bool isAttacking;
     public bool executedAttack;
+    private bool attackLock = false;
 
     //wandering
     private Vector3 moveDirection;
@@ -35,6 +36,7 @@ public class Enemy : MonoBehaviour
 
     //death
     private bool enemyDead = false;
+    private bool triggerDeath = false;
 
     //player attacking
     public bool invulnerable = false;
@@ -133,19 +135,24 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            moveEnemy(transform.position, 2);
             animType = "dead";
             animate(animType);
-            moveEnemy(transform.position, 2);
 
-            StartCoroutine(death());
+            if(!triggerDeath)
+            {
+                triggerDeath = true;
+                StartCoroutine(death());
+            }
         }
         
         isAttacking = enemy.hasAttacked;
 
-        if(isAttacking && !executedAttack)
+        if(isAttacking && !executedAttack && !attackLock)
         {
-            StartCoroutine(executingAttack(1.0f));
-            StartCoroutine(stoppingAttack(2.0f));
+            attackLock = true;
+            StartCoroutine(executingAttack(0.7f));
+            StartCoroutine(stoppingAttack(1.0f));
         }
     }
 
@@ -161,6 +168,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(dur);
         executedAttack = false;
         Debug.Log("Attack finished");
+        attackLock = false;
     }
     
 
@@ -447,14 +455,13 @@ public class Enemy : MonoBehaviour
             enemy.health = 0;
             enemy.attackDamage = 0;
             enemyDead = true;
-            
         }
     }
 
     IEnumerator death()
     {
         //animate("dead");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         Object.Destroy(this.gameObject);
     }
 
