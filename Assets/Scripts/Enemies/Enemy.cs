@@ -131,6 +131,13 @@ public class Enemy : MonoBehaviour
             if (enemy.playerAttackable)
             {
                 attacking();
+
+                if (!executedAttack && !attackLock)
+                {
+                    attackLock = true;
+                    StartCoroutine(executingAttack(0.7f));
+                    StartCoroutine(stoppingAttack(0.8f));
+                }
             }
         }
         else
@@ -148,12 +155,7 @@ public class Enemy : MonoBehaviour
         
         isAttacking = enemy.hasAttacked;
 
-        if(isAttacking && !executedAttack && !attackLock)
-        {
-            attackLock = true;
-            StartCoroutine(executingAttack(0.7f));
-            StartCoroutine(stoppingAttack(1.0f));
-        }
+        
     }
 
     IEnumerator executingAttack(float dur)

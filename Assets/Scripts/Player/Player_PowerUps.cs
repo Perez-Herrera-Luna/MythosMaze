@@ -10,7 +10,7 @@ public class Player_PowerUps : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        clearPowerUps();
     }
 
     // Update is called once per frame
@@ -33,6 +33,7 @@ public class Player_PowerUps : MonoBehaviour
 
             case "restoreHealth":
                 playerData.playerHealth = playerData.playerMaxHealth;
+                clearPowerUps();
                 break;
 
             case "buffSpeed":
@@ -51,5 +52,12 @@ public class Player_PowerUps : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         playerData.moveSpeed /= playerData.powerUpAmount;
+    }
+
+    void clearPowerUps()
+    {
+        playerData.powerUpAmount = 0;
+        playerData.powerUpName = "none";
+        playerData.powerUpDuration = 0;
     }
 }

@@ -51,7 +51,7 @@ public class PlayerWeaponController : MonoBehaviour
 
 
     [Header("Weapon animation durations")]
-    public float daggerDuration = 0.4f;
+    public float daggerDuration = 1.0f;
     public float bowDuration = 3.0f;
 
     //private InputAction attackAction;
@@ -89,8 +89,7 @@ public class PlayerWeaponController : MonoBehaviour
 
                 if(!playerAttack && !playerData.isMoving)
                 {
-                    daggerAnim.SetBool("isWalking", false);  
-                    daggerAnim.SetBool("isAttacking", false);  
+                    daggerAnim.SetBool("isWalking", false);   
                     daggerAnim.SetBool("isIdle", true);
                 }
 
@@ -238,6 +237,7 @@ public class PlayerWeaponController : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         attackEnabled = true;
+        playerData.isAttacking = false;
     }
 
     IEnumerator attackAnim(float dur)
