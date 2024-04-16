@@ -5,11 +5,13 @@ using UnityEngine;
 public class Player_PowerUps : MonoBehaviour
 {
     public PlayerData playerData;
+    public PlayerHealthBar healthBar;
     public int playerBaseHealth = 10;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerData.playerMaxHealth = playerBaseHealth;
         clearPowerUps();
     }
 
@@ -43,6 +45,9 @@ public class Player_PowerUps : MonoBehaviour
 
             case "oneUp":
                 playerData.playerMaxHealth += playerBaseHealth;
+                Debug.Log("Player new health max: " + playerData.playerMaxHealth);
+                healthBar.SetMaxHealth(playerData.playerMaxHealth);
+                clearPowerUps();
                 break;
 
         }

@@ -43,13 +43,13 @@ public class Powerup : MonoBehaviour
             playerData.powerUpDuration = buffDurration;
             playerData.powerUpAmount = buffAmount;
 
+            Destroy(gameObject);
+
             // Invokes method with name "buffMethodName" within PlayerManager class using System.Reflection
             playerMgr = hit.gameObject.GetComponent<PlayerManager>();
             playerMgrClassType = playerMgr.GetType();
             methodReference = playerMgrClassType.GetMethod(buffMethodName);
-            methodReference.Invoke(playerMgr, buffObjectArray);
-
-            Destroy(gameObject);
+            methodReference.Invoke(playerMgr, buffObjectArray);   
         }
     }
 }
