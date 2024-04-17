@@ -15,11 +15,12 @@ MonoBehaviour:
   height: 12
   width: 8
   collisionRadius: 3.1622
+  isBossArena: 0
   doorLocations:
   - {x: 1, y: -2}
   - {x: -2, y: -2}
   enemyPrefabNames:
-  - BasicMeleeEnemyPrefab
+  - Skeleton_Enemy
   maxNumEnemies: 4
   powerupPrefabNames: []
   charPrefabNames: []

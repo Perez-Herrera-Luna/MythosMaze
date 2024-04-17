@@ -22,7 +22,7 @@ MonoBehaviour:
   - {x: 0, y: 3}
   - {x: 3, y: 0}
   enemyPrefabNames:
-  - BasicMeleeEnemyPrefab
+  - Skeleton_Enemy
   maxNumEnemies: 1
   powerupPrefabNames: []
   charPrefabNames: []
