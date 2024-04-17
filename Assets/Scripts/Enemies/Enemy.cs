@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
         enemy.attackDamage = enemy.maxAttackDamage;
 
         //animation setup
-        skeletonAnim = GameObject.Find("Skeleton_Enemy").GetComponent<Animator>();
+        skeletonAnim = transform.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -237,6 +237,10 @@ public class Enemy : MonoBehaviour
         if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && (enemy.name != "Winged_Melee" || enemy.name != "Winged_Ranged"))
         {
             pointChosen = true;
+        }
+        else
+        {
+           //Debug.Log("jesus take the wheel");
         }
     }
 
