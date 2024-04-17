@@ -29,6 +29,12 @@ public class Enemy : MonoBehaviour
     public bool executedAttack;
     private bool attackLock = false;
 
+    [Header("Stats")]
+    public float health;
+    public float attackDamage;
+    public bool hasAttacked = false;
+    public bool playerInSight, playerAttackable;
+
     //wandering
     private Vector3 moveDirection;
     private Vector3 walkPoint; //point on the ground to walk to
@@ -63,14 +69,14 @@ public class Enemy : MonoBehaviour
             gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
 
-        enemy.health = enemy.maxHealth;
-        enemy.hasAttacked = false;
+        health = enemy.maxHealth;
+        hasAttacked = false;
         isAttacking = false;
         executedAttack = false;
-        enemy.attackDamage = enemy.maxAttackDamage;
+        attackDamage = enemy.maxAttackDamage;
 
         //animation setup
-        skeletonAnim = GameObject.Find("Skeleton_Enemy").GetComponent<Animator>();
+        skeletonAnim = transform.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -103,32 +109,32 @@ public class Enemy : MonoBehaviour
             if (distance < enemy.sightRange && distance > enemy.attackRange)
             {
                 executedAttack = false;
-                enemy.playerInSight = true;
-                enemy.playerAttackable = false;
+                playerInSight = true;
+                playerAttackable = false;
             }
             if (distance < enemy.sightRange && distance < enemy.attackRange)
             {
-                enemy.playerAttackable = true;
-                enemy.playerInSight = true;
+                playerAttackable = true;
+                playerInSight = true;
             }
             if (distance > enemy.sightRange)
             {
-                enemy.playerInSight = false;
-                enemy.playerAttackable = false;
+                playerInSight = false;
+                playerAttackable = false;
             }
 
-            if (!enemy.playerInSight && !enemy.playerAttackable)
+            if (!playerInSight && !playerAttackable)
             {
                 executedAttack = false;
                 animType = "wander";
                 wandering();
             }
-            if (enemy.playerInSight && !enemy.playerAttackable)
+            if (playerInSight && !playerAttackable)
             {
                 animType = "chase";
                 chasing();
             }
-            if (enemy.playerAttackable)
+            if (playerAttackable)
             {
                 attacking();
 
@@ -153,7 +159,7 @@ public class Enemy : MonoBehaviour
             }
         }
         
-        isAttacking = enemy.hasAttacked;
+        isAttacking = hasAttacked;
 
         
     }
@@ -294,10 +300,10 @@ public class Enemy : MonoBehaviour
 
     private void attacking()
     {
-        if(!enemy.hasAttacked)
+        if(!hasAttacked)
         {
             //Debug.Log("Enemy Attacking!");
-            enemy.hasAttacked = true;
+            hasAttacked = true;
             //Debug.Log("setting hasAttacked to true");
             StartCoroutine(coolDownTimer(2.0f));
         }
@@ -414,7 +420,7 @@ public class Enemy : MonoBehaviour
     IEnumerator coolDownTimer(float cd)
     {
         yield return new WaitForSeconds(cd);
-        enemy.hasAttacked = false;
+        hasAttacked = false;
         Debug.Log("cooldown finished");
         Debug.Log("setting hasAttacked to false");
         executedAttack = false;
@@ -426,12 +432,12 @@ public class Enemy : MonoBehaviour
         if(!invulnerable)
         {
             invulnerable = true;
-            enemy.health -= damage;
-            //Debug.Log("Enemy Health: " + enemy.health);
+            health -= damage;
+            //Debug.Log("Enemy Health: " + health);
         }
         else
         {
-            if(enemy.health > 0)
+            if(health > 0)
             {
                 StartCoroutine(hitDelay());
             }
@@ -452,10 +458,10 @@ public class Enemy : MonoBehaviour
 
     private void checkHealth()
     {
-        if(enemy.health <= 0)
+        if(health <= 0)
         {
-            enemy.health = 0;
-            enemy.attackDamage = 0;
+            health = 0;
+            attackDamage = 0;
             enemyDead = true;
         }
     }
