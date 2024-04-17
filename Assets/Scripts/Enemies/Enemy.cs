@@ -244,6 +244,10 @@ public class Enemy : MonoBehaviour
         {
             pointChosen = true;
         }
+        else
+        {
+           //Debug.Log("jesus take the wheel");
+        }
     }
 
     private void chasing()
