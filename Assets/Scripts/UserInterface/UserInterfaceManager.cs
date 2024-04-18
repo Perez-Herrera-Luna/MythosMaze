@@ -17,6 +17,8 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject loadingScreen;
     public GameObject optionsMenu;
     public GameObject mainMenu;
+    public GameObject escapeMenu;
+    public GameObject keyRebindingMenu;
     public GameObject gameOverMenu;
     public GameObject gameWonMenu;
     public GameObject playerGameUI;
@@ -34,6 +36,8 @@ public class UserInterfaceManager : MonoBehaviour
         canvas = GameObject.Find("Canvas");
         background = GameObject.Find("Background");
         mainMenu = GameObject.Find("MainMenu");
+        escapeMenu = GameObject.Find("EscapeMenu");
+        keyRebindingMenu = GameObject.Find("KeyRebindingMenu");
         optionsMenu = GameObject.Find("OptionsMenu");
         loadingScreen = GameObject.Find("LoadingScreen");
         gameOverMenu = GameObject.Find("GameOverMenu");
@@ -80,6 +84,16 @@ public class UserInterfaceManager : MonoBehaviour
         EnableMenuElement(gameOverMenu);
     }
 
+    public void KeyRebinding()
+    {
+        EnableMenuElement(keyRebindingMenu);
+    }
+
+    public void KeyRebindingBackButton()
+    {
+        EnableMenuElement(optionsMenu);
+    }
+
     public void GameStart()
     {
         loadingScreen.SetActive(false);
@@ -112,8 +126,10 @@ public class UserInterfaceManager : MonoBehaviour
         canvas.SetActive(true);
         background.SetActive(true);
         mainMenu.SetActive(false);
+        escapeMenu.SetActive(false);
         optionsMenu.SetActive(false);
         loadingScreen.SetActive(false);
+        keyRebindingMenu.SetActive(false);
         gameOverMenu.SetActive(false);
         gameWonMenu.SetActive(false);
         playerDamageScreen.SetActive(false);

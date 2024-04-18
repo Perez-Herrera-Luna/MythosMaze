@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 
     public string firstLevelName = "PrototypeLevel";
 
+    public bool isGamePaused = false;
+    public bool gameplayStarted = false;
+
     private void Awake()
     {
         inst = this;
@@ -66,6 +69,8 @@ public class GameManager : MonoBehaviour
 
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
+
+        gameplayStarted = true;
 
         // invoke player camera and set camera orientation
     }
