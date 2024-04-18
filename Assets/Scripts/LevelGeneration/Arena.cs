@@ -114,7 +114,11 @@ public class Arena : MonoBehaviour
     {
         foreach(string enemyName in arenaData.enemyPrefabNames)
         {
+            // TODO : compile prefabs into one folder
+
             GameObject enemyPrefab = Resources.Load<GameObject>("Prefabs/Enemies/" + enemyName);
+            if (enemyPrefab == null)
+                enemyPrefab = Resources.Load<GameObject>("ImportedAssets/Original_Models/Enemies/Skeleton/Skeleton_Enemy");
 
             if (enemyPrefab == null)
                 Debug.Log("Error finding enemy prefab in Assets/Resources/Prefabs/Enemies folder");
@@ -144,6 +148,8 @@ public class Arena : MonoBehaviour
         enemyLocations.Add(loc + gameObject.transform.position);
         loc = new Vector3(-10, 1.4f, 10);
         enemyLocations.Add(loc + gameObject.transform.position);
+
+        // TODO : add test if enemy prefabs were found
 
         // for initial prototype just spawn one type of enemy at set locations
         for (int enemyNum = 0; enemyNum < maxEnemies; enemyNum++)

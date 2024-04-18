@@ -454,10 +454,15 @@ public class LevelGrid
     }
 
     public void PrintGrid(){
-        for(int i = currLevel.gridCols - 1; i >= 0; i--){
+        Vector2Int currLoc = Vector2Int.zero;
+        for (int i = currLevel.gridCols - 1; i >= 0; i--){
             string row = levelLayout[i, 0].NodeValue.ToString();
             for(int j = 1; j < currLevel.gridRows; j++){
-                row += levelLayout[j, i].NodeValue;
+                currLoc.Set(j, i);
+                if (IsValidTarget(currLoc))
+                    row += levelLayout[j, i].NodeValue;
+                else
+                    Debug.Log("Error: invalid target in PrintGrid");
             }
             Debug.Log(row);
         }

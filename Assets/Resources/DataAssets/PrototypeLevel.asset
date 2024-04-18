@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: PrototypeLevel
   m_EditorClassIdentifier: 
   level: 0
-  gridRows: 41
-  gridCols: 41
+  gridRows: 25
+  gridCols: 25
   pathWidth: 2
   maxNumArenas: 5
-  arenaDistanceBuff: 2
+  arenaDistanceBuff: 0
   drunkenRatio: 6
-  maxPathLength: 20
+  maxPathLength: 18

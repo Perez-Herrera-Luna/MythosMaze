@@ -20,13 +20,13 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
-  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
+  m_AmbientSkyColor: {r: 0.053, g: 0.05675, b: 0.06475, a: 1}
+  m_AmbientEquatorColor: {r: 0.21223079, g: 0.22696589, b: 0.2581829, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 51b74d7bad397457d883c5940f7664d8, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -35,10 +35,10 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,8 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 24b2a6170fedceb49b42a85e9c2fc7fc, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 8accefe3affadfc46abd9419e9699ddb, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1116,6 +1116,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1441595467}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3267222906789159593, guid: 767ee8c17f598db4e8e7b959576f3c08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1820350941}
     - targetCorrespondingSourceObject: {fileID: 1906019544203395698, guid: 767ee8c17f598db4e8e7b959576f3c08, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1996491152}
@@ -1425,6 +1428,20 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1441595468}
   m_SourcePrefab: {fileID: 100100000, guid: 9d2e81385e5768e44b02c4fab87ce19a, type: 3}
+--- !u!1 &1820350937 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3267222906789159593, guid: 767ee8c17f598db4e8e7b959576f3c08, type: 3}
+  m_PrefabInstance: {fileID: 1489624706}
+  m_PrefabAsset: {fileID: 0}
+--- !u!45 &1820350941
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820350937}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 51b74d7bad397457d883c5940f7664d8, type: 2}
 --- !u!1 &1824996977 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dc6e3d2bc21fca94aab941a596d5fad0, type: 3}

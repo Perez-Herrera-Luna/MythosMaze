@@ -41,12 +41,12 @@ public class InputManager : MonoBehaviour
         
         playerInput = GetComponent<PlayerInput>();
 
-        SetupInputActions();
+        // SetupInputActions();
     }
 
     void Update()
     {
-        UpdateInputs();
+        // UpdateInputs();
     }
 
     private void SetupInputActions()
