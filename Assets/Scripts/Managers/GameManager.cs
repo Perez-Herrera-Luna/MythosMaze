@@ -74,4 +74,35 @@ public class GameManager : MonoBehaviour
 
         // invoke player camera and set camera orientation
     }
+
+    public void BackToMainMenu()
+    {
+        gameplayStarted = false;
+
+        // Unload the current level with scene manager
+    }
+
+    public void PauseGame()
+    {
+        isGamePaused = true;
+        
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+
+        // Stop player movement
+        // Stop camera movement
+
+
+    }
+
+    public void ResumeGame()
+    {
+        isGamePaused = false;
+
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
+
+        // Resume player movement
+        // Resume camera movement
+    }
 }

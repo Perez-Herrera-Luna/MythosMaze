@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
 
     private void SetupInputActions()
     {
-        cameraAction = playerInput.actions["Camera"];
+        cameraAction = playerInput.actions["Look"];
         moveAction = playerInput.actions["Move"];
         jumpAction = playerInput.actions["Jump"];
         slideAction = playerInput.actions["Slide"];

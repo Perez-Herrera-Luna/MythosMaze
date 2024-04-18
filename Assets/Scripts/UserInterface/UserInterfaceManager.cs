@@ -11,6 +11,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameManager gameMgr;
     public MainMenuController mainMenuController;
     public OptionsMenuController optionsMenuController;
+    public EscapeMenuController escapeMenuController;
 
     public GameObject canvas;
     public GameObject background;
@@ -48,8 +49,10 @@ public class UserInterfaceManager : MonoBehaviour
 
         mainMenuController = mainMenu.GetComponent<MainMenuController>();
         optionsMenuController = optionsMenu.GetComponent<OptionsMenuController>();
+        escapeMenuController = inst.GetComponent<EscapeMenuController>();
         mainMenuController.setUserInterfaceManager(inst);
         optionsMenuController.setUserInterfaceManager(inst);
+        escapeMenuController.setUserInterfaceManager(inst);
 
         EnableMenuElement(mainMenu);
 
@@ -94,6 +97,28 @@ public class UserInterfaceManager : MonoBehaviour
         EnableMenuElement(optionsMenu);
     }
 
+    public void EscapeMenu()
+    {
+        // ! Unlock the cursor, make it visible, and stop camera/player movement
+        // gameMgr.PauseGame();
+        EnableMenuElement(escapeMenu);
+        background.SetActive(false);
+    }
+
+    public void ResumeGame()
+    {
+        canvas.SetActive(true);
+        background.SetActive(false);
+        escapeMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+        loadingScreen.SetActive(false);
+        keyRebindingMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
+        gameWonMenu.SetActive(false);
+        playerDamageScreen.SetActive(false);
+        playerGameUI.SetActive(true);
+    }
+
     public void GameStart()
     {
         loadingScreen.SetActive(false);
@@ -125,6 +150,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         canvas.SetActive(true);
         background.SetActive(true);
+
         mainMenu.SetActive(false);
         escapeMenu.SetActive(false);
         optionsMenu.SetActive(false);
@@ -134,6 +160,7 @@ public class UserInterfaceManager : MonoBehaviour
         gameWonMenu.SetActive(false);
         playerDamageScreen.SetActive(false);
         playerGameUI.SetActive(false);
+
         element.SetActive(true);
     }
 }
