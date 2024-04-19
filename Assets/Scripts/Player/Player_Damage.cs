@@ -15,20 +15,20 @@ public class Player_Damage : MonoBehaviour
 
     // [Header("Health UI")]
 
-    // public PlayerHealthBar healthBar;
+    public PlayerHealthBar healthBar;
 
     // Start is called before the first frame update
     void Start()
     {
         gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
-        // healthBar.SetMaxHealth(playerData.playerMaxHealth);
-        // healthBar.SetHealth(playerData.playerHealth);
+        healthBar.SetMaxHealth(playerData.playerMaxHealth);
+        healthBar.SetHealth(playerData.playerHealth);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // healthBar.SetHealth(playerData.playerHealth);
+        healthBar.SetHealth(playerData.playerHealth);
         checkHealth();
     }
 

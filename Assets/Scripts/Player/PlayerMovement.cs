@@ -331,7 +331,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator attackDelay()
     {
         //Debug.Log("Delay start");
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.1f);
         //Debug.Log("Delay end");
         playerData.isAttacking = false;
     }
