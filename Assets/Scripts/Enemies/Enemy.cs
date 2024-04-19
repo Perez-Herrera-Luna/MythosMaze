@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
     public bool hasAttacked = false;
     public bool playerInSight, playerAttackable;
 
+
     //wandering
     private Vector3 moveDirection;
     private Vector3 walkPoint; //point on the ground to walk to
@@ -191,6 +192,7 @@ public class Enemy : MonoBehaviour
         else
         {
             moveEnemy(walkPoint, 0);
+            //pointChosen = false;
         }
 
         //check if enemy reached desired point
@@ -243,10 +245,6 @@ public class Enemy : MonoBehaviour
         if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && (enemy.name != "Winged_Melee" || enemy.name != "Winged_Ranged"))
         {
             pointChosen = true;
-        }
-        else
-        {
-           //Debug.Log("jesus take the wheel");
         }
     }
 
@@ -372,7 +370,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if(other.gameObject.CompareTag("playerWeapon"))
         {
@@ -456,7 +454,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator hitDelay()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(1f);
         invulnerable = false;
     }
 
@@ -473,6 +471,7 @@ public class Enemy : MonoBehaviour
     IEnumerator death()
     {
         //animate("dead");
+        Debug.Log("ENEMY DIED");
         yield return new WaitForSeconds(0.5f);
         Object.Destroy(this.gameObject);
     }
