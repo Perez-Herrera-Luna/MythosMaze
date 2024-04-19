@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerWeaponController : MonoBehaviour
 {
+    public Camera fpsCam;
     public PlayerData playerData;
     public BowAndArrowData bowData;
     public PlayerMovement moveScript;
@@ -243,15 +244,32 @@ public class PlayerWeaponController : MonoBehaviour
 
     void fireArrow()
     {
+        
+        // Adjust arrow velocity based on chargeTime
+
+        Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+        
+        Vector3 targetPoint;
+        if(Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(75);
+        }
+
+        Vector3 direction = (targetPoint - arrowFirePoint.position)/20;
+
         // Instantiate and launch the arrow based on chargeTime
         GameObject arrow = Instantiate(arrowPrefab, arrowFirePoint.position, arrowFirePoint.rotation);
         Rigidbody rb = arrow.GetComponent<Rigidbody>();
-        // Adjust arrow velocity based on chargeTime
 
-        Vector3 arrowVelocity = arrowFirePoint.forward * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
+        Vector3 arrowVelocity = direction * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
 
         // Adjust arrow rotation to align with game world's forward direction
-        arrow.transform.forward = arrowVelocity.normalized;
+        //arrow.transform.forward = arrowVelocity.normalized;
 
         // Apply velocity to the arrow
         rb.velocity = arrowVelocity;
