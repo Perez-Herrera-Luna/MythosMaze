@@ -24,18 +24,6 @@ public class Arena : MonoBehaviour
     public bool HasCharacter => hasCharacter;
     public int GetLevel => arenaLevel.level;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetInitialValues(bool isSrcArena, LevelData currLevel, List<Vector2Int> availableDoorLocs)
     {
         if (arenaData.isBossArena)

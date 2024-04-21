@@ -6,8 +6,10 @@ using System;
 
 public class ProceduralLevel : MonoBehaviour
 {
+    [Header("Current Level Data")]
     public LevelData currLevel;
 
+    [Header("Arena Prefabs")]
     public ArenaData bossArenaData;
     public GameObject bossArenaPrefab;
 
@@ -17,45 +19,60 @@ public class ProceduralLevel : MonoBehaviour
     public List<ArenaData> arenasData;
     public List<GameObject> arenaPrefabs;
 
-    public GameObject questCharPrefab;
-
+    [Header("Path Prefabs")]
     public GameObject pathPrefab;
     public GameObject turnPrefab;
     public GameObject threeJunctionPrefab;
     public GameObject fourJunctionPrefab;
 
-    public LevelGraph GetLevelGraph => levelGraph;  // for unit/integration testing 
+    // [Header("Powerup Prefabs")]
 
+    [Header("Quest Prefabs")]
+    public GameObject questCharPrefab;
+
+    [Header("Level Generation")]
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
-
-    private GameObject playerObj;
+    private bool success = false;
 
     private int maxTriesGenLoc = 500;
     private int maxTriesGenArena = 20;
     private int maxTriesLevelGen = 3;
 
-    // Start is called before the first frame update
-    // calls necessary functions for procedural level generation
+    [Header("Player")]
+    private GameObject playerObj;
+
+    public LevelGraph GetLevelGraph => levelGraph;
+    public bool Success => success;
+
+    // calls InitialSetup prior to the first frame update
     void Start()
     {
         InitialSetup();
     }
 
-    // asynchronous function to load the player level
+    // initialize grid and graph according to curr levelData
+    private void InitialSetup()
+    {
+        levelGrid = new LevelGrid(currLevel);
+        levelGraph = new LevelGraph(currLevel, srcArenaData);
+    }
+
+    // called by SceneManager.cs to load the current level
     public async Task GenerateLevelAsync()
     {
         await Task.Run(() => GenerateLevel());
     }
 
-    private void GenerateLevel()
+    // main function for level generation algorithn
+    public void GenerateLevel()
     {
-        bool noDeadEnds = true;
+        success = true;
         int numTries = 1;
 
         do
         {
-            if (!noDeadEnds)
+            if (!success)
             {
                 levelGrid.ResetGrid();
                 levelGraph.ResetGraph();
@@ -63,21 +80,17 @@ public class ProceduralLevel : MonoBehaviour
 
             GenerateArenas();
 
-            noDeadEnds = GeneratePaths();
-        } while (!noDeadEnds & (numTries++ < maxTriesLevelGen));
+            GeneratePaths();
+
+            // run checks on arenas and paths
+            // bool sucess = result of those  
+        } while (!success & (numTries++ < maxTriesLevelGen));
 
         if (numTries == (maxTriesLevelGen + 1))
             Debug.Log("error: reached maxTriesLevelGen => generated level has at least one dead end");
-       
     }
 
-    // initialize grid and graph according to levelData
-    private void InitialSetup()
-    {
-        levelGrid = new LevelGrid(currLevel);
-        levelGraph = new LevelGraph(currLevel, srcArenaData);
-    }
-
+    // helper function to select random arena from pool
     private ArenaData GenerateRandomArenaPrefab()
     {
         int randNum = ThreadSafeRandom.GetRandom(0, arenasData.Count);
@@ -85,7 +98,7 @@ public class ProceduralLevel : MonoBehaviour
         return arenasData[randNum];
     }
 
-    // randomly generate arenas (< maxNumberArenas) in grid
+    // randomly generate arenas (<= maxNumberArenas) in grid
     private void GenerateArenas()
     {
         bool generateArenasSuccess = true;
@@ -302,6 +315,7 @@ public class ProceduralLevel : MonoBehaviour
     }
 
     // function which makes necessary calls to instantiate all arenas and paths in the level
+    // called by SceneManager.cs
     public void LoadLevel()
     {
         // levelGrid.PrintGrid();

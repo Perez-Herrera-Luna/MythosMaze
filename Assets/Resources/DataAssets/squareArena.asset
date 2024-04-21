@@ -24,5 +24,8 @@ MonoBehaviour:
   enemyPrefabNames:
   - Skeleton_Enemy
   maxNumEnemies: 8
-  powerupPrefabNames: []
-  charPrefabNames: []
+  powerupPrefabNames:
+  - 
+  - 
+  charPrefabNames:
+  - 

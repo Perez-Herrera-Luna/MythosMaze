@@ -6,28 +6,32 @@ using UnityEngine;
 // Arenas are nodes, each node contains edges to all other arenas
 public class LevelGraph
 {
+    [Header("Current Level & Arena Data")]
     private LevelData currLevel;
     private ArenaData srcArenaData;
-    // Graph Attributes (list of nodes + adjacency list)
-    private int numArenasAdded = 0;
-    public int  NumArenasAdded => numArenasAdded;
 
+    [Header("Graph Attributes")]
+    private int numArenasAdded = 0;
     private List<GraphNode> generatedArenas = new List<GraphNode>();
-    public List<GraphNode> GeneratedArenas => generatedArenas; 
     private List<(int, float)>[] arenaAdjacencyList;    // array of Lists
     private float maxCollisionRadius = 0;
+
+    public int NumArenasAdded => numArenasAdded;
+    public List<GraphNode> GeneratedArenas => generatedArenas; 
+    public GraphNode GetBossArena => generatedArenas[0];
     public float MaxCollisionRadius => maxCollisionRadius;
 
-    public GraphNode GetBossArena => generatedArenas[0];
-
-    // Dijkstra's Algorithm Attributes  
-    private int srcArenaIndex;       // arena furthest distance from boss
-    public int SrcArenaIndex => srcArenaIndex;
-    private Dictionary<int, int> shortestPath;   // shortestPath (index, prevNodeIndex)
-    public Dictionary<int, int> ShortestPath => shortestPath;
-    private bool[] visited;
+    [Header("Dijkstra's Algorithm Attributes")]
     private NodePriorityQueue nodePriorityQueue;    // priority queue with minDistances to boss
+    private int srcArenaIndex;       // arena furthest distance from boss
+    private bool[] visited;
 
+    private Dictionary<int, int> shortestPath;   // shortestPath (index, prevNodeIndex)
+
+    public int SrcArenaIndex => srcArenaIndex;
+    public Dictionary<int, int> ShortestPath => shortestPath;
+
+    // Public Methods [called by ProceduralLevel
     public LevelGraph(LevelData level, ArenaData sourcArenaData)
     {
         currLevel = level;
@@ -51,7 +55,7 @@ public class LevelGraph
         numArenasAdded = 0;
     }
 
-    // Try adding new arena node to graph (compare location with already generated arenas)
+    // Try adding new arena location to graph (compare location with already generated arenas)
     // called from ProceduralLevel
     public bool AddArena(ArenaData arena, int arenaPrefabIndex, Vector2Int newLoc, int pathWidth, float gridRadius)
     {

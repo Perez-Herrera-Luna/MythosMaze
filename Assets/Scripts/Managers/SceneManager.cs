@@ -101,9 +101,18 @@ public class SceneManager : MonoBehaviour
             yield return null;
         }
 
-        currLevel.LoadLevel();
-        gameManager.GameStart();
-
+        if (currLevel.Success)
+        {
+            currLevel.LoadLevel();
+            gameManager.GameStart();
+        }
+        else
+        {
+            // error handling in absolute worst case (aka despite all testing level generation failed
+            // should return to main menu
+            // maybe popup or smtg saying smtg along the lines of 'error ocurred, sorry, please retry loading game'
+        }
+       
         yield return null;
     }
 }
