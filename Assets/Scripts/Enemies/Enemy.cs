@@ -41,6 +41,9 @@ public class Enemy : MonoBehaviour
     private Vector3 walkPoint; //point on the ground to walk to
     private bool pointChosen;   //true if a new walkpoint is set
 
+    private float searchTime;
+    private float maxSearchTime = 10.0f;
+
     //death
     private bool enemyDead = false;
     private bool triggerDeath = false;
@@ -52,6 +55,8 @@ public class Enemy : MonoBehaviour
     private Animator skeletonAnim;
 
     private string animType;
+
+    private bool enemyActive = true;
 
     private void Awake()
     {
@@ -147,7 +152,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-        else
+        else if(enemyActive)
         {
             moveEnemy(transform.position, 2);
             animType = "dead";
@@ -187,6 +192,7 @@ public class Enemy : MonoBehaviour
         //determine what point to walk to
         if(!pointChosen)
         {
+            
             searchForPoint();
         }
         else
@@ -197,7 +203,7 @@ public class Enemy : MonoBehaviour
 
         //check if enemy reached desired point
         Vector3 distanceToPoint = transform.position - walkPoint;
-        if(distanceToPoint.magnitude < 1f)
+        if(distanceToPoint.magnitude < 5f || (maxSearchTime - (Time.time - searchTime) < 0))
         {
             pointChosen = false; //search for a new point now
         }
@@ -219,6 +225,7 @@ public class Enemy : MonoBehaviour
                 walkPoint.y = transform.position.y + randomY;
                 walkPoint.z = transform.position.z + randomZ;
                 pointChosen = true;
+                searchTime = Time.time;
                 break;
 
             case "Winged_Ranged":
@@ -226,6 +233,7 @@ public class Enemy : MonoBehaviour
                 walkPoint.y = transform.position.y + randomY;
                 walkPoint.z = transform.position.z + randomZ;
                 pointChosen = true;
+                searchTime = Time.time;
                 break;
 
             case "Sniper_Ranged":
@@ -245,6 +253,7 @@ public class Enemy : MonoBehaviour
         if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && (enemy.name != "Winged_Melee" || enemy.name != "Winged_Ranged"))
         {
             pointChosen = true;
+            searchTime = Time.time;
         }
     }
 
@@ -372,7 +381,7 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.CompareTag("playerWeapon"))
+        if(other.gameObject.CompareTag("playerWeapon") && health > 0)
         {
             Debug.Log("player attacking: " + playerData.isAttacking);
             //Debug.Log("Enemy hit!");
@@ -470,9 +479,11 @@ public class Enemy : MonoBehaviour
 
     IEnumerator death()
     {
+        enemyActive = false;
         //animate("dead");
         Debug.Log("ENEMY DIED");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.0f);
+        animate("delete");
         Object.Destroy(this.gameObject);
     }
 
@@ -507,6 +518,11 @@ public class Enemy : MonoBehaviour
                     skeletonAnim.SetBool("isChasing", false);
                     skeletonAnim.SetBool("isAttacking", false);
                     skeletonAnim.SetBool("isDead", true);
+                }
+                else if(animType == "delete")
+                {
+                    skeletonAnim.SetBool("isDeleted", true);
+                    skeletonAnim.SetBool("isDead", false);
                 }
                 break;
 
