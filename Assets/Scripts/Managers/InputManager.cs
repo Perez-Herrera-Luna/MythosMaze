@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    // TODO: Add PlayerInput component to the input manager game object
-    // and remove the PlayerInput component from the player game object
     public static InputManager instance;
 
     public Vector2 CameraInput { get; private set; }
@@ -41,12 +39,12 @@ public class InputManager : MonoBehaviour
         
         playerInput = GetComponent<PlayerInput>();
 
-        // SetupInputActions();
+        SetupInputActions();
     }
 
     void Update()
     {
-        // UpdateInputs();
+        UpdateInputs();
     }
 
     private void SetupInputActions()
@@ -78,5 +76,29 @@ public class InputManager : MonoBehaviour
         Weapon1Input = weapon1.triggered; // weapon1.IsPressed();
         Weapon2Input = weapon2.triggered; // weapon2.IsPressed();
         Weapon3Input = weapon3.triggered; // weapon3.IsPressed();
+    }
+
+    private void OnEnable()
+    {
+        moveAction.Enable();
+        jumpAction.Enable();
+        slideAction.Enable();
+        dashAction.Enable();
+        attackAction.Enable();
+        weapon1.Enable();
+        weapon2.Enable();
+        weapon3.Enable();
+    }
+
+    private void OnDisable()
+    {
+        moveAction.Disable();
+        jumpAction.Disable();
+        slideAction.Disable();
+        dashAction.Disable();
+        attackAction.Disable();
+        weapon1.Disable();
+        weapon2.Disable();
+        weapon3.Disable();
     }
 }
