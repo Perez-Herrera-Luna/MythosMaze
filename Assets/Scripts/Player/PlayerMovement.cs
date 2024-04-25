@@ -99,21 +99,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 moveDirection; // Player's movement direction
     private Rigidbody rb; // Player's rigidbody
 
-    [Header("Input Actions")]
-    [SerializeField] private InputActionAsset playerControls;
-
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction slideAction;
-    private InputAction dashAction;
-    private Vector2 moveInput;
-    private InputAction attackAction;
-    private InputAction weapon1;
-    private InputAction weapon2;
-    private InputAction weapon3;
-
     [Header("Attacking")]
-    public KeyCode attackKey = KeyCode.Mouse0; // Keybind for primary attack. Hardcoded to spacebar for now
     public bool primaryAttack = false; //player attack flag
     public bool attackEnabled = true;
 
@@ -141,46 +127,6 @@ public class PlayerMovement : MonoBehaviour
         walking,
         sliding,
         dashing,
-    }
-
-    private void Awake()
-    {
-        moveAction = playerControls.FindAction("Move");
-        jumpAction = playerControls.FindAction("Jump");
-        slideAction = playerControls.FindAction("Slide");
-        dashAction = playerControls.FindAction("Dash");
-
-        attackAction = playerControls.FindAction("Attack");
-        weapon1 = playerControls.FindAction("Weapon1");
-        weapon2 = playerControls.FindAction("Weapon2");
-        weapon3 = playerControls.FindAction("Weapon3");
-
-        moveAction.performed += context => moveInput = context.ReadValue<Vector2>();
-        moveAction.canceled += context => moveInput = Vector2.zero;
-    }
-
-    private void OnEnable()
-    {
-        moveAction.Enable();
-        jumpAction.Enable();
-        slideAction.Enable();
-        dashAction.Enable();
-        attackAction.Enable();
-        weapon1.Enable();
-        weapon2.Enable();
-        weapon3.Enable();
-    }
-
-    private void OnDisable()
-    {
-        moveAction.Disable();
-        jumpAction.Disable();
-        slideAction.Disable();
-        dashAction.Disable();
-        attackAction.Disable();
-        weapon1.Disable();
-        weapon2.Disable();
-        weapon3.Disable();
     }
 
     void Start()
@@ -248,26 +194,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void PlayerInput()
     {
-        ReadMoveInput();
-
-        // 
-        if (jumpAction.ReadValue<float>() > 0 && isGrounded && canJump) // Jump if the player is on the ground and the jump key is pressed and the jump cooldown is over
+        ReadMoveInput(); // Read player's movement input
+        
+        if (InputManager.instance.JumpInput && isGrounded && canJump) // Jump if the player is on the ground and the jump key is pressed and the jump cooldown is over
         {
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown); // Reset jump cooldown
         }
 
-        if (dashAction.triggered)
+        if (InputManager.instance.DashInput) // Dash if the dash key is pressed
         {
             Dash();
         }
 
-        if (slideAction.ReadValue<float>() > 0 && !isSliding) // Slide if the slide key is pressed
+        if (InputManager.instance.SlidePressed && !isSliding) // Slide if the slide key is pressed
         {
             StartSlide();
         }
 
-        else if (slideAction.ReadValue<float>() <= 0 && isSliding) // Stop sliding if the crouch key is released and the player is sliding
+        else if (InputManager.instance.SlideReleased && isSliding) // Stop sliding if the crouch key is released and the player is sliding
         {
             StopSlide();
         }
@@ -287,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //attacking
-        if(attackAction.triggered)
+        if(InputManager.instance.AttackInput)
         {    
             //primaryAttack = true; 
 
@@ -307,25 +252,25 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //weapon select   
-        if(weapon1.triggered)
+        if(InputManager.instance.Weapon1Input)
         {
             Debug.Log("weapon 1 selected");
             weaponSelected = 1;
             playerData.activeWeapon = 1;
         }
-        if(weapon2.triggered)
+        if(InputManager.instance.Weapon2Input)
         {
             Debug.Log("weapon 2 selected");
             weaponSelected = 2;
             playerData.activeWeapon = 2;
         }
-        if(weapon3.triggered)
+        if(InputManager.instance.Weapon3Input)
         {
             Debug.Log("weapon 3 selected");
             weaponSelected = 3;
             playerData.activeWeapon = 3;
         }
-          
+    
     }
 
     IEnumerator attackDelay()
@@ -338,8 +283,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void ReadMoveInput()
     {
-        horizontalInput = moveInput.x;
-        verticalInput = moveInput.y;
+        horizontalInput = InputManager.instance.MovementInput.x;
+        verticalInput = InputManager.instance.MovementInput.y;
     }
 
     private void StateHandler()
@@ -526,8 +471,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 GetNormalizedInputDirectionVector()
     {
-        float horizontal = moveInput.x;
-        float vertical = moveInput.y;
+        float horizontal = InputManager.instance.MovementInput.x;
+        float vertical = InputManager.instance.MovementInput.y;
 
         Vector3 direction = new Vector3();
         direction = orientation.forward * vertical + orientation.right * horizontal;
