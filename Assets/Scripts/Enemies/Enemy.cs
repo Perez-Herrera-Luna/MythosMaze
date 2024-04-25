@@ -192,7 +192,6 @@ public class Enemy : MonoBehaviour
         //determine what point to walk to
         if(!pointChosen)
         {
-            
             searchForPoint();
         }
         else
@@ -203,8 +202,9 @@ public class Enemy : MonoBehaviour
 
         //check if enemy reached desired point
         Vector3 distanceToPoint = transform.position - walkPoint;
-        if(distanceToPoint.magnitude < 5f || (maxSearchTime - (Time.time - searchTime) < 0))
+        if((distanceToPoint.magnitude < 5f) || (maxSearchTime - (Time.time - searchTime) < 0))
         {
+            Debug.Log("enemy looking for new search point");
             pointChosen = false; //search for a new point now
         }
     }
@@ -216,7 +216,13 @@ public class Enemy : MonoBehaviour
         float randomX = Random.Range(-enemy.roamRange, enemy.roamRange);
         float randomY = Random.Range(enemy.flyingHeightMax-1, enemy.flyingHeightMax);
 
-        walkPoint = new Vector3();
+        while(((transform.position.x + randomX) == transform.position.x) && ((transform.position.z + randomZ) == transform.position.z))
+        {
+            randomZ = Random.Range(-enemy.roamRange, enemy.roamRange);
+            randomX = Random.Range(-enemy.roamRange, enemy.roamRange);
+        }
+
+        //walkPoint = new Vector3();
 
         switch(enemy.name)
         {
