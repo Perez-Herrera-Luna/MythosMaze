@@ -5,8 +5,7 @@ using UnityEngine;
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerCamera : MonoBehaviour
 {
-    public float sensitivityX = 3f; // X-axis sensitivity
-    public float sensitivityY = 3f; // Y-axis sensitivity
+    public float sensitivityMultiplier = 0.1f; // Sensitivity multiplier
 
     public Transform orientation;
 
@@ -29,8 +28,8 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * sensitivityX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivityY;
+        float mouseX = InputManager.instance.CameraInput.x * sensitivityMultiplier;
+        float mouseY = InputManager.instance.CameraInput.y * sensitivityMultiplier;
 
         yRotation += mouseX;
         xRotation -= mouseY;

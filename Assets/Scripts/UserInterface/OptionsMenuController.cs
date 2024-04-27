@@ -7,6 +7,12 @@ public class OptionsMenuController : MonoBehaviour
     public UserInterfaceManager userInterfaceMgr;
     public OptionsMenuController inst;
 
+    // Options
+    public bool cameraTilt;
+    public bool cameraInvert;
+    public float cameraSensitivity;
+    public float masterVolume;
+
     void Start()
     {
         inst = this;

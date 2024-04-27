@@ -78,6 +78,32 @@ public class InputManager : MonoBehaviour
         Weapon3Input = weapon3.triggered; // weapon3.IsPressed();
     }
 
+    public void DisableMovementInput()
+    {
+        moveAction.Disable();
+        jumpAction.Disable();
+        slideAction.Disable();
+        dashAction.Disable();
+
+        attackAction.Disable();
+        weapon1.Disable();
+        weapon2.Disable();
+        weapon3.Disable();
+    }
+
+    public void EnableMovementInput()
+    {
+        moveAction.Enable();
+        jumpAction.Enable();
+        slideAction.Enable();
+        dashAction.Enable();
+
+        attackAction.Enable();
+        weapon1.Enable();
+        weapon2.Enable();
+        weapon3.Enable();
+    }
+
     private void OnEnable()
     {
         moveAction.Enable();

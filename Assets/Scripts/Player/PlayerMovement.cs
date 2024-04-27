@@ -83,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
     public float playerFov = 85f; // Player's default field of view
     public float changeDuration = 0.25f; // Duration of camera effect
     public float dashFov = 95f; // Field of view when dashing
+    public bool cameraTilt = true; // Should the camera tilt when moving?
 
     [Header("References")]
     public PlayerCamera cam; // Reference to the player's camera
@@ -217,12 +218,12 @@ public class PlayerMovement : MonoBehaviour
             StopSlide();
         }
 
-        if(horizontalInput < 0)
+        if(horizontalInput < 0 && cameraTilt)
         {
             cam.applyTilt("left");
         }
     
-        else if (horizontalInput > 0)
+        else if (horizontalInput > 0 && cameraTilt)
         {
             cam.applyTilt("right");
         }
