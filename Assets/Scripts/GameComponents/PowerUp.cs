@@ -6,50 +6,26 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
-    public float buffAmount;
-    public float buffDurration;
-    object[] buffObjectArray = new object[1];
-    public string buffMethodName;
+    public float amount;
+    public string powerupName;
 
-    PlayerManager playerMgr;
-    Type playerMgrClassType;
-    MethodInfo methodReference;
-
-    public PlayerData playerData;
+    private PowerupManager powerupMgr;
 
     // Start is called before the first frame update
     void Start()
     {
-        float[] buff = {buffAmount};
-        Array.Copy(buff, buffObjectArray, buff.Length);
-        playerData = GameObject.Find("Player").GetComponent<PlayerData>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        powerupMgr = GameObject.Find("PowerupManager").GetComponent<PowerupManager>();
     }
 
     void OnTriggerEnter(Collider hit)
     {
         if(hit.gameObject.CompareTag("player"))
         {
-            Debug.Log("Player picked up powerup: " + buffMethodName);
-            Debug.Log(buffMethodName + "(" + buffAmount + ")");
+            Debug.Log("Player picked up powerup: " + powerupName);
 
-            playerData.powerUpName = buffMethodName;
-            Debug.Log("powerUpName: " + buffMethodName);
-            playerData.powerUpDuration = buffDurration;
-            playerData.powerUpAmount = buffAmount;
+            powerupMgr.ActivatePowerup(powerupName, amount);
 
             Destroy(gameObject);
-
-            // Invokes method with name "buffMethodName" within PlayerManager class using System.Reflection
-            playerMgr = hit.gameObject.GetComponent<PlayerManager>();
-            playerMgrClassType = playerMgr.GetType();
-            methodReference = playerMgrClassType.GetMethod(buffMethodName);
-            methodReference.Invoke(playerMgr, buffObjectArray);   
         }
     }
 }

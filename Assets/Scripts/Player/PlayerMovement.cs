@@ -16,8 +16,6 @@ using UnityEngine.InputSystem;
 // Based heavily on a movement controller tutorial by "Dave / Game Development"
 public class PlayerMovement : MonoBehaviour
 {
-    public PlayerData playerData;
-
     [Header("Movement")]
     public float walkSpeed = 10f; // Player's base walk speed
     
@@ -29,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     private MovementState lastState; // Player's last movement state
     private bool keepMomemtum; // Used to keep player's momentum when changing movement state
     private float speedChangeFactor; // Used to change player's speed
+
+    public bool isMoving = false;
 
     [Header("Jumping")]
     public float jumpForce = 7f; // Player's jump force
@@ -101,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Attacking")]
     public bool primaryAttack = false; //player attack flag
-    public bool attackEnabled = true;
+    public bool isAttacking = false;
 
     public int weaponSelected = 1;
 
@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         startYScale = transform.localScale.y; // Set player's starting height
         dashSpeed = walkSpeed + dashSpeedModifier; // Set player's dash speed
 
-        playerData.playerHealth = playerData.playerMaxHealth;
+        // playerData.playerHealth = playerData.playerMaxHealth;
         // healthBar.SetMaxHealth(playerData.playerMaxHealth);
         // healthBar.SetHealth(playerData.playerHealth);
     }
@@ -236,7 +236,7 @@ public class PlayerMovement : MonoBehaviour
         {    
             //primaryAttack = true; 
 
-            playerData.isAttacking = true;
+            isAttacking = true;
             StartCoroutine(attackDelay());
             
         }
@@ -244,11 +244,11 @@ public class PlayerMovement : MonoBehaviour
         //movement detection
         if(horizontalInput != 0 || verticalInput != 0)
         {
-            playerData.isMoving = true;
+            isMoving = true;
         }
         else
         {
-            playerData.isMoving = false;
+            isMoving = false;
         }
 
         //weapon select   
@@ -256,19 +256,16 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("weapon 1 selected");
             weaponSelected = 1;
-            playerData.activeWeapon = 1;
         }
         if(InputManager.instance.Weapon2Input)
         {
             Debug.Log("weapon 2 selected");
             weaponSelected = 2;
-            playerData.activeWeapon = 2;
         }
         if(InputManager.instance.Weapon3Input)
         {
             Debug.Log("weapon 3 selected");
             weaponSelected = 3;
-            playerData.activeWeapon = 3;
         }
     
     }
@@ -278,7 +275,7 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log("Delay start");
         yield return new WaitForSeconds(0.1f);
         //Debug.Log("Delay end");
-        playerData.isAttacking = false;
+        isAttacking = false;
     }
 
     private void ReadMoveInput()

@@ -43,9 +43,9 @@ public class GameManager : MonoBehaviour
         userInterfaceMgr = uim;
     }
 
-    public void DisplayDamage()
+    public void DisplayDamage(float health)
     {
-        userInterfaceMgr.DisplayDamage();
+        userInterfaceMgr.DisplayDamage(health);
     }
 
     public void HideDamage()

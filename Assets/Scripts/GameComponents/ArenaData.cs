@@ -18,7 +18,9 @@ public class ArenaData : ScriptableObject
     public List<string> enemyPrefabNames;
     public int maxNumEnemies;
 
-    public List<string> powerupPrefabNames;
+    public List<string> activePowerupNames;
+    public List<string> completedPowerupNames;
+    public int maxNumPowerups;
 
     public List<string> charPrefabNames;
 }

@@ -23,5 +23,8 @@ MonoBehaviour:
   attackSpeedMultiplier: 1
   attackDamageMultiplier: 1
   isAttacking: 0
-  numWeapons: 0
-  activeWeapon: 0
+  numWeapons: 1
+  activeWeapon: 1
+  powerUpName: none
+  powerUpDuration: 0
+  powerUpAmount: 0

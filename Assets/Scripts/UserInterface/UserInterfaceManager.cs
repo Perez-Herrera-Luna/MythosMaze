@@ -24,6 +24,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject gameWonMenu;
     public GameObject playerGameUI;
     public GameObject playerDamageScreen;
+    public PlayerHealthBar healthBar;
     public UnityEngine.UI.Slider progressBar;
 
     void Awake()
@@ -46,6 +47,7 @@ public class UserInterfaceManager : MonoBehaviour
         playerGameUI = GameObject.Find("PlayerGameUI");
         playerDamageScreen = GameObject.Find("PlayerDamageScreen");
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
+        healthBar = GameObject.Find("Health bar").GetComponent<PlayerHealthBar>();
 
         mainMenuController = mainMenu.GetComponent<MainMenuController>();
         optionsMenuController = optionsMenu.GetComponent<OptionsMenuController>();
@@ -85,6 +87,7 @@ public class UserInterfaceManager : MonoBehaviour
     public void GameOver()
     {
         EnableMenuElement(gameOverMenu);
+        sceneMgr.UnloadCurrLevel();
     }
 
     public void KeyRebinding()
@@ -126,9 +129,11 @@ public class UserInterfaceManager : MonoBehaviour
         playerGameUI.SetActive(true);
     }
 
-    public void DisplayDamage()
+    public void DisplayDamage(float health)
     {
         // canvas.SetActive(true);
+        Debug.Log("Damage!");
+        healthBar.SetHealth(health);
     }
 
     public void HideDamage()

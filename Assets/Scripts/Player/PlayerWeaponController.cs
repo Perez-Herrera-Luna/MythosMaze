@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class PlayerWeaponController : MonoBehaviour
 {
     public Camera fpsCam;
-    public PlayerData playerData;
     public BowAndArrowData bowData;
     public PlayerMovement moveScript;
     //public GameObject playerHolder;
@@ -79,6 +78,7 @@ public class PlayerWeaponController : MonoBehaviour
     {
         daggerAnim = GameObject.Find("Dagger").GetComponent<Animator>();
         bowAnim = GameObject.Find("Bow and Arrow - Animated").GetComponent<Animator>();
+        moveScript = GameObject.Find("Player").GetComponent<PlayerMovement>();
     }
 
     private void Awake()
@@ -94,15 +94,12 @@ public class PlayerWeaponController : MonoBehaviour
         if(attackAction.triggered)
         {    
             //primaryAttack = true; 
-
-            playerData.isAttacking = true;
             playerAttacking = true;
             StartCoroutine(attackDelay());
-            
         }
 
         //bool playerAttack = playerData.isAttacking;
-        weaponSelect = playerData.activeWeapon;
+        weaponSelect = moveScript.weaponSelected;
         //Debug.Log(weaponSelect);
 
         switch(weaponSelect)
@@ -115,7 +112,7 @@ public class PlayerWeaponController : MonoBehaviour
                     daggerAnim.SetBool("isWalking", true);
                 }
 
-                if(!playerAttacking && !playerData.isMoving)
+                if(!playerAttacking && !moveScript.isMoving)
                 {
                     daggerAnim.SetBool("isWalking", false);   
                     daggerAnim.SetBool("isIdle", true);
@@ -171,13 +168,13 @@ public class PlayerWeaponController : MonoBehaviour
 
             case 3:
                 //bow and arrow
-                if(playerData.isMoving && bowEnabled)
+                if(moveScript.isMoving && bowEnabled)
                 {
                     bowAnim.SetBool("isIdle", false);
                     bowAnim.SetBool("isWalking", true);
                 }
                 
-                if(!playerData.isMoving && bowEnabled)
+                if(!moveScript.isMoving && bowEnabled)
                 {
                     bowAnim.SetBool("isIdle", true);
                     bowAnim.SetBool("isWalking", false);
@@ -238,7 +235,7 @@ public class PlayerWeaponController : MonoBehaviour
         //Debug.Log("Delay start");
         yield return new WaitForSeconds(2.0f);
         //Debug.Log("Delay end");
-        playerData.isAttacking = false;
+        moveScript.isAttacking = false;
         playerAttacking = false;
     }
 

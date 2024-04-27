@@ -1280,17 +1280,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arenaData: {fileID: 11400000, guid: ae940306fe1492b4b8ee22594d98b12c, type: 2}
-  arenaActive: 0
-  arenaCompleted: 0
-  enemyPrefabs:
-  - {fileID: 1937601175838191562, guid: 4961c459afdc6b14f8efde12ce6cf661, type: 3}
-  powerupPrefabs:
-  - {fileID: 8535981317751429174, guid: 813a6be98154c55469598952ca00c383, type: 3}
-  - {fileID: 5540783177727174168, guid: 897b49e536e129841bdb0c89c2d78b00, type: 3}
-  - {fileID: 6518420507772143697, guid: b3539525dc3c89048812e9220b4def67, type: 3}
-  bossPrefabs: []
-  charPrefabs: []
-  itemPrefabs: []
   doorGameObjects:
   - {fileID: 3872240826156337900}
   - {fileID: 1311633393593067009}
@@ -1439,7 +1428,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5503671159567301478
 Transform:
   m_ObjectHideFlags: 0

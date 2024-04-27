@@ -44,6 +44,13 @@ public class SceneManager : MonoBehaviour
         StartCoroutine(LoadScene(sceneName));
     }
 
+    public void UnloadCurrLevel()
+    {
+        // TODO : make this actually unload whatever curr level is
+        Debug.Log("unload level");
+        StartCoroutine(UnloadScene("Level1"));
+    }
+
     public void LoadPlayerSceneDone()
     {
         // Do something after the player scene is loaded
@@ -65,6 +72,13 @@ public class SceneManager : MonoBehaviour
         }
 
         LoadUserInterfaceSceneDone();
+    }
+
+    IEnumerator UnloadScene(string sceneName)
+    {
+        AsyncOperation asyncUnload = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
+
+        yield return null;
     }
 
     IEnumerator LoadPlayerScene()

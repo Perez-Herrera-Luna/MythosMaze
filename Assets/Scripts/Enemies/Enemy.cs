@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     public EnemyData enemy;
     public WeaponData weapon;
     public PlayerData playerData;
+    public Arena arena;
 
     [Header("Transforms")]
     public Transform player;
@@ -61,6 +62,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
+        arena = transform.parent.gameObject.GetComponent<Arena>();
     }
 
     // Start is called before the first frame update
@@ -174,14 +176,14 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(dur);
         executedAttack = true;
-        Debug.Log("Attack Executed");
+        // Debug.Log("Attack Executed");
     }
 
     IEnumerator stoppingAttack(float dur)
     {
         yield return new WaitForSeconds(dur);
         executedAttack = false;
-        Debug.Log("Attack finished");
+        // Debug.Log("Attack finished");
         attackLock = false;
     }
     
@@ -204,7 +206,7 @@ public class Enemy : MonoBehaviour
         Vector3 distanceToPoint = transform.position - walkPoint;
         if((distanceToPoint.magnitude < 5f) || (maxSearchTime - (Time.time - searchTime) < 0))
         {
-            Debug.Log("enemy looking for new search point");
+            // Debug.Log("enemy looking for new search point");
             pointChosen = false; //search for a new point now
         }
     }
@@ -389,7 +391,7 @@ public class Enemy : MonoBehaviour
     {
         if(other.gameObject.CompareTag("playerWeapon") && health > 0)
         {
-            Debug.Log("player attacking: " + playerData.isAttacking);
+            // Debug.Log("player attacking: " + playerData.isAttacking);
             //Debug.Log("Enemy hit!");
             //StartCoroutine(OnHit(4));
             //player_script = other.GetComponent<Weapon>();
@@ -438,8 +440,8 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(cd);
         hasAttacked = false;
-        Debug.Log("cooldown finished");
-        Debug.Log("setting hasAttacked to false");
+        // Debug.Log("cooldown finished");
+        // Debug.Log("setting hasAttacked to false");
         executedAttack = false;
         //animType = "chase";
     }
@@ -488,7 +490,8 @@ public class Enemy : MonoBehaviour
         enemyActive = false;
         //animate("dead");
         Debug.Log("ENEMY DIED");
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
+        arena.EnemyDeath();
         animate("delete");
         Object.Destroy(this.gameObject);
     }

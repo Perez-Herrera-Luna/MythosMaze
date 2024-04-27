@@ -850,8 +850,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arenaData: {fileID: 11400000, guid: a34359c2022bd884aa868d18b9d4404a, type: 2}
-  arenaActive: 0
-  arenaCompleted: 0
   doorGameObjects:
   - {fileID: 1311633393593067009}
 --- !u!65 &7809557433836893060
@@ -891,7 +889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5503671159567301478
 Transform:
   m_ObjectHideFlags: 0
