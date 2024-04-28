@@ -36,6 +36,10 @@ public class InputManager : MonoBehaviour
         {
             instance = this;
         }
+        else
+        {
+            Destroy(gameObject);
+        }
         
         playerInput = GetComponent<PlayerInput>();
 
@@ -102,6 +106,16 @@ public class InputManager : MonoBehaviour
         weapon1.Enable();
         weapon2.Enable();
         weapon3.Enable();
+    }
+
+    public void DisableCameraInput()
+    {
+        cameraAction.Disable();
+    }
+
+    public void EnableCameraInput()
+    {
+        cameraAction.Enable();
     }
 
     private void OnEnable()

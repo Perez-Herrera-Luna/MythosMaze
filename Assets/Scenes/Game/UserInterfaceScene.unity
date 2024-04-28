@@ -171,10 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1090}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -218,6 +218,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 184165563}
+  - {fileID: 1403140751}
   - {fileID: 304364933}
   - {fileID: 726967481}
   - {fileID: 1468466904}
@@ -317,9 +318,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1087154163}
-        m_TargetAssemblyTypeName: OptionsMenuController, GameAssembly
-        m_MethodName: BackButton
+      - m_Target: {fileID: 2030728309}
+        m_TargetAssemblyTypeName: UserInterfaceManager, GameAssembly
+        m_MethodName: OptionsMenuPaused
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -948,7 +949,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ad19295cfe4a314b8c8c8b5aad84b76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 86c6f0ad386261e4ca4ba0b4804947e9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1206,7 +1207,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1403140751}
   - {fileID: 1019168374}
   - {fileID: 344783637}
   - {fileID: 50176486}
@@ -1598,9 +1598,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2030728308}
-        m_TargetAssemblyTypeName: OptionsMenuController, GameAssembly
-        m_MethodName: 
+      - m_Target: {fileID: 2030728309}
+        m_TargetAssemblyTypeName: UserInterfaceManager, GameAssembly
+        m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1865,9 +1865,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1087154163}
-        m_TargetAssemblyTypeName: OptionsMenuController, GameAssembly
-        m_MethodName: BackButton
+      - m_Target: {fileID: 2030728309}
+        m_TargetAssemblyTypeName: UserInterfaceManager, GameAssembly
+        m_MethodName: BackToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2315,9 +2315,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1087154163}
-        m_TargetAssemblyTypeName: OptionsMenuController, GameAssembly
-        m_MethodName: BackButton
+      - m_Target: {fileID: 2030728309}
+        m_TargetAssemblyTypeName: UserInterfaceManager, GameAssembly
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2914,8 +2914,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 726967482}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+      - m_Target: {fileID: 2030728309}
+        m_TargetAssemblyTypeName: UserInterfaceManager, GameAssembly
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -4629,6 +4629,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userInterfaceMgr: {fileID: 0}
   inst: {fileID: 0}
+  cameraTilt: 0
+  cameraInvert: 0
+  cameraSensitivity: 0
+  masterVolume: 0
 --- !u!1 &1122749121
 GameObject:
   m_ObjectHideFlags: 0
@@ -5771,12 +5775,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 304364933}
+  m_Father: {fileID: 23890379}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 928.5, y: 298.5}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1403140752
 MonoBehaviour:
@@ -5798,7 +5802,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ad19295cfe4a314b8c8c8b5aad84b76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 86c6f0ad386261e4ca4ba0b4804947e9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7131,6 +7135,7 @@ MonoBehaviour:
   escapeMenuController: {fileID: 0}
   canvas: {fileID: 0}
   background: {fileID: 0}
+  escapeMenuBackground: {fileID: 0}
   loadingScreen: {fileID: 0}
   optionsMenu: {fileID: 0}
   mainMenu: {fileID: 0}

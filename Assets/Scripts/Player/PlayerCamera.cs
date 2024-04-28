@@ -16,6 +16,7 @@ public class PlayerCamera : MonoBehaviour
     float tiltAngle = 2f;
     float rotationDuration = 0.30f;
     string previousTiltDirection;
+    bool invertedCamera = false;
 
     private IEnumerator FOV_Change_Coroutine;
     private IEnumerator Tilt_Coroutine;
@@ -30,6 +31,12 @@ public class PlayerCamera : MonoBehaviour
     {
         float mouseX = InputManager.instance.CameraInput.x * sensitivityMultiplier;
         float mouseY = InputManager.instance.CameraInput.y * sensitivityMultiplier;
+
+        if (invertedCamera)
+        {
+            mouseX = -mouseX;
+            mouseY = -mouseY;
+        }
 
         yRotation += mouseX;
         xRotation -= mouseY;
@@ -121,5 +128,10 @@ public class PlayerCamera : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void InvertCamera(bool invert)
+    {
+        invertedCamera = invert;
     }
 }

@@ -126,7 +126,7 @@ public class SceneManager : MonoBehaviour
             // should return to main menu
             // maybe popup or smtg saying smtg along the lines of 'error ocurred, sorry, please retry loading game'
         }
-       
+
         yield return null;
     }
 }

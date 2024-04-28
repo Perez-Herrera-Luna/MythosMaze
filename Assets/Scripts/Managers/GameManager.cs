@@ -16,7 +16,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        inst = this;
+        if(inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private QuestManager questMgr;
@@ -56,6 +63,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         userInterfaceMgr.GameOver();
+        sceneMgr.UnloadCurrLevel();
     }
 
     public void GameWon()
@@ -79,7 +87,8 @@ public class GameManager : MonoBehaviour
     {
         gameplayStarted = false;
 
-        // Unload the current level with scene manager
+        ResumeMainMenu();
+        sceneMgr.UnloadCurrLevel();
     }
 
     public void PauseGame()
@@ -89,10 +98,8 @@ public class GameManager : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
 
-        // Stop player movement
-        // Stop camera movement
-
-
+        InputManager.instance.DisableMovementInput();
+        InputManager.instance.DisableCameraInput();
     }
 
     public void ResumeGame()
@@ -102,7 +109,18 @@ public class GameManager : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
 
-        // Resume player movement
-        // Resume camera movement
+        InputManager.instance.EnableMovementInput();
+        InputManager.instance.EnableCameraInput();
+    }
+
+    public void ResumeMainMenu()
+    {
+        isGamePaused = false;
+
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+
+        InputManager.instance.EnableMovementInput();
+        InputManager.instance.EnableCameraInput();
     }
 }

@@ -29,10 +29,4 @@ public class MainMenuController : MonoBehaviour
     {
         userInterfaceMgr.OptionsMenu();
     }
-
-    public void QuitGame()
-    {
-        // Quit the game. This will only work in the built game, not in the editor
-        Application.Quit();
-    }
 }

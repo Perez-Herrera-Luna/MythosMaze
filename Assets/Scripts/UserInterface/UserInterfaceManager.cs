@@ -15,6 +15,7 @@ public class UserInterfaceManager : MonoBehaviour
 
     public GameObject canvas;
     public GameObject background;
+    public GameObject escapeMenuBackground;
     public GameObject loadingScreen;
     public GameObject optionsMenu;
     public GameObject mainMenu;
@@ -37,6 +38,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         canvas = GameObject.Find("Canvas");
         background = GameObject.Find("Background");
+        escapeMenuBackground = GameObject.Find("EscapeMenuBackground");
         mainMenu = GameObject.Find("MainMenu");
         escapeMenu = GameObject.Find("EscapeMenu");
         keyRebindingMenu = GameObject.Find("KeyRebindingMenu");
@@ -74,6 +76,18 @@ public class UserInterfaceManager : MonoBehaviour
         EnableMenuElement(optionsMenu);
     }
 
+    public void OptionsMenuPaused()
+    {
+        EnableMenuElement(optionsMenu, false);
+        escapeMenuController.LeftEscapeMenu();
+    }
+
+    public void OptionsMenuBackPaused()
+    {
+        EnableMenuElement(escapeMenu, false);
+        escapeMenuController.ReturnedToEscapeMenu();
+    }
+
     public void GameLoading()
     {
         EnableMenuElement(loadingScreen);
@@ -87,7 +101,12 @@ public class UserInterfaceManager : MonoBehaviour
     public void GameOver()
     {
         EnableMenuElement(gameOverMenu);
-        sceneMgr.UnloadCurrLevel();
+    }
+
+    public void BackToMainMenu()
+    {
+        EnableMenuElement(mainMenu);
+        gameMgr.BackToMainMenu();
     }
 
     public void KeyRebinding()
@@ -102,16 +121,15 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void EscapeMenu()
     {
-        // ! Unlock the cursor, make it visible, and stop camera/player movement
-        // gameMgr.PauseGame();
-        EnableMenuElement(escapeMenu);
-        background.SetActive(false);
+        gameMgr.PauseGame();
+        EnableMenuElement(escapeMenu, false);
     }
 
     public void ResumeGame()
     {
         canvas.SetActive(true);
         background.SetActive(false);
+        escapeMenuBackground.SetActive(false);
         escapeMenu.SetActive(false);
         optionsMenu.SetActive(false);
         loadingScreen.SetActive(false);
@@ -120,6 +138,8 @@ public class UserInterfaceManager : MonoBehaviour
         gameWonMenu.SetActive(false);
         playerDamageScreen.SetActive(false);
         playerGameUI.SetActive(true);
+
+        gameMgr.ResumeGame();
     }
 
     public void GameStart()
@@ -151,10 +171,12 @@ public class UserInterfaceManager : MonoBehaviour
         sceneMgr.LoadSceneByName(gameMgr.firstLevelName);
     }
 
-    public void EnableMenuElement(GameObject element)
+    public void EnableMenuElement(GameObject element, bool enableFullBackground = true)
     {
         canvas.SetActive(true);
-        background.SetActive(true);
+        background.SetActive(enableFullBackground);
+        escapeMenuBackground.SetActive(!enableFullBackground);
+
 
         mainMenu.SetActive(false);
         escapeMenu.SetActive(false);
@@ -167,5 +189,11 @@ public class UserInterfaceManager : MonoBehaviour
         playerGameUI.SetActive(false);
 
         element.SetActive(true);
+    }
+
+    public void QuitGame()
+    {
+        // Quit the game. This will only work in the built game, not in the editor
+        Application.Quit();
     }
 }
