@@ -74,11 +74,13 @@ public class UserInterfaceManager : MonoBehaviour
     public void OptionsMenu()
     {
         EnableMenuElement(optionsMenu);
+        // optionsMenuController.UpdateOptions();
     }
 
     public void OptionsMenuPaused()
     {
         EnableMenuElement(optionsMenu, false);
+        // optionsMenuController.UpdateOptions();
         escapeMenuController.LeftEscapeMenu();
     }
 

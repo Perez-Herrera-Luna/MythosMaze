@@ -4633,6 +4633,12 @@ MonoBehaviour:
   cameraInvert: 0
   cameraSensitivity: 0
   masterVolume: 0
+  playerFOV: 85
+  cameraSensitivitySlider: {fileID: 0}
+  masterVolumeSlider: {fileID: 0}
+  playerFOVSlider: {fileID: 0}
+  cameraTiltToggle: {fileID: 0}
+  cameraInvertToggle: {fileID: 0}
 --- !u!1 &1122749121
 GameObject:
   m_ObjectHideFlags: 0
@@ -6779,7 +6785,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -335, y: -210}
+  m_AnchoredPosition: {x: -750, y: -400}
   m_SizeDelta: {x: 87, y: 21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1913015448
@@ -7179,6 +7185,7 @@ MonoBehaviour:
   escapeKey: 27
   altEscapeKey: 112
   isEscapeMenuActive: 0
+  allowEscapeMenuClose: 0
 --- !u!1 &2042071903
 GameObject:
   m_ObjectHideFlags: 0

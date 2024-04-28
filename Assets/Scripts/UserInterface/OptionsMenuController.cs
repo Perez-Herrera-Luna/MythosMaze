@@ -47,4 +47,13 @@ public class OptionsMenuController : MonoBehaviour
             userInterfaceMgr.MainMenu();
         }
     }
+
+    // public void UpdateOptions()
+    // {
+    //     cameraSensitivity = cameraSensitivitySlider.value;
+    //     masterVolume = masterVolumeSlider.value;
+    //     playerFOV = playerFOVSlider.value;
+    //     cameraTilt = cameraTiltToggle.isOn;
+    //     cameraInvert = cameraInvertToggle.isOn;
+    // }
 }
