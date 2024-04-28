@@ -163,6 +163,17 @@ public class UserInterfaceManager : MonoBehaviour
         // canvas.SetActive(false);
     }
 
+    public void BuffMaxHealth(float maxHealth)
+    {
+        // TODO : update health bar to show increase in max health
+    }
+
+    public void BuffHealth(float health)
+    {
+        Debug.Log("Healing player");
+        healthBar.SetHealth(health);
+    }
+
     public void updateProgressBar(float progress)
     {
         progressBar.value = progress;

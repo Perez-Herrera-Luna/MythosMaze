@@ -60,6 +60,16 @@ public class GameManager : MonoBehaviour
         userInterfaceMgr.HideDamage();
     }
 
+    public void BuffMaxHealth(float maxHealth)
+    {
+        userInterfaceMgr.BuffMaxHealth(maxHealth);
+    }
+
+    public void BuffHealth(float health)
+    {
+        userInterfaceMgr.BuffHealth(health);
+    }
+
     public void GameOver()
     {
         userInterfaceMgr.GameOver();

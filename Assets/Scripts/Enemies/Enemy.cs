@@ -6,7 +6,6 @@ public class Enemy : MonoBehaviour
     [Header("Data Files")]
     public EnemyData enemy;
     public WeaponData weapon;
-    public PlayerData playerData;
     public Arena arena;
 
     [Header("Transforms")]
@@ -20,6 +19,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Player Detection")]
     public GameObject playerObject;
+    private PlayerManager playerMgr;
     public LayerMask whatIsPlayer; //Layermask for player detection
 
     [Header("Enemy Physics")]
@@ -62,6 +62,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
+        playerMgr = player.GetComponent<PlayerManager>();
         arena = transform.parent.gameObject.GetComponent<Arena>();
     }
 
@@ -395,27 +396,27 @@ public class Enemy : MonoBehaviour
             //Debug.Log("Enemy hit!");
             //StartCoroutine(OnHit(4));
             //player_script = other.GetComponent<Weapon>();
-            if(playerData.isAttacking)
+            if(playerMgr.IsAttacking)
             {
                 Debug.Log("Enemy hit!");
 
-                switch(playerData.activeWeapon)
+                switch(playerMgr.ActiveWeapon)
                 {
                     case 1:
                         //dagger
-                        StartCoroutine(OnHit(5));
+                        StartCoroutine(OnHit(playerMgr.WeaponDamage));
                         
                         break;
                         
                     case 2:
                         //throwing knife
-                        StartCoroutine(OnHit(2));
+                        StartCoroutine(OnHit(playerMgr.WeaponDamage));
                         Object.Destroy(other);
                         break;
 
                     case 3:
                         //bow and arrow
-                        StartCoroutine(OnHit(5));
+                        StartCoroutine(OnHit(playerMgr.WeaponDamage));
                         Object.Destroy(other);
                         break;
 
@@ -426,9 +427,9 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if(playerData.activeWeapon == 3)
+                if(playerMgr.ActiveWeapon == 3)
                 {
-                    StartCoroutine(OnHit(5));
+                    StartCoroutine(OnHit(playerMgr.WeaponDamage));
                     Object.Destroy(other.gameObject);
                 }
             }
@@ -448,11 +449,12 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnHit(int damage)
     {
+        Debug.Log("enemy hit");
         if(!invulnerable)
         {
             invulnerable = true;
             health -= damage;
-            //Debug.Log("Enemy Health: " + health);
+            Debug.Log("Enemy Health: " + health);
         }
         else
         {

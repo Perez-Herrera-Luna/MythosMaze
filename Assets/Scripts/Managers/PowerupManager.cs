@@ -44,16 +44,19 @@ public class PowerupManager : MonoBehaviour
                 break;
 
             case "healing":
-
+                playerMgr.healPlayer(amount);
                 break;
 
             case "moveSpeed":
+                playerMgr.buffMoveSpeed(amount);
                 break;
 
             case "dashCooldown":
+                playerMgr.buffDashCooldown(amount);
                 break;
 
             case "jumpForce":
+                playerMgr.buffJumpForce(amount);
                 break;
 
             default:

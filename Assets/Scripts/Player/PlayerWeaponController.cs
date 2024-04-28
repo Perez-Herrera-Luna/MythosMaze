@@ -14,6 +14,9 @@ public class PlayerWeaponController : MonoBehaviour
     private Animator bowAnim;
     public int weaponSelect = 0;
 
+    // for now just manually set
+    public int[] weaponDamage;
+
     [Header("Weapon Game Objects")]
     public GameObject daggerObject;
     public GameObject throwingKnifeObject;
@@ -35,6 +38,8 @@ public class PlayerWeaponController : MonoBehaviour
     public float knifeSpeed = 20.0f;
     public float kifeCoolDown = 1.0f;
     public float daggerCoolDown = 0.25f;
+
+    public float weaponCooldown = 2.0f;
 
     private float bowChargeTime = 0f;
 
@@ -61,7 +66,6 @@ public class PlayerWeaponController : MonoBehaviour
     [Header("Input Actions")]
     [SerializeField] private InputActionAsset playerControls;
     private InputAction attackAction;
-
 
     private void OnEnable()
     {
@@ -106,11 +110,11 @@ public class PlayerWeaponController : MonoBehaviour
         {
             case 1:
                 //dagger selected
-                if(playerAttacking)
+/*                if(playerAttacking)
                 {
                     daggerAnim.SetBool("isIdle", false);
                     daggerAnim.SetBool("isWalking", true);
-                }
+                }*/
 
                 if(!playerAttacking && !moveScript.isMoving)
                 {
@@ -151,7 +155,7 @@ public class PlayerWeaponController : MonoBehaviour
                     attackEnabled = false;
                     var knife = Instantiate(knifePrefab, knifeSpawnPoint.position, finalRotation);
                     knife.GetComponent<Rigidbody>().velocity = knifeSpawnPoint.forward * knifeSpeed;
-                    StartCoroutine(attackCoolDown(2));
+                    StartCoroutine(attackCoolDown(weaponCooldown));
                     
                     Destroy(knife, 2);
                 }
@@ -228,6 +232,14 @@ public class PlayerWeaponController : MonoBehaviour
 
         }
 
+    }
+
+    // Weapon Powerup Function
+    public void buffWeapons(float amount)
+    {
+        weaponCooldown = weaponCooldown - amount;
+        daggerAnim.speed = daggerAnim.speed + amount;
+        Debug.Log("buff weapons: " + amount);
     }
 
     IEnumerator attackDelay()
