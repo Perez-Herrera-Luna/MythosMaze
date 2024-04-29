@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class OptionsMenuController : MonoBehaviour
 {
+    public static OptionsMenuController inst;
     public UserInterfaceManager userInterfaceMgr;
-    public OptionsMenuController inst;
+
+    public PlayerCamera playerCamera;
+    public PlayerMovement playerMovement;
 
     // Options
     public bool cameraTilt = true;
@@ -19,16 +22,30 @@ public class OptionsMenuController : MonoBehaviour
     public UnityEngine.UI.Slider playerFOVSlider;
     public UnityEngine.UI.Toggle cameraTiltToggle;
     public UnityEngine.UI.Toggle cameraInvertToggle;
+    public UnityEngine.UI.Toggle fullscreenToggle;
 
     void Start()
     {
-        inst = this;
+        if (inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
 
-        // cameraSensitivitySlider = GameObject.Find("CameraSensitivitySlider").GetComponent<UnityEngine.UI.Slider>();
-        // masterVolumeSlider = GameObject.Find("MasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>();
-        // playerFOVSlider = GameObject.Find("PlayerFOVSlider").GetComponent<UnityEngine.UI.Slider>();
-        // cameraTiltToggle = GameObject.Find("CameraTiltToggle").GetComponent<UnityEngine.UI.Toggle>();
-        // cameraInvertToggle = GameObject.Find("CameraInvertToggle");
+        playerCamera = GameObject.Find("Player Camera").GetComponent<PlayerCamera>();
+        playerMovement = GameObject.Find("Player").GetComponent<PlayerMovement>();
+
+        cameraSensitivitySlider = GameObject.Find("CameraSensitivitySlider").GetComponent<UnityEngine.UI.Slider>();
+        masterVolumeSlider = GameObject.Find("VolumeSlider").GetComponent<UnityEngine.UI.Slider>();
+        playerFOVSlider = GameObject.Find("PlayerFOVSlider").GetComponent<UnityEngine.UI.Slider>();
+        cameraTiltToggle = GameObject.Find("CameraTiltToggle").GetComponent<UnityEngine.UI.Toggle>();
+        cameraInvertToggle = GameObject.Find("CameraInvertToggle").GetComponent<UnityEngine.UI.Toggle>();
+        fullscreenToggle = GameObject.Find("FullscreenToggle").GetComponent<UnityEngine.UI.Toggle>();
+
+        UpdateOptions();
     }
 
     public void setUserInterfaceManager(UserInterfaceManager uim)
@@ -48,12 +65,57 @@ public class OptionsMenuController : MonoBehaviour
         }
     }
 
-    // public void UpdateOptions()
-    // {
-    //     cameraSensitivity = cameraSensitivitySlider.value;
-    //     masterVolume = masterVolumeSlider.value;
-    //     playerFOV = playerFOVSlider.value;
-    //     cameraTilt = cameraTiltToggle.isOn;
-    //     cameraInvert = cameraInvertToggle.isOn;
-    // }
+    public void ResetBackToDefault()
+    {
+        cameraSensitivity = 0.1f;
+        masterVolume = 1f;
+        playerFOV = 85f;
+        cameraTilt = true;
+        cameraInvert = false;
+
+        UpdateOptions();
+    }
+
+    public void UpdateOptions()
+    {
+        cameraSensitivitySlider.value = cameraSensitivity;
+        masterVolumeSlider.value = masterVolume;
+        playerFOVSlider.value = playerFOV;
+        cameraTiltToggle.isOn = cameraTilt;
+        cameraInvertToggle.isOn = cameraInvert;
+    }
+
+    public void SetSensitive(float value)
+    {
+        // cameraSensitivity = value;
+        playerCamera.sensitivityMultiplier = value;
+    }
+
+    public void SetVolume(float value)
+    {
+        masterVolume = value;
+    }
+
+    public void SetFOV(float value)
+    {
+        // playerFOV = value;
+        playerCamera.SmoothFovChange(value, 0f);
+    }
+
+    public void SetTilt(bool value)
+    {
+        // cameraTilt = value;
+        playerMovement.cameraTilt = value;
+    }
+
+    public void SetInvert(bool value)
+    {
+        // cameraInvert = value;
+        playerCamera.invertedCamera = value;
+    }
+
+    public void SetFullscreen(bool value)
+    {
+        Screen.fullScreen = value;
+    }
 }

@@ -16,7 +16,7 @@ public class PlayerCamera : MonoBehaviour
     float tiltAngle = 2f;
     float rotationDuration = 0.30f;
     string previousTiltDirection;
-    bool invertedCamera = false;
+    public bool invertedCamera = false;
 
     private IEnumerator FOV_Change_Coroutine;
     private IEnumerator Tilt_Coroutine;
@@ -34,7 +34,7 @@ public class PlayerCamera : MonoBehaviour
 
         if (invertedCamera)
         {
-            mouseX = -mouseX;
+            // mouseX = -mouseX;
             mouseY = -mouseY;
         }
 

@@ -118,7 +118,15 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void KeyRebindingBackButton()
     {
-        EnableMenuElement(optionsMenu);
+        // EnableMenuElement(optionsMenu);
+        if (gameMgr.isGamePaused)
+        {
+            EnableMenuElement(optionsMenu, false);
+        }
+        else
+        {
+            EnableMenuElement(optionsMenu);
+        }
     }
 
     public void EscapeMenu()
