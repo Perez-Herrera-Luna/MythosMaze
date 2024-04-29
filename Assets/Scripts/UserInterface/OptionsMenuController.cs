@@ -14,7 +14,7 @@ public class OptionsMenuController : MonoBehaviour
     public bool cameraTilt = true;
     public bool cameraInvert = false;
     public float cameraSensitivity = 0.1f;
-    public float masterVolume = 1f;
+    public float masterVolume = 1f; // TODO: Hook this up to the volume when the audio manager is implemented. Make sure to change range on the slider and the default value.
     public float playerFOV = 85f;
 
     public UnityEngine.UI.Slider cameraSensitivitySlider;

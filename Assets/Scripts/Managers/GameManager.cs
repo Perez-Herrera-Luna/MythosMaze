@@ -144,6 +144,8 @@ public class GameManager : MonoBehaviour
 
         InputManager.instance.DisableMovementInput();
         InputManager.instance.DisableCameraInput();
+
+        Time.timeScale = 0;
     }
 
     public void ResumeGame()
@@ -155,6 +157,8 @@ public class GameManager : MonoBehaviour
 
         InputManager.instance.EnableMovementInput();
         InputManager.instance.EnableCameraInput();
+
+        Time.timeScale = 1;
     }
 
     public void ResumeMainMenu()
@@ -166,5 +170,7 @@ public class GameManager : MonoBehaviour
 
         InputManager.instance.EnableMovementInput();
         InputManager.instance.EnableCameraInput();
+
+        Time.timeScale = 1;
     }
 }
