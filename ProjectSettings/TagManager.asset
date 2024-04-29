@@ -21,6 +21,7 @@ TagManager:
   - spartan
   - Stymphalian
   - powerupLoc
+  - cyclops
   layers:
   - Default
   - TransparentFX

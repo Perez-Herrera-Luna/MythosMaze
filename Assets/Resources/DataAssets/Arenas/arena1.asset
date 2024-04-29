@@ -22,7 +22,5 @@ MonoBehaviour:
   - {x: 2, y: 0}
   - {x: -3, y: 0}
   enemyPrefabNames:
-  - Skeleton_Enemy
-  maxNumEnemies: 2
-  powerupPrefabNames: []
-  charPrefabNames: []
+  - Cyclops_Enemy
+  charPrefabName: []

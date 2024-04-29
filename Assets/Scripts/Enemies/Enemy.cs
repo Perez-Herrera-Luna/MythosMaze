@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour
 
     //animation
     private Animator skeletonAnim;
+    private Animator cyclopsAnim;
 
     private string animType;
 
@@ -86,6 +87,7 @@ public class Enemy : MonoBehaviour
 
         //animation setup
         skeletonAnim = transform.GetComponent<Animator>();
+        cyclopsAnim = transform.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -398,14 +400,16 @@ public class Enemy : MonoBehaviour
             //player_script = other.GetComponent<Weapon>();
             if(playerMgr.IsAttacking)
             {
-                Debug.Log("Enemy hit!");
+                Debug.Log("Player attacking!");
 
                 switch(playerMgr.ActiveWeapon)
                 {
                     case 1:
                         //dagger
-                        StartCoroutine(OnHit(playerMgr.WeaponDamage));
-                        
+                        Debug.Log("dagger attack!");
+                        //StartCoroutine(OnHit(playerMgr.WeaponDamage));
+                        StartCoroutine(OnHit(5.0f));
+                        Debug.Log("OnHit executed");
                         break;
                         
                     case 2:
@@ -455,13 +459,16 @@ public class Enemy : MonoBehaviour
             invulnerable = true;
             health -= damage;
             Debug.Log("Enemy Health: " + health);
+            StartCoroutine(hitDelay());
         }
         else
         {
+            /*
             if(health > 0)
             {
                 StartCoroutine(hitDelay());
             }
+            */
         }
       
         //gameMgr.DisplayDamage();
@@ -536,7 +543,32 @@ public class Enemy : MonoBehaviour
                     skeletonAnim.SetBool("isDead", false);
                 }
                 break;
+            
+            case "Cyclops":
 
+                if(animType == "wander" || animType == "chase")
+                {
+                    skeletonAnim.SetBool("isWalking", true);
+                    skeletonAnim.SetBool("isAttacking", false);
+                }
+                else if(animType == "attack")
+                {
+                    skeletonAnim.SetBool("isWalking", false);
+                    skeletonAnim.SetBool("isAttacking", true);
+                }
+                else if(animType == "dead")
+                {
+                    skeletonAnim.SetBool("isWalking", false);
+                    skeletonAnim.SetBool("isAttacking", false);
+                    skeletonAnim.SetBool("isDead", true);
+                }
+                else if(animType == "delete")
+                {
+                    skeletonAnim.SetBool("isDeleted", true);
+                    skeletonAnim.SetBool("isDead", false);
+                }
+                break;
         }
     }
+
 }
