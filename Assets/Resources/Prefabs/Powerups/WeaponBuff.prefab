@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1036607873816472295
+--- !u!1001 &5887352630757063566
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -8,26 +8,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 613189738015977458, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
-      propertyPath: m_Radius
-      value: 0.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 613189738015977458, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
-      propertyPath: m_Center.y
-      value: 0.037611008
-      objectReference: {fileID: 0}
     - target: {fileID: 2112404794439048598, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_Name
-      value: WeaponDamage
+      value: WeaponBuff
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112404794439048598, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112404794439048598, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: m_TagString
+      value: powerup
+      objectReference: {fileID: 0}
+    - target: {fileID: 3265598346083737151, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: buffAmount
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3265598346083737151, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: powerupData
       value: 
-      objectReference: {fileID: 11400000, guid: 2843c05223ff9c84aadb3f49c2534abd, type: 2}
+      objectReference: {fileID: 11400000, guid: 7c504c3b5ce6ff840ae980a2d541a010, type: 2}
+    - target: {fileID: 3265598346083737151, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: buffMethodName
+      value: buffWeaponDamage
+      objectReference: {fileID: 0}
     - target: {fileID: 3744329502541737776, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 38dae2cd856c1504a97ade833a2d870f, type: 2}
+      objectReference: {fileID: 2100000, guid: 9bee1ece51592f843996472527e9e1bc, type: 2}
+    - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -42,19 +62,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.93301266
       objectReference: {fileID: 0}
     - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.2500001
       objectReference: {fileID: 0}
     - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.06698735
       objectReference: {fileID: 0}
     - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.2500001
       objectReference: {fileID: 0}
     - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -68,11 +88,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4165682033836648764, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8212871521622308014, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300006, guid: b416babc01d186040bab8cd773f417f6, type: 3}
-    m_RemovedComponents: []
+      objectReference: {fileID: 4300006, guid: e121965519da8964eb443caa891ca78c, type: 3}
+    m_RemovedComponents:
+    - {fileID: 4021317105623296823, guid: b8083b5d3b1b47547abfbc8604c5e191, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

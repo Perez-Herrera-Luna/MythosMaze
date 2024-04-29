@@ -60,14 +60,48 @@ public class GameManager : MonoBehaviour
         userInterfaceMgr.HideDamage();
     }
 
-    public void BuffMaxHealth(float maxHealth)
+    public void DisplayWeaponPowerup(float amount)
     {
-        userInterfaceMgr.BuffMaxHealth(maxHealth);
+        if (amount < 1)
+            userInterfaceMgr.DisplayWeaponBuff(amount);
+        else
+            userInterfaceMgr.DisplayWeaponDamageBuff(amount);
+    }
+    
+    public void DisplayPlayerPowerup(string type, float amount)
+    {
+        switch (type)
+        {
+            case "defense":
+                userInterfaceMgr.DisplayPlayerDefenseBuff(amount);
+                break;
+
+            case "speed":
+                userInterfaceMgr.DisplayPlayerSpeedBuff(amount);
+                break;
+
+            case "dash":
+                userInterfaceMgr.DisplayPlayerDashBuff(amount);
+                break;
+
+            case "jump":
+                userInterfaceMgr.DisplayPlayerJumpBuff(amount);
+                break;
+
+            default:
+                Debug.Log("Error: Invalid type of player powerup");
+                break;
+        }
     }
 
-    public void BuffHealth(float health)
+    public void DisplayMaxHealthBuff(float maxHealth)
     {
-        userInterfaceMgr.BuffHealth(health);
+        userInterfaceMgr.DisplayMaxHealthBuff(maxHealth);
+    }
+
+    public void DisplayPlayerHealing(float health)
+    {
+        userInterfaceMgr.DisplayHealing(health);
     }
 
     public void GameOver()

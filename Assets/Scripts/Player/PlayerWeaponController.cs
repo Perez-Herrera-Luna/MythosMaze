@@ -15,7 +15,7 @@ public class PlayerWeaponController : MonoBehaviour
     public int weaponSelect = 0;
 
     // for now just manually set
-    public int[] weaponDamage;
+    public float[] weaponDamage = new float[] { 5.0f, 2.0f, 5.0f };
 
     [Header("Weapon Game Objects")]
     public GameObject daggerObject;
@@ -36,12 +36,11 @@ public class PlayerWeaponController : MonoBehaviour
 
     public GameObject knifePrefab;
     public float knifeSpeed = 20.0f;
-    public float kifeCoolDown = 1.0f;
     public float daggerCoolDown = 0.25f;
+    private float bowChargeTime = 0f;
 
     public float weaponCooldown = 2.0f;
-
-    private float bowChargeTime = 0f;
+    public float weaponSpeed = 2.0f;
 
     public float chargeEndTime;
     private float chargeStartTime;

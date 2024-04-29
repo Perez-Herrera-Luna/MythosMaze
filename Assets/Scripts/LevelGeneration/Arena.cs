@@ -12,25 +12,32 @@ public class Arena : MonoBehaviour
     [Header("Arena Attributes")]
     private bool isBossArena;    // designates if combatArena is boss level or not
     private bool isSourceArena;
-    private bool hasCharacter;   // designates if this arena has a quest character within it or not   
-    private bool settingUpArena = false;
-    private int numEnemies = 0;
+
     public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
     public bool arenaCompleted = false; // arena is completed once player defeats all enemies within
+
+    [Header("Quest Character")]
+    private bool hasCharacter;   // designates if this arena has a quest character within it or not   
+    public Transform CharacterLoc;
 
     [Header("Arena Doors")]
     private List<Vector2Int> activeDoors = new List<Vector2Int>();
     public List<GameObject> doorGameObjects;
     private List<Vector2Int> doorLocations = new List<Vector2Int>();
 
-    [Header("Arena Prefabs")]
+    [Header("Arena Enemies")]
     private List<GameObject> enemyPrefabs = new List<GameObject>();
+    private int numEnemies = 0;
+    public List<Transform> enemyLocs;
 
+    [Header("Arena Powerups")]
     private List<GameObject> activePowerupPrefabs = new List<GameObject>();
-    private List<GameObject> completePowerupPrefabs = new List<GameObject>();
+    public List<GameObject> activePowerups = new List<GameObject>();
+    public List<Transform> activePowerupLocs;
 
-    private List<GameObject> activePowerups = new List<GameObject>();
+    private List<GameObject> completePowerupPrefabs = new List<GameObject>();
     private List<GameObject> completePowerups = new List<GameObject>();
+    public List<Transform> completePowerupLocs;
 
     // ********** PUBLIC FUNCTIONS ********** // 
     // public bool ArenaActive => arenaActive;
@@ -46,7 +53,7 @@ public class Arena : MonoBehaviour
         if (arenaData.isBossArena)
             isBossArena = true;
 
-        if (arenaData.charPrefabNames.Count > 0)
+        if (arenaData.charPrefabName != null)
             hasCharacter = true;
 
         isSourceArena = isSrcArena;
@@ -59,6 +66,96 @@ public class Arena : MonoBehaviour
             Debug.Log("Error: mismatch in arena door locations / door game objects");
 
         StartCoroutine(SetupArena());
+    }
+
+    public bool AddPowerup(PowerupData powerup, bool firstRound)
+    {
+        // 2 rounds of powerup generation (round 2 is if there are less than min number of powerups in level)
+        if (powerup.generationLocation == "arena_active")
+        {
+            if (firstRound)
+                return AddActivePowerup(powerup.powerupName, powerup.generationProbability);
+            else
+                return AddActivePowerup(powerup.powerupName, 1);
+        }else if (powerup.generationLocation == "arena_complete")
+        {
+            if (!hasCharacter)
+            {
+                if (firstRound)
+                    return AddCompletePowerup(powerup.powerupName, powerup.generationProbability);
+                else
+                    return AddCompletePowerup(powerup.powerupName, 1);
+            }
+            else
+            {
+                Debug.Log("warning: trying to add complete powerup to src arena");
+                return false;
+            }
+        }
+        else
+        {
+            Debug.Log("warning: trying to add incorrect powerup type to arena");
+            return false;
+        }
+    }
+
+    // Sets up arena powerups, returns a list corresponding to number of active arena prefabs implemented of each type
+    private bool AddActivePowerup(string powerupName, float powerupProb)
+    {
+        if (activePowerupLocs.Count > 0) {
+
+            List<Transform> powerupLocs = activePowerupLocs;
+
+            foreach (Transform loc in powerupLocs)
+            {
+                float probability = ThreadSafeRandom.GetRandomProb();
+                if(probability <= powerupProb)
+                {
+                    GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerupName);
+                    activePowerups.Add(Instantiate(currPowerup, loc));
+                    activePowerupLocs.Remove(loc);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("probability: " + probability);
+                }
+            }
+
+            Debug.Log("warning: powerup " + powerupName + " did not activate in arena");
+            return false;
+        }else{
+            // Debug.Log("warning: no more active powerup locations");
+            return false;
+        }
+    }
+
+    private bool AddCompletePowerup(string powerupName, float powerupProb)
+    {
+        if (completePowerupLocs.Count >= 0)
+        {
+            List<Transform> powerupLocs = completePowerupLocs;
+
+            foreach (Transform loc in powerupLocs)
+            {
+                float probability = ThreadSafeRandom.GetRandomProb();
+                if (probability <= powerupProb)
+                {
+                    GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerupName);
+                    completePowerups.Add(Instantiate(currPowerup, loc));
+                    completePowerupLocs.Remove(loc);
+                    return true;
+                }
+            }
+
+            Debug.Log("warning: powerup " + powerupName + " did not activate in arena");
+            return false;
+        }
+        else
+        {
+            Debug.Log("warning: no more complete powerup locations");
+            return false;
+        }
     }
 
     // Called by all arena enemies (in Enemy.cs) on EnemyDeath
@@ -88,7 +185,7 @@ public class Arena : MonoBehaviour
         }
         else
         {
-            Debug.Log("warning: Arena.OnTriggerEnter called on non-player obj");
+            // Debug.Log("warning: Arena.OnTriggerEnter called on non-player obj");
         }
     }
 
@@ -102,7 +199,7 @@ public class Arena : MonoBehaviour
         }
         else
         {
-            Debug.Log("warning: Arena.OnTriggerExit called on non-player obj");
+            // Debug.Log("warning: Arena.OnTriggerExit called on non-player obj");
         }
     }
 
@@ -112,20 +209,20 @@ public class Arena : MonoBehaviour
     // Coroutine: Loads Arena Prefabs, Setups up enemies, powerups, and character
     IEnumerator SetupArena()
     {
-        settingUpArena = true;
-
-        yield return null;
-
         LoadPrefabs();
 
         SetupEnemies();
-        SetupPowerups();
+        // SetupPowerups();
+
+        if(!isSourceArena)
+            DeactivatePowerups();
 
         if (hasCharacter)
             SetupCharacter();
 
+        yield return new WaitForSeconds(0.5f);
+
         // TODO : Add final checks for arena 
-        settingUpArena = false;
     }
 
     // Coroutine: On player entry, closes doors and activates powerups as appropriate
@@ -142,10 +239,10 @@ public class Arena : MonoBehaviour
             Debug.Log("arena activated");
             arenaActive = true;
         }
-        else
+        /*else
         {
             Debug.Log("warning: arena bool already active");
-        }
+        }*/
     }
 
     // Coroutine: On player exit, deactivates powerups
@@ -207,7 +304,7 @@ public class Arena : MonoBehaviour
                 enemyPrefabs.Add(enemyPrefab);
         }
 
-        foreach (string powerupName in arenaData.activePowerupNames)
+        /*foreach (string powerupName in arenaData.activePowerupNames)
         {
             // TODO : compile prefabs into one folder
 
@@ -217,7 +314,7 @@ public class Arena : MonoBehaviour
                 Debug.Log("Error finding powerup prefab in Assets/Resources/Prefabs/Powerups folder");
             else
                 activePowerupPrefabs.Add(activePowerup);
-        }
+        }*/
     }
 
     // helper function: Instantiates enemies at procedurally generated locations
@@ -260,7 +357,7 @@ public class Arena : MonoBehaviour
     } */
 
     // helper function: instantiates all arena powerups at procedurally generated locations
-    private void SetupPowerups()
+    /*private void SetupPowerups()
     {
         // TODO: procedurally generate pickup locations
 
@@ -300,7 +397,7 @@ public class Arena : MonoBehaviour
         }
 
         DeactivatePowerups();
-    }
+    }*/
 
     // helper function: generates a random, valid powerup location
     /*private Vector3 GeneratePowerupLocation()
@@ -327,14 +424,14 @@ public class Arena : MonoBehaviour
             {
                 foreach (GameObject powerup in completePowerups)
                 {
-                    powerup.SetActive(false);
+                    powerup.SetActive(true);
                 }
             }
             else
             {
                 foreach (GameObject powerup in activePowerups)
                 {
-                    powerup.SetActive(false);
+                    powerup.SetActive(true);
                 }
             }
         }

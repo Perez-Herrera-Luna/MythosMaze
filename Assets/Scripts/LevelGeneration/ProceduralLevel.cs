@@ -38,6 +38,7 @@ public class ProceduralLevel : MonoBehaviour
     private int maxTriesGenLoc = 500;
     private int maxTriesGenArena = 20;
     private int maxTriesLevelGen = 3;
+    private int maxTriesPowerups = 10;
 
     [Header("Player")]
     private GameObject playerObj;
@@ -45,10 +46,15 @@ public class ProceduralLevel : MonoBehaviour
     public LevelGraph GetLevelGraph => levelGraph;
     public bool Success => success;
 
+    [Header("Powerups")]
+    private Dictionary<PowerupData, int> powerups = new Dictionary<PowerupData, int>();
+    private List<GameObject> activePathPowerups = new List<GameObject>();
+
     // calls InitialSetup prior to the first frame update
     void Start()
     {
         InitialSetup();
+        SetupPowerups();
     }
 
     // initialize grid and graph according to curr levelData
@@ -56,6 +62,19 @@ public class ProceduralLevel : MonoBehaviour
     {
         levelGrid = new LevelGrid(currLevel);
         levelGraph = new LevelGraph(currLevel, srcArenaData);
+    }
+
+    private void SetupPowerups()
+    {
+        foreach (string powerup in currLevel.powerups)
+        {
+            PowerupData currPowerup = Resources.Load<PowerupData>("DataAssets/Powerups/" + powerup);
+
+            if (currPowerup != null)
+                powerups.Add(currPowerup, 0);
+            else
+                Debug.Log("could not find PowerupData in Resources Folder");
+        }
     }
 
     // called by SceneManager.cs to load the current level
@@ -330,6 +349,7 @@ public class ProceduralLevel : MonoBehaviour
     {
         GameObject arenaInstance;
         Arena arenaScript;
+        List<Arena> arenas = new List<Arena>();
         Vector3 arenaLocation;
 
         for(int i = 0; i < levelGraph.NumArenasAdded; i++){
@@ -358,23 +378,91 @@ public class ProceduralLevel : MonoBehaviour
             }
 
             arenaScript = arenaInstance.gameObject.GetComponent<Arena>();
+            if (arenaScript != null)
+            {
+                arenas.Add(arenaScript);
+            }
 
             // set arena initial values (isSourceArena, hasCharacter, arenaLevel, availableDoorLocations)
             arenaScript.SetInitialValues(sourceArena, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
+
+            // Adding Powerups to Arena (firstRound => checks for powerup maxNUm)
+
+            List<PowerupData> powerupNames = new List<PowerupData>(powerups.Keys);
+
+            foreach (PowerupData powerup in powerupNames)
+            {
+                if(powerup.generationLocation == "arena_active")
+                {
+                    if (powerups[powerup] <= powerup.maxNum)
+                    {
+                        if (arenaScript.AddPowerup(powerup, true))
+                            powerups[powerup] += 1;
+                    }
+                }else if(powerup.generationLocation == "arena_complete" && !sourceArena)
+                {
+                    if (powerups[powerup] <= powerup.maxNum)
+                    {
+                        if (arenaScript.AddPowerup(powerup, true))
+                            powerups[powerup] += 1;
+                        else
+                            Debug.Log("error adding powerup");
+                    }
+                }
+            }
         }
 
         if(levelGraph.NumArenasAdded != levelGraph.GeneratedArenas.Count){
             Debug.Log("Error in adding arenas");
         }
+
+        // Adding Powerups to Arena (secondRound => checks for powerup min Num)
+
+        bool allArenaPowerupsLoaded = false;
+        int numTries = 0;
+
+        while (!allArenaPowerupsLoaded && numTries++ < maxTriesPowerups)
+        {
+            allArenaPowerupsLoaded = true;
+
+            List<PowerupData> powerupNames = new List<PowerupData>(powerups.Keys);
+
+            foreach (PowerupData powerup in powerupNames)
+            {
+                if (powerup.generationLocation == "arena_active" | powerup.generationLocation == "arena_complete")
+                {
+                    if (powerups[powerup] < powerup.minNum)
+                    {
+                        int randArena = ThreadSafeRandom.GetRandom(0, arenas.Count);
+                        if (arenas[randArena].AddPowerup(powerup, false))
+                        {
+                            powerups[powerup] += 1;
+                        }
+                        else
+                        {
+                            allArenaPowerupsLoaded = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (numTries >= maxTriesPowerups)
+        {
+            Debug.Log("warning: reached maxTriesPowerups while generating arena powerups");
+        }
     }
 
     private void LoadPaths()
     {
+        List<Transform> powerupLocs = new List<Transform>();
+
         for (int i = 0; i < levelGrid.GridRows; i++)
         {
             for (int j = 0; j < levelGrid.GridCols; j++)
             {
                 Vector2Int location = new Vector2Int(i, j);
+                GameObject pathObj = null;
                 GridNode currNode = new GridNode();
                 currNode = levelGrid.GetNode(location);
 
@@ -383,18 +471,61 @@ public class ProceduralLevel : MonoBehaviour
                 rotation.eulerAngles = new Vector3(0, rotValue, 0);
 
                 if (currNode.NodeValue == 'P')
-                    GameObject.Instantiate(pathPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
+                    pathObj = GameObject.Instantiate(pathPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
                 else if (currNode.NodeValue == 'T')
-                    GameObject.Instantiate(turnPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
+                    pathObj = GameObject.Instantiate(turnPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
 
                 if (currNode.NodeValue == 'J')
                 {
                     if (currNode.NumConnections == 3)
-                        GameObject.Instantiate(threeJunctionPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
+                        pathObj = GameObject.Instantiate(threeJunctionPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
                     else
-                        GameObject.Instantiate(fourJunctionPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
+                        pathObj = GameObject.Instantiate(fourJunctionPrefab, levelGrid.ConvertLocation(i, j), rotation, gameObject.transform);
+                }
+
+                if (pathObj != null)
+                {
+                    Transform loc = pathObj.transform.GetChild(0);
+                    if (loc.gameObject.tag != "powerupLoc")
+                        Debug.Log("Error: powerupLoc is not the 1st child obj in path prefab");
+                    else
+                        powerupLocs.Add(loc);
                 }
             }
+        }
+
+        // Adding Powerups to Paths (secondRound => checks for powerup min Num)
+
+        int randPath = 0;
+
+        List<PowerupData> powerupNames = new List<PowerupData>(powerups.Keys);
+
+        foreach (PowerupData powerup in powerupNames)
+        {
+            if(powerup.generationLocation == "path_loc")
+            {
+                int numTries = 0;
+                while (powerups[powerup] < powerup.minNum && numTries++ < maxTriesPowerups)
+                {
+                    randPath = ThreadSafeRandom.GetRandom(0, powerupLocs.Count);
+                    GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerup.powerupName);
+
+                    if(currPowerup.tag == "powerup")
+                    {
+                        activePathPowerups.Add(Instantiate(currPowerup, powerupLocs[randPath]));
+                        powerups[powerup] += 1;
+                    }
+                    else
+                    {
+                        Debug.Log("Error: powerup prefab not instantiated correctly");
+                    }
+                }
+
+                if(numTries >= maxTriesPowerups)
+                {
+                    Debug.Log("Warning: reached maxTriesPowerups while generating path powerup loc");
+                }
+            }    
         }
     }
 

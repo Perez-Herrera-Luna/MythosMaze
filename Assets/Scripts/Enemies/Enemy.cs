@@ -447,7 +447,7 @@ public class Enemy : MonoBehaviour
         //animType = "chase";
     }
 
-    IEnumerator OnHit(int damage)
+    IEnumerator OnHit(float damage)
     {
         Debug.Log("enemy hit");
         if(!invulnerable)

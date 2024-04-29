@@ -188,7 +188,7 @@ public class LevelGrid
             bool success = false;
             Vector2Int pathDir = pathConnection.Value.Item2;
 
-            //Debug.Log("AddPath() : currLocation = " + pathConnection.Key + ", direction = " + pathDir);
+            // Debug.Log("AddPath() : currLocation = " + pathConnection.Key + ", direction = " + pathDir);
 
             // add connection to curr node
             GridNode srcNode = GetNode(pathConnection.Key);

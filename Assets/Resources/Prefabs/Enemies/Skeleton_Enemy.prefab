@@ -14,15 +14,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce07fe6b327cbcd4eab4061980bec716, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.1
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce07fe6b327cbcd4eab4061980bec716, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.1
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce07fe6b327cbcd4eab4061980bec716, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.1
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce07fe6b327cbcd4eab4061980bec716, type: 3}
       propertyPath: m_LocalPosition.x
@@ -328,10 +328,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy: {fileID: 11400000, guid: 80e04e6ae5642694383d1c7c80e5b3cd, type: 2}
   weapon: {fileID: 0}
-  playerData: {fileID: 11400000, guid: a2346e02e051af2489daf34a8dbb1e65, type: 2}
+  arena: {fileID: 0}
   player: {fileID: 0}
   orientation: {fileID: 5921869573316794352}
-  enemyHeight: 2
+  enemyHeight: 3
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
@@ -341,6 +341,11 @@ MonoBehaviour:
     m_Bits: 2048
   isAttacking: 0
   executedAttack: 0
+  health: 0
+  attackDamage: 0
+  hasAttacked: 0
+  playerInSight: 0
+  playerAttackable: 0
   invulnerable: 0
 --- !u!111 &2621097015180837319
 Animation:

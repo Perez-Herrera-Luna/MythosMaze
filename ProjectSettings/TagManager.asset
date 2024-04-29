@@ -20,6 +20,7 @@ TagManager:
   - centaur
   - spartan
   - Stymphalian
+  - powerupLoc
   layers:
   - Default
   - TransparentFX

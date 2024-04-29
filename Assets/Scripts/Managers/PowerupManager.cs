@@ -13,6 +13,9 @@ public class PowerupManager : MonoBehaviour
     private float currAmount;
     private float currDuration;
 
+    private float pickupDelay = 0.2f;
+    private bool canPickup = true;
+
     private void Awake()
     {
         inst = this;
@@ -30,42 +33,61 @@ public class PowerupManager : MonoBehaviour
 
     public void ActivatePowerup(string powerupName, float amount)
     {
-        currName = powerupName;
-        currAmount = amount;
-
-        switch (currName)
+        if (canPickup)
         {
-            case "weaponBuff":
-                playerMgr.buffWeapons(amount);
-                break;
+            currName = powerupName;
+            currAmount = amount;
+            canPickup = false;
+            StartCoroutine(PowerupTimer());
+            Debug.Log("Player picked up powerup: " + powerupName);
 
-            case "maxHealth":
-                playerMgr.buffMaxHealth(amount);
-                break;
+            switch (currName)
+            {
+                case "WeaponBuff":
+                    playerMgr.buffWeapons(amount);
+                    break;
 
-            case "healing":
-                playerMgr.healPlayer(amount);
-                break;
+                case "AbsoluteDefense":
+                    playerMgr.buffAbsoluteDefense(amount);
+                    break;
 
-            case "moveSpeed":
-                playerMgr.buffMoveSpeed(amount);
-                break;
+                case "MaxHealth":
+                    playerMgr.buffMaxHealth(amount);
+                    break;
 
-            case "dashCooldown":
-                playerMgr.buffDashCooldown(amount);
-                break;
+                case "Healing":
+                    playerMgr.healPlayer(amount);
+                    break;
 
-            case "jumpForce":
-                playerMgr.buffJumpForce(amount);
-                break;
+                case "MoveSpeed":
+                    playerMgr.buffMoveSpeed(amount);
+                    break;
 
-            default:
-                Debug.Log("Error: Powerup Name not found in Powerup Manager");
-                break;
+                case "DashCooldown":
+                    playerMgr.buffDashCooldown(amount);
+                    break;
 
+                case "JumpForce":
+                    playerMgr.buffJumpForce(amount);
+                    break;
+
+                case "WeaponDamage":
+                    playerMgr.buffWeaponDamage(amount);
+                    break;
+
+                default:
+                    Debug.Log("Error: Powerup Name not found in Powerup Manager");
+                    break;
+            }
+
+            clearPowerUps();
         }
+    }
 
-        clearPowerUps();
+    IEnumerator PowerupTimer()
+    {
+        yield return new WaitForSeconds(pickupDelay);
+        canPickup = true;
     }
 
     void clearPowerUps()

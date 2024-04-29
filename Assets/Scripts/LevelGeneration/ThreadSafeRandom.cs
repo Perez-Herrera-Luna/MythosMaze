@@ -17,5 +17,13 @@ public class ThreadSafeRandom
         return random.Value.Next(min, max);
     }
 
+    public static float GetRandomProb()
+    {
+        if (random == null)
+            random = new ThreadLocal<System.Random>(() => new System.Random(GetThreadSeed()));
+
+        return (float)random.Value.NextDouble();
+    }
+
     private static int GetThreadSeed() => Thread.CurrentThread.ManagedThreadId;
 }
