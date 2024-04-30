@@ -336,8 +336,14 @@ public class Enemy : MonoBehaviour
                 GameObject rock = Instantiate(rockPrefab, rockFirePoint.position, rockFirePoint.rotation);
                 Rigidbody rb = rock.GetComponent<Rigidbody>();
 
-                Vector3 rockDirection = player.position;
-                //Vector3 rockVelocity = 
+                Vector3 target = player.position;
+                Vector3 direction = (target - transform.position).normalized;
+                Quaternion targetRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                
+                rb.velocity = direction * 10;
+                rb.rotation = targetRotation;
+
+                Destroy(rock, 5.0f);
             }
 
             //Debug.Log("setting hasAttacked to true");

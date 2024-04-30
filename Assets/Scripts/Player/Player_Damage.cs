@@ -33,6 +33,17 @@ public class Player_Damage : MonoBehaviour
                 StartCoroutine(invulnerableDelay(2f));
             }
         }
+
+        if(other.gameObject.CompareTag("rock"))
+        {
+            if(!invulnerable)
+            {      
+                invulnerable = true;
+                Debug.Log("Player hit by rock");
+                playerMgr.playerHit(2);
+                StartCoroutine(invulnerableDelay(2f));
+            }
+        }
     }
 
     IEnumerator invulnerableDelay(float dur)
