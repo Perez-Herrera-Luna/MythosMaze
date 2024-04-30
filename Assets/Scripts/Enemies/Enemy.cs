@@ -39,6 +39,8 @@ public class Enemy : MonoBehaviour
     [Header("projectiles")]
     public Transform rockFirePoint;
     public GameObject rockPrefab;
+    public Transform spearFirePoint;
+    public GameObject spearPrefab;
 
 
     //wandering
@@ -59,6 +61,7 @@ public class Enemy : MonoBehaviour
     //animation
     private Animator skeletonAnim;
     private Animator cyclopsAnim;
+    private Animator spartanAnim;
 
     private string animType;
 
@@ -92,6 +95,7 @@ public class Enemy : MonoBehaviour
         //animation setup
         skeletonAnim = transform.GetComponent<Animator>();
         cyclopsAnim = transform.GetComponent<Animator>();
+        spartanAnim = transform.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -345,6 +349,10 @@ public class Enemy : MonoBehaviour
 
                 Destroy(rock, 5.0f);
             }
+            if(enemy.name == "Spartan")
+            {
+                StartCoroutine(spawnSpear());
+            }
 
             //Debug.Log("setting hasAttacked to true");
             StartCoroutine(coolDownTimer(2.0f));
@@ -359,7 +367,7 @@ public class Enemy : MonoBehaviour
                 moveEnemy(backOff, 1);
             }
 
-            if(enemy.name == "Skeleton" || enemy.name == "Cyclops")
+            if(enemy.name == "Skeleton" || enemy.name == "Cyclops" || enemy.name == "Spartan")
             {
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player
@@ -368,6 +376,22 @@ public class Enemy : MonoBehaviour
             }
         }
          
+    }
+
+    IEnumerator spawnSpear()
+    {
+        yield return new WaitForSeconds(2.0f);
+        GameObject spear = Instantiate(spearPrefab, spearFirePoint.position, spearFirePoint.rotation);
+        Rigidbody rb = spear.GetComponent<Rigidbody>();
+
+        Vector3 target = player.position;
+        Vector3 direction = (target - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        
+        rb.velocity = direction * 10;
+        rb.rotation = targetRotation;
+
+        Destroy(spear, 2.0f);
     }
 
     private void moveEnemy(Vector3 target, int mode)
@@ -568,24 +592,49 @@ public class Enemy : MonoBehaviour
 
                 if(animType == "wander" || animType == "chase")
                 {
-                    skeletonAnim.SetBool("isWalking", true);
-                    skeletonAnim.SetBool("isAttacking", false);
+                    cyclopsAnim.SetBool("isWalking", true);
+                    cyclopsAnim.SetBool("isAttacking", false);
                 }
                 else if(animType == "attack")
                 {
-                    skeletonAnim.SetBool("isWalking", false);
-                    skeletonAnim.SetBool("isAttacking", true);
+                    cyclopsAnim.SetBool("isWalking", false);
+                    cyclopsAnim.SetBool("isAttacking", true);
                 }
                 else if(animType == "dead")
                 {
-                    skeletonAnim.SetBool("isWalking", false);
-                    skeletonAnim.SetBool("isAttacking", false);
-                    skeletonAnim.SetBool("isDead", true);
+                    cyclopsAnim.SetBool("isWalking", false);
+                    cyclopsAnim.SetBool("isAttacking", false);
+                    cyclopsAnim.SetBool("isDead", true);
                 }
                 else if(animType == "delete")
                 {
-                    skeletonAnim.SetBool("isDeleted", true);
-                    skeletonAnim.SetBool("isDead", false);
+                    cyclopsAnim.SetBool("isDeleted", true);
+                    cyclopsAnim.SetBool("isDead", false);
+                }
+                break;
+
+            case "Spartan":
+
+                if(animType == "wander" || animType == "chase")
+                {
+                    spartanAnim.SetBool("isWalking", true);
+                    spartanAnim.SetBool("isAttacking", false);
+                }
+                else if(animType == "attack")
+                {
+                    spartanAnim.SetBool("isWalking", false);
+                    spartanAnim.SetBool("isAttacking", true);
+                }
+                else if(animType == "dead")
+                {
+                    spartanAnim.SetBool("isWalking", false);
+                    spartanAnim.SetBool("isAttacking", false);
+                    spartanAnim.SetBool("isDead", true);
+                }
+                else if(animType == "delete")
+                {
+                    spartanAnim.SetBool("isDeleted", true);
+                    spartanAnim.SetBool("isDead", false);
                 }
                 break;
         }
