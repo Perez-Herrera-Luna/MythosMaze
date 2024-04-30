@@ -23,9 +23,4 @@ MonoBehaviour:
   - {x: -2, y: 0}
   enemyPrefabNames:
   - Skeleton_Enemy
-  maxNumEnemies: 8
-  activePowerupNames:
-  - WeaponDamage
-  completedPowerupNames: []
-  maxNumPowerups: 1
-  charPrefabNames: []
+  charPrefabName: Charon

@@ -409,7 +409,7 @@ public class ProceduralLevel : MonoBehaviour
                 arenas.Add(arenaScript);
             }
 
-            // set arena initial values (isSourceArena, hasCharacter, arenaLevel, availableDoorLocations)
+            // set arena initial values (isSourceArena, arenaLevel, availableDoorLocations)
             arenaScript.SetInitialValues(sourceArena, currLevel, levelGraph.GeneratedArenas[i].GetAvailableDoors);
 
             // Adding Powerups to Arena (firstRound => checks for powerup maxNUm)

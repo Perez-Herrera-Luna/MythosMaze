@@ -18,7 +18,9 @@ public class Arena : MonoBehaviour
 
     [Header("Quest Character")]
     private bool hasCharacter;   // designates if this arena has a quest character within it or not   
-    public Transform CharacterLoc;
+    public Transform characterLoc;
+    private GameObject characterPrefab = null;
+    private GameObject questCharacter;
 
     [Header("Arena Doors")]
     private List<Vector2Int> activeDoors = new List<Vector2Int>();
@@ -66,7 +68,11 @@ public class Arena : MonoBehaviour
         if (doorLocations.Count != doorGameObjects.Count)
             Debug.Log("Error: mismatch in arena door locations / door game objects");
 
-        StartCoroutine(SetupArena());
+        if (isSrcArena)
+            SetupSourceArena();
+        else
+            StartCoroutine(SetupArena());
+
         OpenDoors();
     }
 
@@ -214,10 +220,8 @@ public class Arena : MonoBehaviour
         LoadPrefabs();
 
         SetupEnemies();
-        // SetupPowerups();
 
-        if(!isSourceArena)
-            DeactivatePowerups();
+        DeactivatePowerups();
 
         if (hasCharacter)
             SetupCharacter();
@@ -234,8 +238,8 @@ public class Arena : MonoBehaviour
 
         if (!arenaActive)
         {
-            if (!arenaCompleted)
-                CloseDoors();
+            /*if (!arenaCompleted)
+                CloseDoors();*/
 
             ActivatePowerups();
             Debug.Log("arena activated");
@@ -270,11 +274,10 @@ public class Arena : MonoBehaviour
 
         if (arenaCompleted)
         {
-            OpenDoors();
-
             if (!hasCharacter)
             {
                 ActivatePowerups();
+                OpenDoors();
             }
             else
             {
@@ -288,6 +291,15 @@ public class Arena : MonoBehaviour
     }
 
     // ********** INITIAL SETUP ********** // 
+
+    private void SetupSourceArena()
+    {
+        LoadPrefabs();
+        SetupEnemies();
+
+        if(hasCharacter)
+            SetupCharacter();
+    }
 
     // helper function: loads needed enemy (and maybe other - powerup, char) prefabs from Resources folder
     private void LoadPrefabs()
@@ -306,17 +318,14 @@ public class Arena : MonoBehaviour
                 enemyPrefabs.Add(enemyPrefab);
         }
 
-        /*foreach (string powerupName in arenaData.activePowerupNames)
+        if (hasCharacter)
         {
-            // TODO : compile prefabs into one folder
-
-            GameObject activePowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerupName);
-            
-            if (activePowerup == null)
-                Debug.Log("Error finding powerup prefab in Assets/Resources/Prefabs/Powerups folder");
+            GameObject charPrefab = Resources.Load<GameObject>("Prefabs/Quests/" + arenaData.charPrefabName);
+            if (charPrefab == null)
+                Debug.Log("Error finding quest character prefab in Assets/Resources/Prefabs/Quests folder");
             else
-                activePowerupPrefabs.Add(activePowerup);
-        }*/
+                characterPrefab = charPrefab;
+        }
     }
 
     // helper function: Instantiates enemies at procedurally generated locations
@@ -352,65 +361,18 @@ public class Arena : MonoBehaviour
         }
     }
 
-    // helper function: generates a random, valid enemy location
-    /*private Vector3 GenerateEnemyLocation()
-    {
-        return Vector3.zero;
-    } */
-
-    // helper function: instantiates all arena powerups at procedurally generated locations
-    /*private void SetupPowerups()
-    {
-        // TODO: procedurally generate pickup locations
-
-        // setup arena active powerups
-        Quaternion rotation = Quaternion.Euler(0, 0, 0);
-
-        List<Vector3> activePowerupLocs = new List<Vector3>();
-        Vector3 loc = new Vector3(2, 0.85f, 2);
-        activePowerupLocs.Add(loc + gameObject.transform.position);
-        loc = new Vector3(-8, 0.85f, 20);
-        activePowerupLocs.Add(loc + gameObject.transform.position);
-        loc = new Vector3(-20, 0.85f, 10);
-        activePowerupLocs.Add(loc + gameObject.transform.position);
-
-        // for initial prototype just spawn one type of pickup at set locations
-        for (int powerupNum = 0; powerupNum < arenaData.maxNumPowerups; powerupNum++)
-        {
-            activePowerups.Add(Instantiate(activePowerupPrefabs[powerupNum], activePowerupLocs[powerupNum], rotation, gameObject.transform));
-        }
-
-        // setup arena completion powerup(s)
-        Quaternion rotation2 = Quaternion.Euler(4.047f, 12.59f, -88.822f);
-
-        List<Vector3> completePowerupLocs = new List<Vector3>();
-        Vector3 powerupLoc = new Vector3(0, 0.85f, 0);
-        completePowerupLocs.Add(powerupLoc + gameObject.transform.position);
-
-        if(completePowerupLocs.Count != completePowerupPrefabs.Count)
-        {
-            Debug.Log("error: incorrect number of powerup prefabs");
-            return;
-        }
-
-        for (int powerupNum = 0; powerupNum < completePowerupLocs.Count; powerupNum++)
-        {
-            completePowerups.Add(Instantiate(completePowerupPrefabs[powerupNum], completePowerupLocs[powerupNum], rotation, gameObject.transform));
-        }
-
-        DeactivatePowerups();
-    }*/
-
-    // helper function: generates a random, valid powerup location
-    /*private Vector3 GeneratePowerupLocation()
-    {
-        return Vector3.zero;
-    } */
-
     // helper function: instantiates (and deactivates) character in center of arena
     private void SetupCharacter()
     {
-        // TODO : this (setupcharacter)
+        if (hasCharacter)
+        {
+            if(characterPrefab != null)
+            {
+                questCharacter = Instantiate(characterPrefab, characterLoc);
+                questCharacter.GetComponent<QuestCharacter>().SetArenaConnection(this);
+                questCharacter.SetActive(false);
+            }
+        }
     }
 
 
@@ -475,6 +437,7 @@ public class Arena : MonoBehaviour
     // helper function: activates quest character
     private void ActivateCharacter()
     {
+        questCharacter.SetActive(true);
     }
 
     // ********** DOORS ********** // 

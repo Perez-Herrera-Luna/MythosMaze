@@ -8,19 +8,19 @@ public class Powerup : MonoBehaviour
 {
     public PowerupData powerupData;
 
-    private PowerupManager powerupMgr;
+    // private PowerupManager powerupMgr;
 
     // Start is called before the first frame update
     void Start()
     {
-        powerupMgr = GameObject.Find("PowerupManager").GetComponent<PowerupManager>();
+        // powerupMgr = GameObject.Find("PowerupManager").GetComponent<PowerupManager>();
     }
 
     void OnTriggerExit(Collider hit)
     {
         if(hit.gameObject.CompareTag("player"))
         {
-            powerupMgr.ActivatePowerup(powerupData.powerupName, powerupData.valuePerLevel);
+            PowerupManager.inst.ActivatePowerup(powerupData.powerupName, powerupData.valuePerLevel);
 
             Destroy(gameObject);
         }

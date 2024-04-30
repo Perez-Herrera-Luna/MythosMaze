@@ -10,10 +10,17 @@ public class SceneManager : MonoBehaviour
 {
     public static SceneManager inst;
     public UserInterfaceManager userInterfaceMgr;
-    public GameManager gameManager;
+    // public GameManager gameManager;
     private void Awake()
     {
-        inst = this;
+        if (inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
@@ -22,10 +29,10 @@ public class SceneManager : MonoBehaviour
 
     }
 
-    public void setGameManager(GameManager gm)
+/*    public void setGameManager(GameManager gm)
     {
         gameManager = gm;
-    }
+    }*/
 
     public void setUserInterfaceManager(UserInterfaceManager uim)
     {
@@ -118,10 +125,11 @@ public class SceneManager : MonoBehaviour
         if (currLevel.Success)
         {
             currLevel.LoadLevel();
-            gameManager.GameStart();
+            GameManager.inst.GameStart();
         }
         else
         {
+            // TODO: 
             // error handling in absolute worst case (aka despite all testing level generation failed
             // should return to main menu
             // maybe popup or smtg saying smtg along the lines of 'error ocurred, sorry, please retry loading game'

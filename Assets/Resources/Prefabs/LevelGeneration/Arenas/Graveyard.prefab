@@ -1815,7 +1815,7 @@ MonoBehaviour:
   arenaData: {fileID: 11400000, guid: 85f8a1b04e9e4f84fa8ee880498551cf, type: 2}
   arenaActive: 0
   arenaCompleted: 0
-  CharacterLoc: {fileID: 5445638718731919485}
+  characterLoc: {fileID: 5445638718731919485}
   doorGameObjects:
   - {fileID: 3872240826156337900}
   - {fileID: 1311633393593067009}

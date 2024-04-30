@@ -6,8 +6,8 @@ public class PowerupManager : MonoBehaviour
 {
     public static PowerupManager inst;
 
-    private PlayerManager playerMgr;
-    private GameManager gameMgr;
+    // private PlayerManager playerMgr;
+    // private GameManager gameMgr;
 
     private string currName;
     private float currAmount;
@@ -18,18 +18,25 @@ public class PowerupManager : MonoBehaviour
 
     private void Awake()
     {
-        inst = this;
+        if (inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
     {
-        gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
+        // gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void setPlayerManager(PlayerManager player)
+/*    public void setPlayerManager(PlayerManager player)
     {
         playerMgr = player;
-    }
+    }*/
 
     public void ActivatePowerup(string powerupName, float amount)
     {
@@ -44,35 +51,35 @@ public class PowerupManager : MonoBehaviour
             switch (currName)
             {
                 case "WeaponBuff":
-                    playerMgr.buffWeapons(amount);
+                    PlayerManager.inst.buffWeapons(amount);
                     break;
 
                 case "AbsoluteDefense":
-                    playerMgr.buffAbsoluteDefense(amount);
+                    PlayerManager.inst.buffAbsoluteDefense(amount);
                     break;
 
                 case "MaxHealth":
-                    playerMgr.buffMaxHealth(amount);
+                    PlayerManager.inst.buffMaxHealth(amount);
                     break;
 
                 case "Healing":
-                    playerMgr.healPlayer(amount);
+                    PlayerManager.inst.healPlayer(amount);
                     break;
 
                 case "MoveSpeed":
-                    playerMgr.buffMoveSpeed(amount);
+                    PlayerManager.inst.buffMoveSpeed(amount);
                     break;
 
                 case "DashCooldown":
-                    playerMgr.buffDashCooldown(amount);
+                    PlayerManager.inst.buffDashCooldown(amount);
                     break;
 
                 case "JumpForce":
-                    playerMgr.buffJumpForce(amount);
+                    PlayerManager.inst.buffJumpForce(amount);
                     break;
 
                 case "WeaponDamage":
-                    playerMgr.buffWeaponDamage(amount);
+                    PlayerManager.inst.buffWeaponDamage(amount);
                     break;
 
                 default:
