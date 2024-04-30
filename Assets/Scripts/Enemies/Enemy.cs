@@ -347,15 +347,22 @@ public class Enemy : MonoBehaviour
                 rb.velocity = direction * 10;
                 rb.rotation = targetRotation;
 
+                StartCoroutine(coolDownTimer(4.0f));
                 Destroy(rock, 5.0f);
             }
             if(enemy.name == "Spartan")
             {
                 StartCoroutine(spawnSpear());
+                StartCoroutine(coolDownTimer(4.0f));
+            }
+
+            if(enemy.name == "Skeleton")
+            {
+                StartCoroutine(coolDownTimer(2.0f));
             }
 
             //Debug.Log("setting hasAttacked to true");
-            StartCoroutine(coolDownTimer(2.0f));
+            
         }
         else
         {
@@ -388,7 +395,7 @@ public class Enemy : MonoBehaviour
         Vector3 direction = (target - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         
-        rb.velocity = direction * 10;
+        rb.velocity = direction * 15;
         rb.rotation = targetRotation;
 
         Destroy(spear, 2.0f);

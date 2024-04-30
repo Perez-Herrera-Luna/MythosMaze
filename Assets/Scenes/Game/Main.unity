@@ -1903,17 +1903,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2241288833158439648, guid: ccc438ec166c15643a6f51d865b2507d, type: 3}
-      propertyPath: spearPrefab
-      value: 
-      objectReference: {fileID: 2432990227335573450, guid: 3566560cbcbb36e40ba9cbdfd8c37c98, type: 3}
     - target: {fileID: 2357906746932159951, guid: ccc438ec166c15643a6f51d865b2507d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -22.258
       objectReference: {fileID: 0}
     - target: {fileID: 2357906746932159951, guid: ccc438ec166c15643a6f51d865b2507d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.64
+      value: 4.17
       objectReference: {fileID: 0}
     - target: {fileID: 2357906746932159951, guid: ccc438ec166c15643a6f51d865b2507d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1952,8 +1948,7 @@ PrefabInstance:
       value: Spartan_Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5965582863015511173, guid: ccc438ec166c15643a6f51d865b2507d, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccc438ec166c15643a6f51d865b2507d, type: 3}
