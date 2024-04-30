@@ -1279,12 +1279,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25182ce917cf3d4991c4e062cdbb10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arenaData: {fileID: 11400000, guid: ae940306fe1492b4b8ee22594d98b12c, type: 2}
+  arenaData: {fileID: 11400000, guid: 85f8a1b04e9e4f84fa8ee880498551cf, type: 2}
+  arenaActive: 0
+  arenaCompleted: 0
+  CharacterLoc: {fileID: 0}
   doorGameObjects:
   - {fileID: 3872240826156337900}
   - {fileID: 1311633393593067009}
   - {fileID: 6870192838538369858}
   - {fileID: 1851061550515925622}
+  enemyLocs: []
+  activePowerups: []
+  activePowerupLocs: []
+  completePowerupLocs: []
 --- !u!65 &7809557433836893060
 BoxCollider:
   m_ObjectHideFlags: 0

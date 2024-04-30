@@ -13,10 +13,19 @@ MonoBehaviour:
   m_Name: Level2
   m_EditorClassIdentifier: 
   level: 2
-  gridRows: 31
-  gridCols: 31
+  gridRows: 41
+  gridCols: 41
   pathWidth: 2
-  maxNumArenas: 6
+  maxNumArenas: 8
   arenaDistanceBuff: 0
-  drunkenRatio: 8
+  drunkenRatio: 5
   maxPathLength: 18
+  powerups:
+  - WeaponBuff
+  - AbsoluteDefense
+  - MaxHealth
+  - Healing
+  - MoveSpeed
+  - DashCooldown
+  - JumpForce
+  - WeaponDamage

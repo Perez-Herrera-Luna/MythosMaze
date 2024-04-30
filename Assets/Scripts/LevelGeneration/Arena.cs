@@ -59,6 +59,7 @@ public class Arena : MonoBehaviour
         isSourceArena = isSrcArena;
         arenaLevel = currLevel;
         activeDoors = arenaData.doorLocations.Except(availableDoorLocs).ToList();
+        CloseDoors();
 
         doorLocations = isBossArena ? activeDoors : arenaData.doorLocations;
 
@@ -66,6 +67,7 @@ public class Arena : MonoBehaviour
             Debug.Log("Error: mismatch in arena door locations / door game objects");
 
         StartCoroutine(SetupArena());
+        OpenDoors();
     }
 
     public bool AddPowerup(PowerupData powerup, bool firstRound)

@@ -47,8 +47,10 @@ public class GraphNode
         // Debug.Log("adding arena at: " + gridLocation + " with maxNumDoors = " + maxNumDoors + " and initialDoorNum = " + initialDoorNum);
     }
 
-    public void UpdateArenaDataValue(ArenaData newArena, int pathWidth)
+    public void UpdateArenaDataValue(int arenaIndex, ArenaData newArena, int pathWidth)
     {
+        arenaPrefabIndex = arenaIndex;
+
         arenaRows = newArena.height / pathWidth;
         arenaCols = newArena.width / pathWidth;
 

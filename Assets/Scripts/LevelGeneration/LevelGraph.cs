@@ -77,8 +77,6 @@ public class LevelGraph
             arenaAdjacencyList[0] = new List<(int, float)>();
 
             maxCollisionRadius = arena.collisionRadius;
-
-            // if everything worked correctly
             numArenasAdded++;
         }
         else
@@ -185,12 +183,15 @@ public class LevelGraph
             }
         }
 
-        generatedArenas[srcArenaIndex].UpdateArenaDataValue(srcArenaData, pathWidth);
-
         if (CheckForArenaCollision(srcArenaData, generatedArenas[srcArenaIndex].GridLocation))
             return true;
         else
             return false;
+    }
+
+    public void UpdateSourceArena(ArenaData newArena, int pathWidth)
+    {
+        generatedArenas[srcArenaIndex].UpdateArenaDataValue(0, newArena, pathWidth);
     }
 
     // public function called by proceduralLevel to generate shortest path

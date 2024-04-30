@@ -34,10 +34,11 @@ public class ProceduralLevel : MonoBehaviour
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
     private bool success = false;
+    private bool initialPathSuccess = false;
 
     private int maxTriesGenLoc = 500;
     private int maxTriesGenArena = 20;
-    private int maxTriesLevelGen = 3;
+    private int maxTriesLevelGen = 100;
     private int maxTriesPowerups = 10;
 
     [Header("Player")]
@@ -99,10 +100,29 @@ public class ProceduralLevel : MonoBehaviour
 
             GenerateArenas();
 
-            GeneratePaths();
+            success = GeneratePaths();
 
-            // run checks on arenas and paths
-            // bool sucess = result of those  
+            // final checks on non-boss arenas' door numbers
+            int num2DoorArenas = 0;
+            for (int i = 1; i < levelGraph.GeneratedArenas.Count; i++)
+            {
+                GraphNode arena = levelGraph.GeneratedArenas[i];
+
+                if (arena.NumDoors == 1)
+                    success = false;
+                else if (arena.NumDoors == 2)
+                    num2DoorArenas++;
+            }
+
+            if(num2DoorArenas == 2)
+            {
+                if (!initialPathSuccess)
+                    success = false;
+            }else if(num2DoorArenas > 2)
+            {
+                success = false;
+            }
+
         } while (!success & (numTries++ < maxTriesLevelGen));
 
         if (numTries == (maxTriesLevelGen + 1))
@@ -189,7 +209,10 @@ public class ProceduralLevel : MonoBehaviour
             int previousPrefabIndex = levelGraph.GeneratedArenas[srcIndex].ArenaPrefabIndex;
 
             if (generateArenasSuccess)
+            {
                 generateArenasSuccess = levelGrid.UpdateArena(levelGraph.GeneratedArenas[srcIndex].GridLocation, srcIndex, srcArenaData, arenasData[previousPrefabIndex]);
+                levelGraph.UpdateSourceArena(srcArenaData, levelGrid.PathWidth);
+            }
 
         } while (!generateArenasSuccess & (numTries++ < maxTries));
 
@@ -205,6 +228,7 @@ public class ProceduralLevel : MonoBehaviour
         
         // Initial Paths
         GraphNode srcArena, targetArena;
+        initialPathSuccess = true;
 
         // iterate through shortest path tree, generate initial paths
         foreach(KeyValuePair<int, int> kvp in levelGraph.ShortestPath){
@@ -214,7 +238,9 @@ public class ProceduralLevel : MonoBehaviour
                 srcArena = levelGraph.GeneratedArenas[kvp.Value];
                 targetArena = levelGraph.GeneratedArenas[kvp.Key];
 
-                bool pathGenerated = levelGrid.GeneratePath(true, srcArena, kvp.Value, targetArena, kvp.Key);                
+                bool pathGenerated = levelGrid.GeneratePath(true, srcArena, kvp.Value, targetArena, kvp.Key);
+                if (!pathGenerated)
+                    initialPathSuccess = false;
             }
         }
 
@@ -252,7 +278,7 @@ public class ProceduralLevel : MonoBehaviour
             {
                 if (source.srcArena.NumDoors < 2)
                 {
-                    Debug.Log("Error: Arena with only one door");
+                    Debug.Log("Error: Source arena with only one door");
                     return false;
                 }
                 else
@@ -309,7 +335,7 @@ public class ProceduralLevel : MonoBehaviour
                 // try adding path between final arenas in opposite direction
                 if(!levelGrid.GeneratePath(false, remaining.arena, remaining.index, source.srcArena, source.srcIndex))
                 {
-                    Debug.Log("Error: Arena(s) with only one door");
+                    // Debug.Log("Error: Arena(s) with only one door");
                     return false;
                 }
                 else
@@ -337,7 +363,7 @@ public class ProceduralLevel : MonoBehaviour
     // called by SceneManager.cs
     public void LoadLevel()
     {
-        // levelGrid.PrintGrid();
+        levelGrid.PrintGrid();
         
         LoadArenas();
 
@@ -507,18 +533,25 @@ public class ProceduralLevel : MonoBehaviour
                 int numTries = 0;
                 while (powerups[powerup] < powerup.minNum && numTries++ < maxTriesPowerups)
                 {
-                    randPath = ThreadSafeRandom.GetRandom(0, powerupLocs.Count);
-                    GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerup.powerupName);
-
-                    if(currPowerup.tag == "powerup")
+                    if (powerupLocs.Count > 0)
                     {
-                        activePathPowerups.Add(Instantiate(currPowerup, powerupLocs[randPath]));
-                        powerups[powerup] += 1;
+                        randPath = ThreadSafeRandom.GetRandom(0, powerupLocs.Count);
+                        GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerup.powerupName);
+
+                        if (currPowerup.tag == "powerup")
+                        {
+                            activePathPowerups.Add(Instantiate(currPowerup, powerupLocs[randPath]));
+                            powerups[powerup] += 1;
+                        }
+                        else
+                        {
+                            Debug.Log("Error: powerup prefab not instantiated correctly");
+                        }
                     }
                     else
                     {
-                        Debug.Log("Error: powerup prefab not instantiated correctly");
-                    }
+                        Debug.Log("Error: PowerupLocs == 0");
+                    }          
                 }
 
                 if(numTries >= maxTriesPowerups)

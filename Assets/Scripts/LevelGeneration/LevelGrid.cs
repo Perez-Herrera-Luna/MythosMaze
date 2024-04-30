@@ -124,7 +124,7 @@ public class LevelGrid
                 if(IsValidTarget(currLocation)){
                     char node = 'X';
 
-                    if ((int)i == 0 & (int)j == 0)
+                    if (currLocation == centerLoc)
                         node = 'A';     // set 'A' at arenaCenter
 
                     int roundedi = (i > 0) ? (int)i : (int)Math.Round(i, MidpointRounding.AwayFromZero);
@@ -132,7 +132,9 @@ public class LevelGrid
 
                     foreach (Vector2Int door in arena.doorLocations)
                     {
-                        if ((door.x == roundedi) & (door.y == roundedj))
+                        Vector2Int doorLoc = new Vector2Int(centerLoc.x + door.x, centerLoc.y + door.y);
+
+                        if (currLocation == doorLoc)
                             node = 'D';
                     }
 
@@ -168,16 +170,27 @@ public class LevelGrid
                 currLocation.Set((int)(centerLoc.x + i), (int)(centerLoc.y + j));
 
                 if (IsValidTarget(currLocation))
+                {
                     levelLayout[currLocation.x, currLocation.y] = new GridNode('E');
+                }
             }
         }
     }
 
     public bool UpdateArena(Vector2Int centerLoc, int arenaIndex, ArenaData newArena, ArenaData oldArena)
     {
-        RemoveArena(centerLoc, oldArena);
+        if(newArena != oldArena)
+        {
+            Debug.Log("updating source arena");
+            RemoveArena(centerLoc, oldArena);
 
-        return AddArena(centerLoc, arenaIndex, newArena);
+            return AddArena(centerLoc, arenaIndex, newArena);
+        }
+        else
+        {
+            Debug.Log("src arena was already graveyard");
+            return true;
+        }
     }
 
     // After path is generated, add all path connections to grid
@@ -194,7 +207,7 @@ public class LevelGrid
             GridNode srcNode = GetNode(pathConnection.Key);
             success = srcNode.AddConnection(pathDir, startArena, endArena, reachedEndArena);
             if (!success){
-                Debug.Log("Error adding pathConnection to GridNode");
+                Debug.Log("Error adding pathConnection to GridNode at loc " + pathConnection.Key);
                 return false;
             }
 
@@ -309,8 +322,11 @@ public class LevelGrid
             reachedEndArena = (currWalkerLoc == currTargetLoc);
 
             if(success){
+                // Debug.Log("Successful path generated btw: " + startIndex + " and " + endIndex);
+                // Debug.Log("reachedEndArena = " + reachedEndArena);
+
                 if (!AddPath(startIndex, endIndex))
-                    Debug.Log("Error adding path");
+                    Debug.Log("Error adding path: " + startIndex + " to " + endIndex);
 
                 // mark used doors in src and target arena GraphNodes as unavailable
                 if(!startArena.AddDoor(startDoors[startDoor]))
