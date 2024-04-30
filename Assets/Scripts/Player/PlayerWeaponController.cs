@@ -274,7 +274,7 @@ public class PlayerWeaponController : MonoBehaviour
         GameObject arrow = Instantiate(arrowPrefab, arrowFirePoint.position, arrowFirePoint.rotation);
         Rigidbody rb = arrow.GetComponent<Rigidbody>();
 
-        Vector3 arrowVelocity = direction * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
+        Vector3 arrowVelocity = direction * 2 * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
 
         // Adjust arrow rotation to align with game world's forward direction
         //arrow.transform.forward = arrowVelocity.normalized;

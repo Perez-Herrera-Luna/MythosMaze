@@ -36,6 +36,10 @@ public class Enemy : MonoBehaviour
     public bool hasAttacked = false;
     public bool playerInSight, playerAttackable;
 
+    [Header("projectiles")]
+    public Transform rockFirePoint;
+    public GameObject rockPrefab;
+
 
     //wandering
     private Vector3 moveDirection;
@@ -324,8 +328,18 @@ public class Enemy : MonoBehaviour
     {
         if(!hasAttacked)
         {
-            //Debug.Log("Enemy Attacking!");
+            Debug.Log("Enemy Attacking!");
             hasAttacked = true;
+
+            if(enemy.name == "Cyclops")
+            {
+                GameObject rock = Instantiate(rockPrefab, rockFirePoint.position, rockFirePoint.rotation);
+                Rigidbody rb = rock.GetComponent<Rigidbody>();
+
+                Vector3 rockDirection = player.position;
+                //Vector3 rockVelocity = 
+            }
+
             //Debug.Log("setting hasAttacked to true");
             StartCoroutine(coolDownTimer(2.0f));
         }
@@ -339,7 +353,7 @@ public class Enemy : MonoBehaviour
                 moveEnemy(backOff, 1);
             }
 
-            if(enemy.name == "Skeleton")
+            if(enemy.name == "Skeleton" || enemy.name == "Cyclops")
             {
                 moveEnemy(transform.position, 2); //stop enemy movement
                 transform.LookAt(player); // have enemy face the player

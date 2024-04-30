@@ -1341,7 +1341,7 @@ MonoBehaviour:
   bowData: {fileID: 11400000, guid: 869cd75611c690c49a2539df9e9f18d3, type: 2}
   moveScript: {fileID: 0}
   weaponSelect: 0
-  weaponDamage: 050000000200000005000000
+  weaponDamage: []
   daggerObject: {fileID: 1824996977}
   throwingKnifeObject: {fileID: 1431217411}
   bowAndArrowObject: {fileID: 282307798}
@@ -1353,9 +1353,9 @@ MonoBehaviour:
   arrowFirePoint: {fileID: 1682187149}
   knifePrefab: {fileID: 0}
   knifeSpeed: 20
-  kifeCoolDown: 1
   daggerCoolDown: 0.25
   weaponCooldown: 2
+  weaponSpeed: 2
   chargeEndTime: 0
   bowCharging: 0
   knifeTransform: {fileID: 1431217412}

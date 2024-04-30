@@ -15,11 +15,13 @@ MonoBehaviour:
   name: Cyclops
   health: 0
   maxHealth: 20
+  minNumPerArena: 0
+  maxNumPerArena: 3
   attackDamage: 0
   maxAttackDamage: 0
   attackSpeed: 1
   hasAttacked: 0
-  sightRange: 15
+  sightRange: 40
   attackRange: 10
   playerInSight: 0
   playerAttackable: 0
