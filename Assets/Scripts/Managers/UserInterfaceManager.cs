@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEditor.SearchService;
 using UnityEngine.UI;
 using UnityEngine;
+using TMPro;
 
 public class UserInterfaceManager : MonoBehaviour
 {
     public static UserInterfaceManager inst;
-    public SceneManager sceneMgr;
-    public GameManager gameMgr;
+    // public SceneManager sceneMgr;
+    // public GameManager gameMgr;
     public MainMenuController mainMenuController;
     public OptionsMenuController optionsMenuController;
     public EscapeMenuController escapeMenuController;
@@ -27,6 +28,8 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject playerDamageScreen;
     public PlayerHealthBar healthBar;
     public UnityEngine.UI.Slider progressBar;
+    public GameObject questDialogue;
+    public TMP_Text questDialogueText;
 
     void Awake()
     {
@@ -51,6 +54,10 @@ public class UserInterfaceManager : MonoBehaviour
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
         healthBar = GameObject.Find("Health bar").GetComponent<PlayerHealthBar>();
 
+        questDialogue = GameObject.Find("QuestDialogue");
+        questDialogueText = GameObject.Find("DialogueText").GetComponent<TMP_Text>();
+        questDialogueText.text = null;
+
         mainMenuController = mainMenu.GetComponent<MainMenuController>();
         optionsMenuController = optionsMenu.GetComponent<OptionsMenuController>();
         escapeMenuController = inst.GetComponent<EscapeMenuController>();
@@ -60,10 +67,11 @@ public class UserInterfaceManager : MonoBehaviour
 
         EnableMenuElement(mainMenu);
 
-        sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
-        gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
-        sceneMgr.setUserInterfaceManager(inst);
-        gameMgr.setUserInterfaceManager(inst);
+        // sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        // gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
+        SceneManager.inst.setUserInterfaceManager(inst);
+        GameManager.inst.setUserInterfaceManager(inst);
+        QuestManager.inst.setUserInterfaceManager(inst);
     }
 
     public void MainMenu()
@@ -108,7 +116,7 @@ public class UserInterfaceManager : MonoBehaviour
     public void BackToMainMenu()
     {
         EnableMenuElement(mainMenu);
-        gameMgr.BackToMainMenu();
+        GameManager.inst.BackToMainMenu();
     }
 
     public void KeyRebinding()
@@ -119,7 +127,7 @@ public class UserInterfaceManager : MonoBehaviour
     public void KeyRebindingBackButton()
     {
         // EnableMenuElement(optionsMenu);
-        if (gameMgr.isGamePaused)
+        if (GameManager.inst.isGamePaused)
         {
             EnableMenuElement(optionsMenu, false);
         }
@@ -131,7 +139,7 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void EscapeMenu()
     {
-        gameMgr.PauseGame();
+        GameManager.inst.PauseGame();
         EnableMenuElement(escapeMenu, false);
     }
 
@@ -149,7 +157,7 @@ public class UserInterfaceManager : MonoBehaviour
         playerDamageScreen.SetActive(false);
         playerGameUI.SetActive(true);
 
-        gameMgr.ResumeGame();
+        GameManager.inst.ResumeGame();
     }
 
     public void GameStart()
@@ -157,6 +165,23 @@ public class UserInterfaceManager : MonoBehaviour
         loadingScreen.SetActive(false);
         background.SetActive(false);
         playerGameUI.SetActive(true);
+    }
+
+    public void UpdateQuestText(string newText)
+    {
+        questDialogueText.text = newText;
+    }
+
+    public void ShowQuestDialogue()
+    {
+        if (questDialogueText.text != null)
+            questDialogue.SetActive(true);
+    }
+
+    public void HideQuestDialogue()
+    {
+        questDialogueText.text = null;
+        questDialogue.SetActive(false);
     }
 
     public void DisplayDamage(float health)
@@ -220,7 +245,7 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void LoadFirstLevel()
     {
-        sceneMgr.LoadSceneByName(gameMgr.firstLevelName);
+        SceneManager.inst.LoadSceneByName(GameManager.inst.firstLevelName);
     }
 
     public void EnableMenuElement(GameObject element, bool enableFullBackground = true)

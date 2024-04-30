@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager inst;
     public UserInterfaceManager userInterfaceMgr;
-    public SceneManager sceneMgr;
+    // public SceneManager sceneMgr;
 
     public string firstLevelName = "PrototypeLevel";
 
@@ -26,23 +26,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private QuestManager questMgr;
-    private PlayerManager playerMgr;
+    // private QuestManager questMgr;
+    // private PlayerManager playerMgr;
 
     public int numLevels;       // number of levels in the game
     public int numLevelsCompleted;      //  number of levels player has completed
 
     void Start()
     {
-        sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
-        sceneMgr.LoadPlayerAndUserInterfaceScenes();
-        sceneMgr.setGameManager(inst);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        // sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        SceneManager.inst.LoadPlayerAndUserInterfaceScenes();
+        // sceneMgr.setGameManager(inst);
     }
 
     public void setUserInterfaceManager(UserInterfaceManager uim)
@@ -107,7 +101,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         userInterfaceMgr.GameOver();
-        sceneMgr.UnloadCurrLevel();
+        SceneManager.inst.UnloadCurrLevel();
     }
 
     public void GameWon()
@@ -118,6 +112,7 @@ public class GameManager : MonoBehaviour
     public void GameStart()
     {
         userInterfaceMgr.GameStart();
+        AudioManager.inst.PlayBackgroundTrack();
 
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
@@ -132,7 +127,7 @@ public class GameManager : MonoBehaviour
         gameplayStarted = false;
 
         ResumeMainMenu();
-        sceneMgr.UnloadCurrLevel();
+        SceneManager.inst.UnloadCurrLevel();
     }
 
     public void PauseGame()

@@ -6,8 +6,8 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager inst;
 
-    private GameManager gameMgr;
-    private PowerupManager powerupMgr;
+    // private GameManager gameMgr;
+    // private PowerupManager powerupMgr;
 
     private PlayerMovement playerMov;
     private PlayerWeaponController playerWeapons;
@@ -23,18 +23,25 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        inst = this;
+        if (inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
-        powerupMgr = GameObject.Find("PowerupManager").GetComponent<PowerupManager>();
+        // gameMgr = GameObject.Find("GameManager").GetComponent<GameManager>();
+        // powerupMgr = GameObject.Find("PowerupManager").GetComponent<PowerupManager>();
         playerMov = GameObject.Find("Player").GetComponent<PlayerMovement>();
         playerWeapons = GameObject.Find("Player Collider").GetComponent<PlayerWeaponController>();
 
-        powerupMgr.setPlayerManager(inst);
+        // PowerupManager.inst.setPlayerManager(inst);
         health = maxHealth;
     }
 
@@ -47,7 +54,7 @@ public class PlayerManager : MonoBehaviour
         else if (health <= 0)
         {
             health = 0;
-            gameMgr.GameOver();
+            GameManager.inst.GameOver();
             Debug.Log("Player Died");
         }
     }
@@ -61,11 +68,11 @@ public class PlayerManager : MonoBehaviour
     {
         health -= Mathf.Max(scaledDefense * (damage - absoluteDefense), 0);
         checkHealth();
-        gameMgr.DisplayDamage(health);
+        GameManager.inst.DisplayDamage(health);
 
         yield return new WaitForSeconds(2);
 
-        gameMgr.HideDamage();
+        GameManager.inst.HideDamage();
     }
 
     // Powerup Helper Functions
@@ -73,21 +80,21 @@ public class PlayerManager : MonoBehaviour
     public void buffWeapons(float amount)
     {
         playerWeapons.buffWeapons(amount);
-        gameMgr.DisplayWeaponPowerup(amount);
+        GameManager.inst.DisplayWeaponPowerup(amount);
         Debug.Log("Weapons Buffed");
     }
 
     public void buffAbsoluteDefense(float amount)
     {
         absoluteDefense += amount;
-        gameMgr.DisplayPlayerPowerup("defense", amount);
+        GameManager.inst.DisplayPlayerPowerup("defense", amount);
         Debug.Log("Absolute Defense Buffed");
     }
 
     public void buffMaxHealth(float amount)
     {
         maxHealth += amount;
-        gameMgr.DisplayMaxHealthBuff(maxHealth);
+        GameManager.inst.DisplayMaxHealthBuff(maxHealth);
         Debug.Log("Buff Max Health: " + amount);
     }
 
@@ -95,28 +102,28 @@ public class PlayerManager : MonoBehaviour
     {
         health += amount;
         checkHealth();
-        gameMgr.DisplayPlayerHealing(health);
+        GameManager.inst.DisplayPlayerHealing(health);
         Debug.Log("Heal Player: " + amount);
     }
 
     public void buffMoveSpeed(float amount)
     {
         playerMov.walkSpeed = playerMov.walkSpeed + amount;
-        gameMgr.DisplayPlayerPowerup("speed", amount);
+        GameManager.inst.DisplayPlayerPowerup("speed", amount);
         Debug.Log("Buff Move Speed: " + amount);
     }
 
     public void buffDashCooldown(float amount)
     {
         playerMov.dashCooldown = playerMov.dashCooldown - amount;
-        gameMgr.DisplayPlayerPowerup("dash", amount);
+        GameManager.inst.DisplayPlayerPowerup("dash", amount);
         Debug.Log("Buff Dash Cooldown: -" + amount);
     }
 
     public void buffJumpForce(float amount)
     {
         playerMov.jumpForce = playerMov.jumpForce + amount;
-        gameMgr.DisplayPlayerPowerup("jump", amount);
+        GameManager.inst.DisplayPlayerPowerup("jump", amount);
         Debug.Log("Buff Jump Force: " + amount);
     }
 
@@ -126,7 +133,7 @@ public class PlayerManager : MonoBehaviour
         {
             playerWeapons.weaponDamage[i] += amount;
         }
-        gameMgr.DisplayWeaponPowerup(amount);
+        GameManager.inst.DisplayWeaponPowerup(amount);
         Debug.Log("Buff Weapon Damage: " + amount);
     }
 }

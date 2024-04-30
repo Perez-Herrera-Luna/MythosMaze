@@ -17,5 +17,5 @@ public class ArenaData : ScriptableObject
 
     public List<string> enemyPrefabNames;
 
-    public List<string> charPrefabName;
+    public string charPrefabName;
 }
