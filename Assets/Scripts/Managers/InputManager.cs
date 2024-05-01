@@ -77,9 +77,16 @@ public class InputManager : MonoBehaviour
         SlideReleased = slideAction.WasReleasedThisFrame();
 
         AttackInput = attackAction.triggered; // attackAction.IsPressed();
+
         Weapon1Input = weapon1.triggered; // weapon1.IsPressed();
         Weapon2Input = weapon2.triggered; // weapon2.IsPressed();
         Weapon3Input = weapon3.triggered; // weapon3.IsPressed();
+
+        if(QuestManager.inst != null && QuestManager.inst.PlayerNearby && AttackInput)
+        {
+            QuestManager.inst.PlayerInteraction();
+            AttackInput = false;
+        }
     }
 
     public void DisableMovementInput()

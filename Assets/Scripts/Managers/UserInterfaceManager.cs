@@ -32,6 +32,7 @@ public class UserInterfaceManager : MonoBehaviour
     public UnityEngine.UI.Slider dashIndicatorSlider;
     public GameObject questDialogue;
     public TMP_Text questDialogueText;
+    public GameObject questPanel;
 
     void Awake()
     {
@@ -67,6 +68,8 @@ public class UserInterfaceManager : MonoBehaviour
 
         questDialogue = GameObject.Find("QuestDialogue");
         questDialogueText = GameObject.Find("DialogueText").GetComponent<TMP_Text>();
+        questPanel = GameObject.Find("DialoguePanel");
+        questPanel.SetActive(false);
         questDialogueText.text = null;
 
         mainMenuController = mainMenu.GetComponent<MainMenuController>();
@@ -180,6 +183,8 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void UpdateQuestText(string newText)
     {
+        // string displayText = newText + "\nPress 'Attack' to continue";
+        // questDialogueText.text = displayText;
         questDialogueText.text = newText;
     }
 
@@ -187,12 +192,14 @@ public class UserInterfaceManager : MonoBehaviour
     {
         if (questDialogueText.text != null)
             questDialogue.SetActive(true);
+            questPanel.SetActive(true); // Shows the panel behind the dialogue text
     }
 
     public void HideQuestDialogue()
     {
         questDialogueText.text = null;
         questDialogue.SetActive(false);
+        questPanel.SetActive(false); // Hides the panel behind the dialogue text
     }
 
     public void DisplayAttackIndicator(bool attackEnabled)
@@ -308,4 +315,5 @@ public class UserInterfaceManager : MonoBehaviour
         // Quit the game. This will only work in the built game, not in the editor
         Application.Quit();
     }
+
 }
