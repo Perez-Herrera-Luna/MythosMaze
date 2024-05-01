@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Healing
   m_EditorClassIdentifier: 
   powerupName: Healing
-  valuePerLevel: 1
+  valuePerLevel: 5
   generationLocation: enemy_dropped
   generationProbability: 0.66
   initialLevel: 1
-  minNum: 12
+  minNum: 0
   maxNum: 18

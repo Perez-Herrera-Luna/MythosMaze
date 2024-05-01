@@ -13,28 +13,29 @@ public class Arena : MonoBehaviour
     private bool isBossArena;    // designates if combatArena is boss level or not
     private bool isSourceArena;
 
-    public bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
-    public bool arenaCompleted = false; // arena is completed once player defeats all enemies within
+    private bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
+    private bool arenaCompleted = false; // arena is completed once player defeats all enemies within
 
-    [Header("Quest Character")]
-    private bool hasCharacter;   // designates if this arena has a quest character within it or not   
+    public bool ArenaActive => arenaActive;
+
+    private bool hasCharacter = false;   // designates if this arena has a quest character within it or not   
     public Transform characterLoc;
-    private GameObject characterPrefab = null;
+    private GameObject characterPrefab;
     private GameObject questCharacter;
 
-    [Header("Arena Doors")]
     private List<Vector2Int> activeDoors = new List<Vector2Int>();
     public List<GameObject> doorGameObjects;
     private List<Vector2Int> doorLocations = new List<Vector2Int>();
 
-    [Header("Arena Enemies")]
-    private List<GameObject> enemyPrefabs = new List<GameObject>();
-    private int numEnemies = 0;
+    [Header("Level Generation Locations")]
     public List<Transform> enemyLocs;
+    private List<GameObject> enemyPrefabs = new List<GameObject>();
+    private List<GameObject> enemyPowerupPrefabs = new List<GameObject>();
+    private int numEnemies = 0;
+    private int maxTriesGenEnemy = 10;
 
-    [Header("Arena Powerups")]
     private List<GameObject> activePowerupPrefabs = new List<GameObject>();
-    public List<GameObject> activePowerups = new List<GameObject>();
+    private List<GameObject> activePowerups = new List<GameObject>();
     public List<Transform> activePowerupLocs;
 
     private List<GameObject> completePowerupPrefabs = new List<GameObject>();
@@ -55,7 +56,7 @@ public class Arena : MonoBehaviour
         if (arenaData.isBossArena)
             isBossArena = true;
 
-        if (arenaData.charPrefabName != null)
+        if (isSrcArena && characterLoc != null)
             hasCharacter = true;
 
         isSourceArena = isSrcArena;
@@ -99,8 +100,7 @@ public class Arena : MonoBehaviour
                 Debug.Log("warning: trying to add complete powerup to src arena");
                 return false;
             }
-        }
-        else
+        }else
         {
             Debug.Log("warning: trying to add incorrect powerup type to arena");
             return false;
@@ -122,15 +122,16 @@ public class Arena : MonoBehaviour
                     GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerupName);
                     activePowerups.Add(Instantiate(currPowerup, loc));
                     activePowerupLocs.Remove(loc);
+                    Debug.Log("Added powerup: " + powerupName + " to arena");
                     return true;
                 }
-                else
+                /*else
                 {
-                    Debug.Log("probability: " + probability);
-                }
+                    Debug.Log("probability: " + probability + " / " + powerupProb);
+                }*/
             }
 
-            Debug.Log("warning: powerup " + powerupName + " did not activate in arena");
+            // Debug.Log("warning: powerup " + powerupName + " did not activate in arena");
             return false;
         }else{
             // Debug.Log("warning: no more active powerup locations");
@@ -140,7 +141,7 @@ public class Arena : MonoBehaviour
 
     private bool AddCompletePowerup(string powerupName, float powerupProb)
     {
-        if (completePowerupLocs.Count >= 0)
+        if (completePowerupLocs.Count > 0)
         {
             List<Transform> powerupLocs = completePowerupLocs;
 
@@ -153,6 +154,10 @@ public class Arena : MonoBehaviour
                     completePowerups.Add(Instantiate(currPowerup, loc));
                     completePowerupLocs.Remove(loc);
                     return true;
+                }
+                else
+                {
+                    Debug.Log("probability: " + probability);
                 }
             }
 
@@ -167,8 +172,14 @@ public class Arena : MonoBehaviour
     }
 
     // Called by all arena enemies (in Enemy.cs) on EnemyDeath
-    public void EnemyDeath()
+    public void EnemyDeath(bool hasPowerup, Vector3 enemyLoc, int powerupIndex)
     {
+        if (hasPowerup && powerupIndex != -1)
+        {
+            Quaternion rotation = Quaternion.Euler(0, 0, 0);
+            Instantiate(enemyPowerupPrefabs[powerupIndex], enemyLoc, rotation, gameObject.transform);
+        }
+
         numEnemies--;
         if (numEnemies == 0)
         {
@@ -180,7 +191,6 @@ public class Arena : MonoBehaviour
             Debug.Log("Called arena.EnemyDeath() more times than needed for arena.numEnemies");
         }
     }
-
 
     // ********** COLLISION DETECTION ********** // 
 
@@ -238,8 +248,8 @@ public class Arena : MonoBehaviour
 
         if (!arenaActive)
         {
-            /*if (!arenaCompleted)
-                CloseDoors();*/
+            if (!arenaCompleted)
+                CloseDoors();
 
             ActivatePowerups();
             Debug.Log("arena activated");
@@ -306,16 +316,22 @@ public class Arena : MonoBehaviour
     {
         foreach (string enemyName in arenaData.enemyPrefabNames)
         {
-            // TODO : compile prefabs into one folder
-
             GameObject enemyPrefab = Resources.Load<GameObject>("Prefabs/Enemies/" + enemyName);
-            if (enemyPrefab == null)
-                enemyPrefab = Resources.Load<GameObject>("ImportedAssets/Original_Models/Enemies/Skeleton/Skeleton_Enemy");
 
             if (enemyPrefab == null)
                 Debug.Log("Error finding enemy prefab in Assets/Resources/Prefabs/Enemies folder");
             else
                 enemyPrefabs.Add(enemyPrefab);
+        }
+
+        foreach (string powerupName in arenaLevel.powerups)
+        {
+            GameObject currPowerup = Resources.Load<GameObject>("Prefabs/Powerups/" + powerupName);
+            if (currPowerup.GetComponent<Powerup>().powerupData.generationLocation == "enemy_dropped")
+            {
+                Debug.Log("trying to add enemy powerup");
+                enemyPowerupPrefabs.Add(currPowerup);
+            }
         }
 
         if (hasCharacter)
@@ -331,33 +347,75 @@ public class Arena : MonoBehaviour
     // helper function: Instantiates enemies at procedurally generated locations
     private void SetupEnemies()
     {
-        // TODO: procedurally generate enemy locations
+        Dictionary<GameObject, int> enemiesCount = new Dictionary<GameObject, int>();
+        List<GameObject> enemies = new List<GameObject>();
 
-        // for now, just manually setting enemy locations using unity interface
-
-        int maxEnemies = 0;
-        if (isBossArena)
-            maxEnemies = 1;
-        else
-            maxEnemies = 3;
-
-        Quaternion rotation = Quaternion.Euler(0, 0, 0);
-
-        List<Vector3> enemyLocations = new List<Vector3>();
-        Vector3 loc = new Vector3(0, 1.4f, 0);
-        enemyLocations.Add(loc + gameObject.transform.position);
-        loc = new Vector3(20, 1.4f, 20);
-        enemyLocations.Add(loc + gameObject.transform.position);
-        loc = new Vector3(-10, 1.4f, 10);
-        enemyLocations.Add(loc + gameObject.transform.position);
-
-        // TODO : add test if enemy prefabs were found
-
-        // for initial prototype just spawn one type of enemy at set locations
-        for (int enemyNum = 0; enemyNum < maxEnemies; enemyNum++)
+        bool allEnemiesLoaded = false;
+        int numTries = 0;
+        while ((enemyLocs.Count > 0) & !allEnemiesLoaded && numTries++ < maxTriesGenEnemy)
         {
-            Instantiate(enemyPrefabs[0], enemyLocations[enemyNum], rotation, gameObject.transform);
-            numEnemies++;
+            foreach (GameObject currEnemy in enemyPrefabs)
+            {
+                if (!enemiesCount.ContainsKey(currEnemy))
+                    enemiesCount.Add(currEnemy, 0);
+
+                EnemyData currEnemyData = currEnemy.GetComponent<Enemy>().enemy;
+
+                if (enemiesCount[currEnemy] < currEnemyData.maxNumPerArena)
+                {
+                    int randLoc = ThreadSafeRandom.GetRandom(0, enemyLocs.Count);
+
+                    GameObject newEnemy = Instantiate(currEnemy, enemyLocs[randLoc]);
+                    if(newEnemy != null)
+                    {
+                        bool hasPowerup = false;
+                        int powerupIndex = -1;
+
+                        Debug.Log("currEnemy: " + currEnemyData.name + " w/ num: " + enemiesCount[currEnemy]);
+
+                        for (int i = 0; i < enemyPowerupPrefabs.Count; i++)
+                        {
+                            Debug.Log("trying to add powerup to enemy");
+                            float powerupProb = enemyPowerupPrefabs[i].GetComponent<Powerup>().powerupData.generationProbability;
+                            float randProb = ThreadSafeRandom.GetRandomProb();
+                            Debug.Log(powerupProb + " / " + randProb);
+                            if (randProb <= powerupProb)
+                            {
+                                Debug.Log("enemy has powerup");
+                                hasPowerup = true;
+                                powerupIndex = i;
+                            }
+                        }
+
+                        enemies.Add(newEnemy);
+                        newEnemy.GetComponent<Enemy>().SetArenaAndPowerup(this, hasPowerup, powerupIndex);
+                        enemyLocs.RemoveAt(randLoc);
+                        enemiesCount[currEnemy] += 1;
+                        numEnemies++;
+                    }
+                }
+                else
+                {
+                    Debug.Log("Error: reached max number of enemies");
+                }
+            }
+
+            allEnemiesLoaded = true;
+
+            foreach (KeyValuePair<GameObject, int> currEnemy in enemiesCount)
+            {
+                EnemyData currEnemyData = currEnemy.Key.GetComponent<Enemy>().enemy;
+                if (currEnemy.Value < currEnemyData.minNumPerArena)
+                    allEnemiesLoaded = false;
+            }
+        }
+
+        if(enemyLocs.Count == 0)
+        {
+            Debug.Log("No more enemy locs");
+        }else if(allEnemiesLoaded)
+        {
+            Debug.Log("all enemies loaded");
         }
     }
 
@@ -381,7 +439,7 @@ public class Arena : MonoBehaviour
     // helper function: activates appropriate powerups (active | completed) based on arena state
     private void ActivatePowerups()
     {
-        UpdatePowerups();
+        DeactivatePowerups();
         if (arenaActive)
         {
             if (arenaCompleted)
@@ -430,6 +488,17 @@ public class Arena : MonoBehaviour
         {
             activePowerups.Remove(removePowerup);
         }
+
+        foreach (GameObject powerup in completePowerups)
+        {
+            if (powerup == null)
+                powerupsToRemove.Add(powerup);
+        }
+
+        foreach (GameObject removePowerup in powerupsToRemove)
+        {
+            completePowerups.Remove(removePowerup);
+        }
     }
 
     // ********** QUEST CHARACTER ********** // 
@@ -464,7 +533,7 @@ public class Arena : MonoBehaviour
     }
 
     // helper function: opens active doors in an arena
-    private void OpenDoors()
+    public void OpenDoors()
     {
         CloseDoors();
 

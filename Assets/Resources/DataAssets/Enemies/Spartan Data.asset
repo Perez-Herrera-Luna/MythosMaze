@@ -10,26 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3db77f3e308eb1841b7560880f96c9ee, type: 3}
-  m_Name: Cyclops Data
+  m_Name: Spartan Data
   m_EditorClassIdentifier: 
-  name: Cyclops
+  name: Spartan
   health: 0
-  maxHealth: 20
-  minNumPerArena: 0
-  maxNumPerArena: 3
+  maxHealth: 15
+  minNumPerArena: 4
+  maxNumPerArena: 5
+  canDropPowerup: 1
   attackDamage: 0
-  maxAttackDamage: 0
+  maxAttackDamage: 4
   attackSpeed: 1
   hasAttacked: 0
-  sightRange: 40
-  attackRange: 10
+  sightRange: 30
+  attackRange: 15
   playerInSight: 0
   playerAttackable: 0
-  wanderSpeed: 1
-  chaseSpeed: 1.5
-  turnSpeed: 2
+  wanderSpeed: 2
+  chaseSpeed: 4
+  turnSpeed: 5
   groundDrag: 1
   airMultiplier: 0
-  roamRange: 30
+  roamRange: 40
   flyingHeightMax: 0
   canFly: 0

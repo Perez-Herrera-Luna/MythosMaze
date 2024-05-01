@@ -25,11 +25,6 @@ public class ProceduralLevel : MonoBehaviour
     public GameObject threeJunctionPrefab;
     public GameObject fourJunctionPrefab;
 
-    // [Header("Powerup Prefabs")]
-
-    [Header("Quest Prefabs")]
-    public GameObject questCharPrefab;
-
     [Header("Level Generation")]
     private LevelGrid levelGrid;
     private LevelGraph levelGraph;
@@ -108,7 +103,7 @@ public class ProceduralLevel : MonoBehaviour
             {
                 GraphNode arena = levelGraph.GeneratedArenas[i];
 
-                if (arena.NumDoors == 1)
+                if (arena.NumDoors < 2)
                     success = false;
                 else if (arena.NumDoors == 2)
                     num2DoorArenas++;
@@ -363,7 +358,7 @@ public class ProceduralLevel : MonoBehaviour
     // called by SceneManager.cs
     public void LoadLevel()
     {
-        levelGrid.PrintGrid();
+        // levelGrid.PrintGrid();
         
         LoadArenas();
 
@@ -431,8 +426,8 @@ public class ProceduralLevel : MonoBehaviour
                     {
                         if (arenaScript.AddPowerup(powerup, true))
                             powerups[powerup] += 1;
-                        else
-                            Debug.Log("error adding powerup");
+                        /*else
+                            Debug.Log("error adding powerup");*/
                     }
                 }
             }
@@ -447,7 +442,7 @@ public class ProceduralLevel : MonoBehaviour
         bool allArenaPowerupsLoaded = false;
         int numTries = 0;
 
-        while (!allArenaPowerupsLoaded && numTries++ < maxTriesPowerups)
+        while (!allArenaPowerupsLoaded && numTries < maxTriesPowerups)
         {
             allArenaPowerupsLoaded = true;
 
@@ -455,11 +450,29 @@ public class ProceduralLevel : MonoBehaviour
 
             foreach (PowerupData powerup in powerupNames)
             {
-                if (powerup.generationLocation == "arena_active" | powerup.generationLocation == "arena_complete")
+                bool arenaPowerup = false;
+                int randArena = -1;
+
+                // randomly select an arena to try to add powerup
+                if (powerup.generationLocation == "arena_active") 
+                {
+                    arenaPowerup = true;
+                    randArena = ThreadSafeRandom.GetRandom(0, arenas.Count);
+                }
+                else if(powerup.generationLocation == "arena_complete")
+                {
+                    arenaPowerup = true;
+                    do
+                    {
+                        randArena = ThreadSafeRandom.GetRandom(0, arenas.Count);
+                    } while (randArena == levelGraph.SrcArenaIndex);
+                }
+
+                // try adding powerup to selected arena
+                if (arenaPowerup)
                 {
                     if (powerups[powerup] < powerup.minNum)
                     {
-                        int randArena = ThreadSafeRandom.GetRandom(0, arenas.Count);
                         if (arenas[randArena].AddPowerup(powerup, false))
                         {
                             powerups[powerup] += 1;
@@ -467,6 +480,7 @@ public class ProceduralLevel : MonoBehaviour
                         else
                         {
                             allArenaPowerupsLoaded = false;
+                            numTries++;
                         }
                     }
                 }
@@ -476,6 +490,10 @@ public class ProceduralLevel : MonoBehaviour
         if (numTries >= maxTriesPowerups)
         {
             Debug.Log("warning: reached maxTriesPowerups while generating arena powerups");
+        }
+        else
+        {
+            Debug.Log("all arena powerups loaded");
         }
     }
 
@@ -520,6 +538,24 @@ public class ProceduralLevel : MonoBehaviour
             }
         }
 
+        // Add Quest Item to Paths
+        string charPath = "Prefabs/Quests/" + srcArenaData.charPrefabName;
+        string itemName = Resources.Load<GameObject>(charPath).GetComponent<QuestCharacter>().quest.itemNeeded;
+
+        GameObject questItemPrefab = null;
+
+        if (itemName != null)
+            questItemPrefab = Resources.Load<GameObject>("Prefabs/Quests/" + itemName);
+
+        if (questItemPrefab != null)
+        {
+            Debug.Log("Adding Item to Paths");
+            int rand = ThreadSafeRandom.GetRandom(0, powerupLocs.Count);
+            Instantiate(questItemPrefab, powerupLocs[rand]);
+            powerupLocs.RemoveAt(rand); 
+        }
+
+
         // Adding Powerups to Paths (secondRound => checks for powerup min Num)
 
         int randPath = 0;
@@ -541,6 +577,7 @@ public class ProceduralLevel : MonoBehaviour
                         if (currPowerup.tag == "powerup")
                         {
                             activePathPowerups.Add(Instantiate(currPowerup, powerupLocs[randPath]));
+                            powerupLocs.RemoveAt(randPath);
                             powerups[powerup] += 1;
                         }
                         else

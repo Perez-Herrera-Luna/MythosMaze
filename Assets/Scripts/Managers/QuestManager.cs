@@ -24,30 +24,28 @@ public class QuestManager : MonoBehaviour
     }
 
     private QuestData currQuest;
+    private Arena currArena;
     private bool questActive = false;
     private bool questComplete = false;
 
     private bool playerNearby = false;
     private bool playerFoundItem = false;
-    private string itemName = null;
     private int playerInteractions = 0;
 
     public bool PlayerNearby { get; set; }
 
-    public void CharacterLoaded(QuestData quest)
+    public void CharacterLoaded(QuestData quest, Arena arena)
     {
         currQuest = quest;
+        currArena = arena;
         questActive = false;
         questComplete = false;
         playerFoundItem = false;
-        itemName = null;
         playerInteractions = 0;
     }
 
     public void ShowDialogue()
     {
-        PlayerNearby = true;
-
         if(!questActive && !questComplete)
         {
             switch (playerInteractions)
@@ -63,6 +61,7 @@ public class QuestManager : MonoBehaviour
                 case 2:
                     userInterfaceMgr.UpdateQuestText(currQuest.questIntroduction);
                     questActive = true;
+                    currArena.OpenDoors();
                     playerInteractions = 0;
                     break;
 
@@ -75,7 +74,7 @@ public class QuestManager : MonoBehaviour
             if (!playerFoundItem)
             {
                 userInterfaceMgr.UpdateQuestText(currQuest.activeQuestNoItem);
-            }else if (itemName == currQuest.itemNeeded)
+            }else
             {
                 switch (playerInteractions)
                 {
@@ -111,7 +110,6 @@ public class QuestManager : MonoBehaviour
 
     public void HideDialogue()
     {
-        PlayerNearby = false;
         userInterfaceMgr.HideQuestDialogue();
     }
 
@@ -119,18 +117,29 @@ public class QuestManager : MonoBehaviour
     {
         if (!questActive && !questComplete)
         {
-            playerInteractions++;
+            Debug.Log("PlayerInteraction");
+            if(playerInteractions < 2)
+                playerInteractions++;
             ShowDialogue();
-        }else if(questActive && playerFoundItem)
+        }
+        else if (questActive && playerFoundItem)
         {
-            playerInteractions++;
+            Debug.Log("PlayerInteraction");
+            if(playerInteractions < 2)
+                playerInteractions++;
             ShowDialogue();
+        }
+        else
+        {
+            Debug.Log("otherPlayerInteraction");
         }
     }
 
     public void ItemPickedUp(string name)
     {
-        playerFoundItem = true;
-        itemName = name;
+        if(name == currQuest.itemNeeded)
+        {
+            playerFoundItem = true;
+        }
     }
 }

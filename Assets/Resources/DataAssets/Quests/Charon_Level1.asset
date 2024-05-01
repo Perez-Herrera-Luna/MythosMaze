@@ -14,12 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: charonQuest
   characterName: Charon
-  itemNeeded: oar
+  itemNeeded: Oar
   rewardWeapon: 2
-  greeting: hi
-  charIntroduction: i'm charon
-  questIntroduction: this is ur quest
-  activeQuestNoItem: u didn't find my oar
-  itemRetrieved: u found my oar!
-  weaponIntroduction: 'here is a a throwing knife '
-  questComplete: thanks for helping me
+  greeting: Hello there, I believe introductions are in order. Some call me the Ferryman,
+    others call me the Rower. You may call me Charon.
+  charIntroduction: It may have come as a surprise to see the undead all out and
+    about. The reason being, is that I have lost my oar. Without it, I cannot bring
+    them to the underworld.
+  questIntroduction: I shall offer you a deal. Find my oar within the maze and bring
+    it back to me. You shall be rewarded for your efforts.
+  activeQuestNoItem: You dare to return before me empty handed?
+  itemRetrieved: Ah, you found it. Well done.
+  weaponIntroduction: And here is your reward as promised.
+  questComplete: I bid you farewell and good luck on your journey throughout the
+    maze.   Would be a shame if we meet again.

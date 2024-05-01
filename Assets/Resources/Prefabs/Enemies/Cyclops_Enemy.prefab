@@ -248,7 +248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 518d56ee999872149bcc575bcdc5c6fc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.922084
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 518d56ee999872149bcc575bcdc5c6fc, type: 3}
       propertyPath: m_LocalPosition.y
@@ -256,7 +256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 518d56ee999872149bcc575bcdc5c6fc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.7717652
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 518d56ee999872149bcc575bcdc5c6fc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -571,6 +571,8 @@ MonoBehaviour:
   playerAttackable: 0
   rockFirePoint: {fileID: 5168240214091450081}
   rockPrefab: {fileID: 7073038822477793607}
+  spearFirePoint: {fileID: 0}
+  spearPrefab: {fileID: 0}
   invulnerable: 0
 --- !u!111 &3997561212086347933
 Animation:

@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     private float maxSearchTime = 10.0f;
 
     //death
+    private bool hasPowerup = false;
+    private int powerup = -1;
     private bool enemyDead = false;
     private bool triggerDeath = false;
 
@@ -71,7 +73,6 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.Find("Player").transform;
         playerMgr = player.GetComponent<PlayerManager>();
-        arena = transform.parent.gameObject.GetComponent<Arena>();
     }
 
     // Start is called before the first frame update
@@ -96,6 +97,21 @@ public class Enemy : MonoBehaviour
         skeletonAnim = transform.GetComponent<Animator>();
         cyclopsAnim = transform.GetComponent<Animator>();
         spartanAnim = transform.GetComponent<Animator>();
+    }
+
+    // helper function to set arena connection and powerup (for enemy death)
+    public void SetArenaAndPowerup(Arena a, bool hasPower, int powerupIndex)
+    {
+        arena = a;
+
+        if (enemy.canDropPowerup)
+        {
+            hasPowerup = hasPower;
+            powerup = powerupIndex;
+
+            if (hasPowerup)
+                Debug.Log("enemy has powerup: " + enemy.name + " , " + powerupIndex);
+        }
     }
 
     // Update is called once per frame
@@ -551,7 +567,7 @@ public class Enemy : MonoBehaviour
         //animate("dead");
         Debug.Log("ENEMY DIED");
         yield return new WaitForSeconds(0.5f);
-        arena.EnemyDeath();
+        arena.EnemyDeath(hasPowerup, gameObject.transform.localPosition, powerup);
         animate("delete");
         Object.Destroy(this.gameObject);
     }

@@ -13,6 +13,7 @@ public class EnemyData : ScriptableObject
     // Procedural Generation
     public int minNumPerArena;
     public int maxNumPerArena;
+    public bool canDropPowerup;
 
     //Attacking
     public float attackDamage;

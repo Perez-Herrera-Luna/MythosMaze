@@ -16,7 +16,7 @@ MonoBehaviour:
   gridRows: 27
   gridCols: 27
   pathWidth: 2
-  maxNumArenas: 6
+  maxNumArenas: 5
   arenaDistanceBuff: 0
   drunkenRatio: 4
   maxPathLength: 18

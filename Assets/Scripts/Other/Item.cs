@@ -10,6 +10,7 @@ public class Item : MonoBehaviour
     {
         if (hit.gameObject.CompareTag("player"))
         {
+            Debug.Log("player picked up quest item");
             QuestManager.inst.ItemPickedUp(itemName);
 
             Destroy(gameObject);
