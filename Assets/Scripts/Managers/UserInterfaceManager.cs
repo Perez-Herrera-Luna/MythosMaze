@@ -28,15 +28,24 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject playerDamageScreen;
     public PlayerHealthBar healthBar;
     public UnityEngine.UI.Slider progressBar;
+    public UnityEngine.UI.Slider attackIndicatorSlider;
+    public UnityEngine.UI.Slider dashIndicatorSlider;
     public GameObject questDialogue;
     public TMP_Text questDialogueText;
 
     void Awake()
     {
-        inst = this;
+        // inst = this;
+        if(inst == null)
+        {
+            inst = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         canvas = GameObject.Find("Canvas");
@@ -53,6 +62,8 @@ public class UserInterfaceManager : MonoBehaviour
         playerDamageScreen = GameObject.Find("PlayerDamageScreen");
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
         healthBar = GameObject.Find("Health bar").GetComponent<PlayerHealthBar>();
+        attackIndicatorSlider = GameObject.Find("AttackIndicatorSlider").GetComponent<Slider>();
+        dashIndicatorSlider = GameObject.Find("DashIndicatorSlider").GetComponent<Slider>();
 
         questDialogue = GameObject.Find("QuestDialogue");
         questDialogueText = GameObject.Find("DialogueText").GetComponent<TMP_Text>();
@@ -182,6 +193,30 @@ public class UserInterfaceManager : MonoBehaviour
     {
         questDialogueText.text = null;
         questDialogue.SetActive(false);
+    }
+
+    public void DisplayAttackIndicator(bool attackEnabled)
+    {
+        if (attackEnabled)
+        {
+            attackIndicatorSlider.value = 1;
+        }
+        else
+        {
+            attackIndicatorSlider.value = 0;
+        }
+    }
+
+    public void DisplayDashIndicator(float dashCooldownMax, float dashCooldown)
+    {
+        if (dashCooldown < 0)
+        {
+            dashCooldown = 0;
+        }
+
+        float dashCooldownPercentage = 1 - (dashCooldown / dashCooldownMax);
+
+        dashIndicatorSlider.value = dashCooldownPercentage;
     }
 
     public void DisplayDamage(float health)

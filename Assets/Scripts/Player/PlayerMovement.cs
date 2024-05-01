@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("CameraEffects")]
     public float playerFov = 85f; // Player's default field of view
     public float changeDuration = 0.25f; // Duration of camera effect
-    public float dashFov = 95f; // Field of view when dashing
+    // public float dashFov = 95f; // Field of view when dashing
     public bool cameraTilt = true; // Should the camera tilt when moving?
 
     [Header("References")]
@@ -135,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // Freeze player's rotation
 
+        playerFov = cam.GetDefaultFOV(); // Get player's default field of view
         ChangeFov(playerFov, 0f); // Set player's default field of view
 
         canJump = true; // Set jump state
@@ -158,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
         if (dashCooldownTimer > 0) // Decrement dash cooldown timer
         {
             dashCooldownTimer -= Time.deltaTime;
+            UserInterfaceManager.inst.DisplayDashIndicator(dashCooldown, dashCooldownTimer);
         }
 
         //setting player health
@@ -496,7 +498,8 @@ public class PlayerMovement : MonoBehaviour
 
         isDashing = true;
 
-
+        playerFov = cam.GetDefaultFOV();
+        float dashFov = playerFov + 10f;
         ChangeFov(dashFov, changeDuration);
 
         Vector3 direction = GetNormalizedInputDirectionVector();

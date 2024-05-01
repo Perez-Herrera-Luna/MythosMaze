@@ -231,6 +231,8 @@ public class PlayerWeaponController : MonoBehaviour
 
         }
 
+        // UI Indicator for attack cooldown
+        // UserInterfaceManager.inst.DisplayAttackIndicator(!playerAttacking);
     }
 
     // Weapon Powerup Function

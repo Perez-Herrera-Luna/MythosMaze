@@ -15,6 +15,7 @@ public class PlayerCamera : MonoBehaviour
     float defaultZ_Rotation = 0;
     float tiltAngle = 2f;
     float rotationDuration = 0.30f;
+    float currentDefaultFOV = 85f;
     string previousTiltDirection;
     public bool invertedCamera = false;
 
@@ -133,5 +134,16 @@ public class PlayerCamera : MonoBehaviour
     public void InvertCamera(bool invert)
     {
         invertedCamera = invert;
+    }
+
+    public void SetDefaultFOV(float fov)
+    {
+        currentDefaultFOV = fov;
+        SmoothFovChange(fov, 0f);
+    }
+
+    public float GetDefaultFOV()
+    {
+        return currentDefaultFOV;
     }
 }

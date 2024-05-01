@@ -99,7 +99,8 @@ public class OptionsMenuController : MonoBehaviour
     public void SetFOV(float value)
     {
         // playerFOV = value;
-        playerCamera.SmoothFovChange(value, 0f);
+        //playerCamera.SmoothFovChange(value, 0f);
+        playerCamera.SetDefaultFOV(value);
     }
 
     public void SetTilt(bool value)
