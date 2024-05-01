@@ -44,6 +44,17 @@ public class Player_Damage : MonoBehaviour
                 StartCoroutine(invulnerableDelay(2f));
             }
         }
+
+        if(other.gameObject.CompareTag("spear"))
+        {
+            if(!invulnerable)
+            {      
+                invulnerable = true;
+                Debug.Log("Player hit by spear");
+                playerMgr.playerHit(1);
+                StartCoroutine(invulnerableDelay(2f));
+            }
+        }
     }
 
     IEnumerator invulnerableDelay(float dur)

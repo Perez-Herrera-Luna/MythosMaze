@@ -23,6 +23,7 @@ TagManager:
   - powerupLoc
   - cyclops
   - rock
+  - spear
   layers:
   - Default
   - TransparentFX
