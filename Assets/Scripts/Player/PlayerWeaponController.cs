@@ -62,19 +62,19 @@ public class PlayerWeaponController : MonoBehaviour
     //private InputAction attackAction;
     //private InputActionAsset playerControls;
 
-    [Header("Input Actions")]
-    [SerializeField] private InputActionAsset playerControls;
-    private InputAction attackAction;
+    // [Header("Input Actions")]
+    // [SerializeField] private InputActionAsset playerControls;
+    // private InputAction attackAction;
 
-    private void OnEnable()
-    {
-        attackAction.Enable();
-    }
+    // private void OnEnable()
+    // {
+    //     attackAction.Enable();
+    // }
 
-    private void OnDisable()
-    {
-        attackAction.Disable();
-    }
+    // private void OnDisable()
+    // {
+    //     attackAction.Disable();
+    // }
 
     // Start is called before the first frame update
     void Start()
@@ -84,17 +84,18 @@ public class PlayerWeaponController : MonoBehaviour
         moveScript = GameObject.Find("Player").GetComponent<PlayerMovement>();
     }
 
-    private void Awake()
-    {
-        attackAction = playerControls.FindAction("Attack");
-        //attackAction = playerControls.FindAction("Attack");
-    }
+    // private void Awake()
+    // {
+    //     attackAction = playerControls.FindAction("Attack");
+    //     //attackAction = playerControls.FindAction("Attack");
+    // }
 
     // Update is called once per frame
     void Update()
     {
         //attacking
-        if(attackAction.triggered)
+        //if(attackAction.triggered)
+        if(InputManager.instance.AttackInput)
         {    
             //primaryAttack = true; 
             playerAttacking = true;
