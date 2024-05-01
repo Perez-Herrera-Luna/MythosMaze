@@ -95,11 +95,11 @@ public class PlayerWeaponController : MonoBehaviour
     {
         //attacking
         //if(attackAction.triggered)
-        if(InputManager.instance.AttackInput)
+        if(InputManager.instance.AttackInput && attackEnabled)
         {    
             //primaryAttack = true; 
             playerAttacking = true;
-            StartCoroutine(attackDelay());
+            //StartCoroutine(attackDelay());
         }
 
         //bool playerAttack = playerData.isAttacking;
@@ -110,7 +110,7 @@ public class PlayerWeaponController : MonoBehaviour
         {
             case 1:
                 //dagger selected
-/*                if(playerAttacking)
+                /*if(playerAttacking)
                 {
                     daggerAnim.SetBool("isIdle", false);
                     daggerAnim.SetBool("isWalking", true);
@@ -120,9 +120,17 @@ public class PlayerWeaponController : MonoBehaviour
                 {
                     daggerAnim.SetBool("isWalking", false);   
                     daggerAnim.SetBool("isIdle", true);
+                    daggerAnim.SetBool("isAttacking", false);  
                 }
 
-                if(playerAttacking)
+                if(!playerAttacking && moveScript.isMoving)
+                {
+                    daggerAnim.SetBool("isWalking", true);   
+                    daggerAnim.SetBool("isIdle", false);
+                    daggerAnim.SetBool("isAttacking", false);  
+                }
+
+                if(playerAttacking && attackEnabled)
                 {
                     attackEnabled = false;
                     daggerAnim.SetBool("isIdle", false);  
@@ -131,8 +139,8 @@ public class PlayerWeaponController : MonoBehaviour
 
                     //StartCoroutine(attackAnim(daggerDuration));
                     //StartCoroutine(attackCoolDown(daggerDuration));
-                    StartCoroutine(attackAnim(0));
-                    StartCoroutine(attackCoolDown(0));
+                    StartCoroutine(daggerAnimDuration(0.5f));
+                    StartCoroutine(attackCoolDown(0.5f));
                 }
 
                 daggerObject.SetActive(true);
@@ -244,6 +252,7 @@ public class PlayerWeaponController : MonoBehaviour
         Debug.Log("buff weapons: " + amount);
     }
 
+/*
     IEnumerator attackDelay()
     {
         //Debug.Log("Delay start");
@@ -251,6 +260,13 @@ public class PlayerWeaponController : MonoBehaviour
         //Debug.Log("Delay end");
         moveScript.isAttacking = false;
         playerAttacking = false;
+    }
+    */
+
+    IEnumerator daggerAnimDuration(float dur)
+    {
+        yield return new WaitForSeconds(dur);
+        daggerAnim.SetBool("isAttacking", false);  
     }
 
     void fireArrow()
@@ -304,9 +320,11 @@ public class PlayerWeaponController : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         attackEnabled = true;
+        playerAttacking = false;
         //playerData.isAttacking = false;
     }
 
+    /*
     IEnumerator attackAnim(float dur)
     {
         yield return new WaitForSeconds(dur);
@@ -316,4 +334,5 @@ public class PlayerWeaponController : MonoBehaviour
         //gameObject.GetComponent<PlayerMovement>().primaryAttack = false;
         //playerData.isAttacking = false;
     }
+    */
 }
