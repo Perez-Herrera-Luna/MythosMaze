@@ -20,6 +20,7 @@ public class PlayerWeaponController : MonoBehaviour
     [Header("Weapon Game Objects")]
     public GameObject daggerObject;
     public GameObject throwingKnifeObject;
+    public GameObject throwingKnifePlaceHolder;
     public GameObject bowAndArrowObject;
     public GameObject arrowPrefab;
     //public GameObject throwingSpearObject;
@@ -49,7 +50,6 @@ public class PlayerWeaponController : MonoBehaviour
 
     public Transform knifeTransform;
 
-
     private bool attackEnabled = true;
     private bool bowEnabled = true;
     private bool playerAttacking = false;
@@ -59,23 +59,6 @@ public class PlayerWeaponController : MonoBehaviour
     public float daggerDuration = 1.0f;
     public float bowDuration = 3.0f;
 
-    //private InputAction attackAction;
-    //private InputActionAsset playerControls;
-
-    // [Header("Input Actions")]
-    // [SerializeField] private InputActionAsset playerControls;
-    // private InputAction attackAction;
-
-    // private void OnEnable()
-    // {
-    //     attackAction.Enable();
-    // }
-
-    // private void OnDisable()
-    // {
-    //     attackAction.Disable();
-    // }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -83,12 +66,6 @@ public class PlayerWeaponController : MonoBehaviour
         bowAnim = GameObject.Find("Bow and Arrow - Animated").GetComponent<Animator>();
         moveScript = GameObject.Find("Player").GetComponent<PlayerMovement>();
     }
-
-    // private void Awake()
-    // {
-    //     attackAction = playerControls.FindAction("Attack");
-    //     //attackAction = playerControls.FindAction("Attack");
-    // }
 
     // Update is called once per frame
     void Update()
@@ -109,13 +86,6 @@ public class PlayerWeaponController : MonoBehaviour
         switch(weaponSelect)
         {
             case 1:
-                //dagger selected
-                /*if(playerAttacking)
-                {
-                    daggerAnim.SetBool("isIdle", false);
-                    daggerAnim.SetBool("isWalking", true);
-                }*/
-
                 if(!playerAttacking && !moveScript.isMoving)
                 {
                     daggerAnim.SetBool("isWalking", false);   
@@ -145,6 +115,7 @@ public class PlayerWeaponController : MonoBehaviour
 
                 daggerObject.SetActive(true);
 
+                throwingKnifePlaceHolder.SetActive(false);  
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 arrowPrefab.SetActive(false);
@@ -154,7 +125,7 @@ public class PlayerWeaponController : MonoBehaviour
                 //throwing knife
                 if(playerAttacking && attackEnabled)
                 {
-                    throwingKnifeObject.GetComponent<Renderer>().enabled = false;
+                    //throwingKnifeObject.GetComponent<Renderer>().enabled = false;
                     Quaternion finalRotation = Quaternion.Euler(
                         knifeSpawnPoint.rotation.eulerAngles.x + knifeXOffset,
                         knifeSpawnPoint.rotation.eulerAngles.y + knifeYOffset,
@@ -169,9 +140,10 @@ public class PlayerWeaponController : MonoBehaviour
                 }
                 else
                 {
-                    throwingKnifeObject.GetComponent<Renderer>().enabled = true;
+                    //throwingKnifeObject.GetComponent<Renderer>().enabled = true;
                 }
 
+                throwingKnifePlaceHolder.SetActive(true);    
                 throwingKnifeObject.SetActive(true);
                 daggerObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
@@ -225,6 +197,7 @@ public class PlayerWeaponController : MonoBehaviour
 
                 bowAndArrowObject.SetActive(true);
                 arrowPrefab.SetActive(true);
+                throwingKnifePlaceHolder.SetActive(false);  
 
                 daggerObject.SetActive(false);
                 throwingKnifeObject.SetActive(false);
