@@ -23,4 +23,4 @@ MonoBehaviour:
   - {x: -3, y: 0}
   enemyPrefabNames:
   - Cyclops_Enemy
-  charPrefabName: []
+  charPrefabName: 

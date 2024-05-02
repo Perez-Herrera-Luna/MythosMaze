@@ -403,14 +403,14 @@ public class LevelGrid
                         Vector2Int prevConnectDir = prevLocation - currWalkerLoc;
                         if (Vector2.Dot(directionToTry, prevConnectDir) == 0)
                             currPathCorners.Push(currWalkerLoc + directionToTry + prevConnectDir);
+                    }
 
-                        // increment walker
-                        prevLocation = currWalkerLoc;
-                        currWalkerLoc += directionToTry;
+                    // increment walker
+                    prevLocation = currWalkerLoc;
+                    currWalkerLoc += directionToTry;
 
-                        if (currWalkerLoc == currTargetLoc)
-                            pathComplete = true;
-                    }  
+                    if (currWalkerLoc == currTargetLoc)
+                        pathComplete = true;
                 }
                 else
                 {
