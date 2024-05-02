@@ -440,21 +440,18 @@ public class Arena : MonoBehaviour
     private void ActivatePowerups()
     {
         DeactivatePowerups();
-        if (arenaActive)
+        if (arenaCompleted)
         {
-            if (arenaCompleted)
+            foreach (GameObject powerup in completePowerups)
             {
-                foreach (GameObject powerup in completePowerups)
-                {
-                    powerup.SetActive(true);
-                }
+                powerup.SetActive(true);
             }
-            else
+        }
+        else
+        {
+            foreach (GameObject powerup in activePowerups)
             {
-                foreach (GameObject powerup in activePowerups)
-                {
-                    powerup.SetActive(true);
-                }
+                powerup.SetActive(true);
             }
         }
     }

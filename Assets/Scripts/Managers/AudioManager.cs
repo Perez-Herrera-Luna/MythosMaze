@@ -19,9 +19,15 @@ public class AudioManager : MonoBehaviour
     }
 
     public AudioSource gameBackgroundTrack;
+    public AudioSource menuInteraction;
 
     public void PlayBackgroundTrack()
     {
         gameBackgroundTrack.Play();
+    }
+
+    public void PlayMenuInteraction()
+    {
+        menuInteraction.Play();
     }
 }
