@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Audio;
 
 public class OptionsMenuController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class OptionsMenuController : MonoBehaviour
 
     public PlayerCamera playerCamera;
     public PlayerMovement playerMovement;
+    public AudioMixer audioMixer;
 
     // Options
     public bool cameraTilt = true;
@@ -113,9 +115,12 @@ public class OptionsMenuController : MonoBehaviour
 
     public void SetVolume(float value)
     {
-        masterVolume = value;
+        audioMixer.SetFloat("MasterVolume", value);
 
-        masterVolumeText.text = masterVolume.ToString("0.00");
+        // Map slider value from -80 to 0 to 0 to 1
+        float transformedValue = (value + 80) / 80;
+
+        masterVolumeText.text = transformedValue.ToString("0.00");
     }
 
     public void SetFOV(float value)

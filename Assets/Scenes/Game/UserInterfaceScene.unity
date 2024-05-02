@@ -7758,6 +7758,7 @@ MonoBehaviour:
   userInterfaceMgr: {fileID: 0}
   playerCamera: {fileID: 0}
   playerMovement: {fileID: 0}
+  audioMixer: {fileID: 24100000, guid: 16b70c7a48d74de4391822e89b411695, type: 2}
   cameraTilt: 1
   cameraInvert: 0
   cameraSensitivity: 0.1
@@ -13246,8 +13247,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 54373347}
   m_HandleRect: {fileID: 730388581}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -80
+  m_MaxValue: 0
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
