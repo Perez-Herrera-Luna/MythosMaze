@@ -23,4 +23,5 @@ MonoBehaviour:
   - {x: -2, y: -1}
   enemyPrefabNames:
   - Skeleton_Enemy
+  - Minotaur
   charPrefabName: Charon

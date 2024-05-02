@@ -1662,7 +1662,8 @@ MonoBehaviour:
   weaponSelect: 0
   weaponDamage: []
   daggerObject: {fileID: 1824996977}
-  throwingKnifeObject: {fileID: 1431217411}
+  throwingKnifeObject: {fileID: 2715959806479996454, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
+  throwingKnifePlaceHolder: {fileID: 1431217411}
   bowAndArrowObject: {fileID: 282307798}
   arrowPrefab: {fileID: 1441595466}
   knifeXOffset: 90

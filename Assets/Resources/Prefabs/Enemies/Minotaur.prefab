@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.48
+      value: 2.3699024
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.04
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.71
+      value: 0.7663243
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       propertyPath: m_LocalRotation.w
@@ -253,6 +253,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3312463172060889351}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7940689861192499280}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 109754667443754410}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6407768629225741411}
   m_SourcePrefab: {fileID: 100100000, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
 --- !u!1 &1642813798389395338 stripped
 GameObject:
@@ -278,10 +287,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 7.38
+  m_Height: 52.63779
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -2.8888826, z: 0}
 --- !u!136 &7270951033686225089
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -297,14 +306,14 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 20.95
+  m_Height: 53.550552
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -2.9502695, z: 0}
 --- !u!54 &-3312463172060889351
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -332,3 +341,69 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7940689861192499280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642813798389395338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675f9c4e34a831642a45e57795d78c90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 11400000, guid: 227f6d8c6e4d6df41bf3923c4c078a77, type: 2}
+  player: {fileID: 0}
+  orientation: {fileID: 0}
+  enemyHeight: 2
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 1024
+  playerObject: {fileID: 0}
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  isAttacking: 0
+  isCharging: 0
+  executedAttack: 0
+  attackRange: 1
+  enemyDead: 0
+  playerAttackCounter: 1
+  pillarDestroyedCount: 0
+--- !u!111 &109754667443754410
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642813798389395338}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!95 &6407768629225741411
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642813798389395338}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 151eae0b604fe5449bc8765ced41f09a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

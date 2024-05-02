@@ -86,6 +86,7 @@ public class PlayerWeaponController : MonoBehaviour
         switch(weaponSelect)
         {
             case 1:
+                Debug.Log("weapon 1 selected");
                 if(!playerAttacking && !moveScript.isMoving)
                 {
                     daggerAnim.SetBool("isWalking", false);   
@@ -112,13 +113,13 @@ public class PlayerWeaponController : MonoBehaviour
                     StartCoroutine(daggerAnimDuration(0.5f));
                     StartCoroutine(attackCoolDown(0.5f));
                 }
-
                 daggerObject.SetActive(true);
 
                 throwingKnifePlaceHolder.SetActive(false);  
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 arrowPrefab.SetActive(false);
+     
                 break;
             
             case 2:

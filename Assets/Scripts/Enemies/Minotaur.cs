@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Minotaur : MonoBehaviour
 {
+    public EnemyData enemy;
     
     [Header("Transforms")]
     public Transform player;
