@@ -86,6 +86,8 @@ public class OptionsMenuController : MonoBehaviour
         cameraInvert = false;
 
         UpdateOptions();
+
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void UpdateOptions()

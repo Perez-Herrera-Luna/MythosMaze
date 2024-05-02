@@ -23,6 +23,8 @@ public class MainMenuController : MonoBehaviour
         // Invoke scene loader to async load the game scene
         userInterfaceMgr.LoadFirstLevel();
         gameObject.SetActive(false);
+
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void OptionsMenu()

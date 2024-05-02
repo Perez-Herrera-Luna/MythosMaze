@@ -102,34 +102,38 @@ public class UserInterfaceManager : MonoBehaviour
     public void MainMenu()
     {
         EnableMenuElement(mainMenu);
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void HowToPlayMenu()
     {
         EnableMenuElement(howToPlayMenu);
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void CreditsMenu()
     {
         EnableMenuElement(creditsMenu);
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void OptionsMenu()
     {
         EnableMenuElement(optionsMenu);
-        // optionsMenuController.UpdateOptions();
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void OptionsMenuPaused()
     {
         EnableMenuElement(optionsMenu, false);
-        // optionsMenuController.UpdateOptions();
+        AudioManager.inst.PlayMenuInteraction();
         escapeMenuController.LeftEscapeMenu();
     }
 
     public void OptionsMenuBackPaused()
     {
         EnableMenuElement(escapeMenu, false);
+        AudioManager.inst.PlayMenuInteraction();
         escapeMenuController.ReturnedToEscapeMenu();
     }
 
@@ -151,6 +155,7 @@ public class UserInterfaceManager : MonoBehaviour
     public void GenericBackButton()
     {
         EnableMenuElement(mainMenu);
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void BackToMainMenu()
@@ -161,11 +166,13 @@ public class UserInterfaceManager : MonoBehaviour
         questDialogueText.text = null;
 
         GameManager.inst.BackToMainMenu();
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void KeyRebinding()
     {
         EnableMenuElement(keyRebindingMenu);
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void KeyRebindingBackButton()
@@ -179,6 +186,8 @@ public class UserInterfaceManager : MonoBehaviour
         {
             EnableMenuElement(optionsMenu);
         }
+
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void EscapeMenu()
