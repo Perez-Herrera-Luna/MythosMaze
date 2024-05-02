@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public UserInterfaceManager userInterfaceMgr;
     // public SceneManager sceneMgr;
 
-    public string firstLevelName = "PrototypeLevel";
+    public string firstLevelName = "Level1";
 
     public bool isGamePaused = false;
     public bool gameplayStarted = false;

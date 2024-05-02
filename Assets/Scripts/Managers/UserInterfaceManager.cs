@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SearchService;
+//using UnityEditor.SearchService;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -44,7 +44,6 @@ public class UserInterfaceManager : MonoBehaviour
 
     void Awake()
     {
-        // inst = this;
         if(inst == null)
         {
             inst = this;
@@ -104,6 +103,13 @@ public class UserInterfaceManager : MonoBehaviour
         QuestManager.inst.setUserInterfaceManager(inst);
     }
 
+    public void PlayGame()
+    {
+        mainMenu.SetActive(false);
+        AudioManager.inst.PlayMenuInteraction();
+        LoadFirstLevel();
+    }
+
     public void MainMenu()
     {
         EnableMenuElement(mainMenu);
@@ -131,15 +137,15 @@ public class UserInterfaceManager : MonoBehaviour
     public void OptionsMenuPaused()
     {
         EnableMenuElement(optionsMenu, false);
-        AudioManager.inst.PlayMenuInteraction();
         escapeMenuController.LeftEscapeMenu();
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void OptionsMenuBackPaused()
     {
         EnableMenuElement(escapeMenu, false);
-        AudioManager.inst.PlayMenuInteraction();
         escapeMenuController.ReturnedToEscapeMenu();
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void GameLoading()

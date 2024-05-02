@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Testing/TestingScene.unity
     guid: 1f02a804c1fadf649a501b5abe5cb282
   - enabled: 0
     path: Assets/Scenes/ManagerScene.unity
     guid: a91d500e7206be041a9f1a8b368cd676
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Testing/PlayerScene.unity
     guid: ccab19e01fb37c747a5d576c3c7b7c6a
   - enabled: 0
@@ -20,10 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game/UserInterfaceScene.unity
     guid: 0bbd622715f813d4998d30b85af3b9a3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Testing/CombatArena.unity
     guid: 230ad29bb2af00e42ad905f87a03c6c6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Testing/PrototypeLevel.unity
     guid: 70fb3e8cab21f0e4a8a207905ef666ab
   - enabled: 1
