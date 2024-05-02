@@ -184,5 +184,7 @@ public class GameManager : MonoBehaviour
         InputManager.instance.EnableCameraInput();
 
         Time.timeScale = 1;
+
+        PlayerManager.inst.resetPlayer();
     }
 }

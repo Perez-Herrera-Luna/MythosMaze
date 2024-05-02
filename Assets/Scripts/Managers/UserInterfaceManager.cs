@@ -28,6 +28,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject playerDamageScreen;
     public GameObject howToPlayMenu;
     public GameObject creditsMenu;
+    public Image playerDamageImage;
     public PlayerHealthBar healthBar;
     public UnityEngine.UI.Slider progressBar;
     public UnityEngine.UI.Slider attackIndicatorSlider;
@@ -37,6 +38,7 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject questPanel;
 
     private IEnumerator Attack_Indicator_Coroutine;
+    private IEnumerator Damage_Indicator_Coroutine;
 
     void Awake()
     {
@@ -71,6 +73,9 @@ public class UserInterfaceManager : MonoBehaviour
         healthBar = GameObject.Find("Health bar").GetComponent<PlayerHealthBar>();
         attackIndicatorSlider = GameObject.Find("AttackIndicatorSlider").GetComponent<Slider>();
         dashIndicatorSlider = GameObject.Find("DashIndicatorSlider").GetComponent<Slider>();
+        playerDamageImage = GameObject.Find("DamageOverlay").GetComponent<Image>();
+        playerDamageImage.color = new Color(1, 1, 1, 0);
+        playerDamageImage.enabled = false;
 
         questDialogue = GameObject.Find("QuestDialogue");
         questDialogueText = GameObject.Find("DialogueText").GetComponent<TMP_Text>();
@@ -284,10 +289,48 @@ public class UserInterfaceManager : MonoBehaviour
         // canvas.SetActive(true);
         Debug.Log("Damage!");
         healthBar.SetHealth(health);
+        playerDamageImage.enabled = true;
+
+        if (Damage_Indicator_Coroutine != null)
+        {
+            StopCoroutine(Damage_Indicator_Coroutine);
+        }
+
+        Damage_Indicator_Coroutine = PlayerDamageIndicator(true);
+        StartCoroutine(Damage_Indicator_Coroutine);
+    }
+
+    public void SetHealth(float health)
+    {
+        healthBar.SetHealth(health);
+    }
+
+    IEnumerator PlayerDamageIndicator(bool fadeIn, float duration = 0.2f)
+    {
+        playerDamageImage.color = new Color(1, 1, 1, fadeIn ? 0.6f : 0);
+        float timer = 0;
+
+        while (timer < duration)
+        {
+            playerDamageImage.color = new Color(1, 1, 1, Mathf.Lerp(fadeIn ? 0.6f : 0, fadeIn ? 0 : 0.6f, timer / duration));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        playerDamageImage.color = new Color(1, 1, 1, fadeIn ? 0 : 0.6f);
     }
 
     public void HideDamage()
     {
+        if (Damage_Indicator_Coroutine != null)
+        {
+            StopCoroutine(Damage_Indicator_Coroutine);
+        }
+
+        Damage_Indicator_Coroutine = PlayerDamageIndicator(false);
+        StartCoroutine(Damage_Indicator_Coroutine);
+
+        playerDamageImage.enabled = false;
         // canvas.SetActive(false);
     }
 

@@ -45,6 +45,17 @@ public class PlayerManager : MonoBehaviour
         health = maxHealth;
     }
 
+    public void resetPlayer()
+    {
+        health = maxHealth;
+        UserInterfaceManager.inst.SetHealth(health);
+
+        // absoluteDefense = 0;
+        // scaledDefense = 1;
+        // playerMov.resetPlayer();
+        // playerWeapons.resetWeapons();
+    }
+
     private void checkHealth()
     {
         if (health > maxHealth)
