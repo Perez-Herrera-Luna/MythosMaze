@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class OptionsMenuController : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class OptionsMenuController : MonoBehaviour
     public UnityEngine.UI.Toggle cameraInvertToggle;
     public UnityEngine.UI.Toggle fullscreenToggle;
 
+    public TMP_Text cameraSensitivityText;
+    public TMP_Text masterVolumeText;
+    public TMP_Text playerFOVText;
+
     void Start()
     {
         if (inst == null)
@@ -44,6 +49,13 @@ public class OptionsMenuController : MonoBehaviour
         cameraTiltToggle = GameObject.Find("CameraTiltToggle").GetComponent<UnityEngine.UI.Toggle>();
         cameraInvertToggle = GameObject.Find("CameraInvertToggle").GetComponent<UnityEngine.UI.Toggle>();
         fullscreenToggle = GameObject.Find("FullscreenToggle").GetComponent<UnityEngine.UI.Toggle>();
+
+        cameraSensitivityText = GameObject.Find("SensitivityText").GetComponent<TMP_Text>();
+        masterVolumeText = GameObject.Find("VolumeText").GetComponent<TMP_Text>();
+        playerFOVText = GameObject.Find("FOVText").GetComponent<TMP_Text>();
+        cameraSensitivityText.text = null;
+        masterVolumeText.text = null;
+        playerFOVText.text = null;
 
         UpdateOptions();
     }
@@ -83,24 +95,32 @@ public class OptionsMenuController : MonoBehaviour
         playerFOVSlider.value = playerFOV;
         cameraTiltToggle.isOn = cameraTilt;
         cameraInvertToggle.isOn = cameraInvert;
+
+        cameraSensitivityText.text = cameraSensitivity.ToString();
+        masterVolumeText.text = masterVolume.ToString();
+        playerFOVText.text = playerFOV.ToString();
     }
 
     public void SetSensitive(float value)
     {
         // cameraSensitivity = value;
         playerCamera.sensitivityMultiplier = value;
+
+        cameraSensitivityText.text = value.ToString("0.00");
     }
 
     public void SetVolume(float value)
     {
         masterVolume = value;
+
+        masterVolumeText.text = masterVolume.ToString("0.00");
     }
 
     public void SetFOV(float value)
     {
-        // playerFOV = value;
-        //playerCamera.SmoothFovChange(value, 0f);
         playerCamera.SetDefaultFOV(value);
+
+        playerFOVText.text = value.ToString("0");
     }
 
     public void SetTilt(bool value)

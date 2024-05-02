@@ -192,7 +192,7 @@
                     "id": "f5dc0630-c89f-4cc1-80c2-62ce57d2ba9a",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "NormalizeVector2",
                     "groups": "Controller",
                     "action": "Look",
                     "isComposite": false,
