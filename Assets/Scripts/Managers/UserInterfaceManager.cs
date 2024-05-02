@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SearchService;
+//using UnityEditor.SearchService;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -36,13 +36,14 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject questDialogue;
     public TMP_Text questDialogueText;
     public GameObject questPanel;
+    public TMP_Text buffIndicatorText;
 
     private IEnumerator Attack_Indicator_Coroutine;
     private IEnumerator Damage_Indicator_Coroutine;
+    private IEnumerator Buff_Indicator_Coroutine;
 
     void Awake()
     {
-        // inst = this;
         if(inst == null)
         {
             inst = this;
@@ -83,6 +84,9 @@ public class UserInterfaceManager : MonoBehaviour
         questPanel.SetActive(false);
         questDialogueText.text = null;
 
+        buffIndicatorText = GameObject.Find("BuffIndicatorText").GetComponent<TMP_Text>();
+        buffIndicatorText.text = null;
+
         mainMenuController = mainMenu.GetComponent<MainMenuController>();
         optionsMenuController = optionsMenu.GetComponent<OptionsMenuController>();
         escapeMenuController = inst.GetComponent<EscapeMenuController>();
@@ -97,6 +101,13 @@ public class UserInterfaceManager : MonoBehaviour
         SceneManager.inst.setUserInterfaceManager(inst);
         GameManager.inst.setUserInterfaceManager(inst);
         QuestManager.inst.setUserInterfaceManager(inst);
+    }
+
+    public void PlayGame()
+    {
+        mainMenu.SetActive(false);
+        AudioManager.inst.PlayMenuInteraction();
+        LoadFirstLevel();
     }
 
     public void MainMenu()
@@ -126,15 +137,15 @@ public class UserInterfaceManager : MonoBehaviour
     public void OptionsMenuPaused()
     {
         EnableMenuElement(optionsMenu, false);
-        AudioManager.inst.PlayMenuInteraction();
         escapeMenuController.LeftEscapeMenu();
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void OptionsMenuBackPaused()
     {
         EnableMenuElement(escapeMenu, false);
-        AudioManager.inst.PlayMenuInteraction();
         escapeMenuController.ReturnedToEscapeMenu();
+        AudioManager.inst.PlayMenuInteraction();
     }
 
     public void GameLoading()
@@ -347,17 +358,26 @@ public class UserInterfaceManager : MonoBehaviour
     {
         // TODO : implement visual display of weapon speed/cooldown powerup
         Debug.Log("UI Mgr Weapon Buff");
+
+        buffIndicatorText.text = "Weapon Buff: " + amount;
+        StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayWeaponDamageBuff(float amount)
     {
         // TODO : implement visual display of weapon damage powerup
         Debug.Log("UI Mgr Weapon Damage Buff");
+
+        buffIndicatorText.text = "Weapon Damage Buff: " + amount;
+        StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayMaxHealthBuff(float maxHealth)
     {
         // TODO : implement visual display of max health increase
+
+        buffIndicatorText.text = "Max Health Buff: " + maxHealth;
+        StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayHealing(float health)
@@ -368,21 +388,49 @@ public class UserInterfaceManager : MonoBehaviour
     public void DisplayPlayerDefenseBuff(float amount)
     {
         // TODO : implement visual display of absolute defense powerup
+
+        buffIndicatorText.text = "Defense Buff: " + amount;
+        StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayPlayerSpeedBuff(float amount)
     {
         // TODO : implement visual display of move speed powerup
+
+        buffIndicatorText.text = "Speed Buff: " + amount;
+        StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayPlayerDashBuff(float amount)
     {
         // TODO : implement visual display of dash cooldown powerup
+
+        buffIndicatorText.text = "Dash Buff: " + amount;
+        StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayPlayerJumpBuff(float amount)
     {
         // TODO : implement visual display of jump force powerup
+
+        buffIndicatorText.text = "Jump Buff: " + amount;
+        StartCoroutine(BuffIndicator(2));
+    }
+
+    IEnumerator BuffIndicator(float duration)
+    {
+        buffIndicatorText.color = new Color(0, 1, 0.246f, 1);
+        float timer = 0;
+
+        while (timer < duration)
+        {
+            buffIndicatorText.color = new Color(0, 1, 0.246f, Mathf.Lerp(1, 0, timer / duration));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        buffIndicatorText.color = new Color(0, 1, 0.246f, 0);
+        buffIndicatorText.text = null;
     }
 
     public void updateProgressBar(float progress)

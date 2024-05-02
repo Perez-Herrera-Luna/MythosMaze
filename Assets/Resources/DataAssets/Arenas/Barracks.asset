@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662403548de64f44784a376b9b198783, type: 3}
   m_Name: Barracks
   m_EditorClassIdentifier: 
-  height: 12
+  height: 10
   width: 8
-  collisionRadius: 3.1622
+  collisionRadius: 3.202
   isBossArena: 0
   doorLocations:
-  - {x: 1, y: -2}
-  - {x: -2, y: -2}
+  - {x: 1, y: -1}
+  - {x: -2, y: -1}
   - {x: 1, y: 1}
   enemyPrefabNames:
   - Spartan_Enemy
