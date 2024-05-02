@@ -101,12 +101,29 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         userInterfaceMgr.GameOver();
-        SceneManager.inst.UnloadCurrLevel();
+        
+        isGamePaused = true;
+        
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+
+        InputManager.instance.DisableMovementInput();
+        InputManager.instance.DisableCameraInput();
+
+        // SceneManager.inst.UnloadCurrLevel();
     }
 
     public void GameWon()
     {
         userInterfaceMgr.GameWon();
+
+        isGamePaused = true;
+        
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+
+        InputManager.instance.DisableMovementInput();
+        InputManager.instance.DisableCameraInput();
     }
 
     public void GameStart()

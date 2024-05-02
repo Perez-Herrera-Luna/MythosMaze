@@ -34,6 +34,8 @@ public class UserInterfaceManager : MonoBehaviour
     public TMP_Text questDialogueText;
     public GameObject questPanel;
 
+    private IEnumerator Attack_Indicator_Coroutine;
+
     void Awake()
     {
         // inst = this;
@@ -130,6 +132,10 @@ public class UserInterfaceManager : MonoBehaviour
     public void BackToMainMenu()
     {
         EnableMenuElement(mainMenu);
+        
+        questPanel.SetActive(false);
+        questDialogueText.text = null;
+
         GameManager.inst.BackToMainMenu();
     }
 
@@ -202,16 +208,42 @@ public class UserInterfaceManager : MonoBehaviour
         questPanel.SetActive(false); // Hides the panel behind the dialogue text
     }
 
-    public void DisplayAttackIndicator(bool attackEnabled)
+    public void DisplayAttackIndicator(float attackCooldown)
     {
-        if (attackEnabled)
+        if (attackCooldown < 0)
+        {
+            attackCooldown = 0;
+        }
+
+        if (Attack_Indicator_Coroutine != null)
+        {
+            StopCoroutine(Attack_Indicator_Coroutine);
+        }
+
+        Attack_Indicator_Coroutine = AnimateAttackIndicator(attackCooldown);
+        StartCoroutine(Attack_Indicator_Coroutine);
+    }
+
+    IEnumerator AnimateAttackIndicator(float attackCooldown)
+    {
+        if (attackCooldown <= 0)
         {
             attackIndicatorSlider.value = 1;
+            yield break;
         }
-        else
+
+        attackIndicatorSlider.value = 0;
+        float startCooldown = attackCooldown;
+        float timer = 0;
+
+        while (timer < attackCooldown)
         {
-            attackIndicatorSlider.value = 0;
+            attackIndicatorSlider.value = Mathf.Lerp(0, 1, timer / attackCooldown);
+            timer += Time.deltaTime;
+            yield return null;
         }
+
+        attackIndicatorSlider.value = 1;
     }
 
     public void DisplayDashIndicator(float dashCooldownMax, float dashCooldown)

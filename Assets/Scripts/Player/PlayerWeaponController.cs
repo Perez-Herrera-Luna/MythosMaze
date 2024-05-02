@@ -239,9 +239,6 @@ public class PlayerWeaponController : MonoBehaviour
                 break;
 
         }
-
-        // UI Indicator for attack cooldown
-        // UserInterfaceManager.inst.DisplayAttackIndicator(!playerAttacking);
     }
 
     // Weapon Powerup Function
@@ -318,6 +315,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     IEnumerator attackCoolDown(float delayTime)
     {
+        UserInterfaceManager.inst.DisplayAttackIndicator(delayTime);
         yield return new WaitForSeconds(delayTime);
         attackEnabled = true;
         playerAttacking = false;
