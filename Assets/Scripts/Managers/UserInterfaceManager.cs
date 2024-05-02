@@ -26,6 +26,8 @@ public class UserInterfaceManager : MonoBehaviour
     public GameObject gameWonMenu;
     public GameObject playerGameUI;
     public GameObject playerDamageScreen;
+    public GameObject howToPlayMenu;
+    public GameObject creditsMenu;
     public PlayerHealthBar healthBar;
     public UnityEngine.UI.Slider progressBar;
     public UnityEngine.UI.Slider attackIndicatorSlider;
@@ -63,6 +65,8 @@ public class UserInterfaceManager : MonoBehaviour
         gameWonMenu = GameObject.Find("GameWinMenu");
         playerGameUI = GameObject.Find("PlayerGameUI");
         playerDamageScreen = GameObject.Find("PlayerDamageScreen");
+        howToPlayMenu = GameObject.Find("HowToPlayMenu");
+        creditsMenu = GameObject.Find("CreditsMenu");
         progressBar = GameObject.Find("ProgressBar").GetComponent<Slider>();
         healthBar = GameObject.Find("Health bar").GetComponent<PlayerHealthBar>();
         attackIndicatorSlider = GameObject.Find("AttackIndicatorSlider").GetComponent<Slider>();
@@ -93,6 +97,16 @@ public class UserInterfaceManager : MonoBehaviour
     public void MainMenu()
     {
         EnableMenuElement(mainMenu);
+    }
+
+    public void HowToPlayMenu()
+    {
+        EnableMenuElement(howToPlayMenu);
+    }
+
+    public void CreditsMenu()
+    {
+        EnableMenuElement(creditsMenu);
     }
 
     public void OptionsMenu()
@@ -127,6 +141,11 @@ public class UserInterfaceManager : MonoBehaviour
     public void GameOver()
     {
         EnableMenuElement(gameOverMenu);
+    }
+
+    public void GenericBackButton()
+    {
+        EnableMenuElement(mainMenu);
     }
 
     public void BackToMainMenu()
@@ -175,6 +194,8 @@ public class UserInterfaceManager : MonoBehaviour
         gameOverMenu.SetActive(false);
         gameWonMenu.SetActive(false);
         playerDamageScreen.SetActive(false);
+        howToPlayMenu.SetActive(false);
+        creditsMenu.SetActive(false);
         playerGameUI.SetActive(true);
 
         GameManager.inst.ResumeGame();
@@ -337,6 +358,8 @@ public class UserInterfaceManager : MonoBehaviour
         gameOverMenu.SetActive(false);
         gameWonMenu.SetActive(false);
         playerDamageScreen.SetActive(false);
+        howToPlayMenu.SetActive(false);
+        creditsMenu.SetActive(false);
         playerGameUI.SetActive(false);
 
         element.SetActive(true);
