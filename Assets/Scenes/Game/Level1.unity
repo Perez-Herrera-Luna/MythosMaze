@@ -197,11 +197,11 @@ PrefabInstance:
       objectReference: {fileID: 5765129691335200689, guid: 9f3f232082e5e764788eb314af00d88d, type: 3}
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenasData.Array.size
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenaPrefabs.Array.size
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenasData.Array.data[0]
@@ -218,11 +218,15 @@ PrefabInstance:
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenasData.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: 94e8bc34a9c183244b85c505e02ac387, type: 2}
+      objectReference: {fileID: 11400000, guid: d68a6a7a932d2794daad713b72dcee1d, type: 2}
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenasData.Array.data[4]
       value: 
       objectReference: {fileID: 11400000, guid: 94e8bc34a9c183244b85c505e02ac387, type: 2}
+    - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
+      propertyPath: arenasData.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: c001e50b93ea38f4a99712bcfb4ca467, type: 2}
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenaPrefabs.Array.data[0]
       value: 
@@ -238,7 +242,15 @@ PrefabInstance:
     - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
       propertyPath: arenaPrefabs.Array.data[3]
       value: 
+      objectReference: {fileID: 5765129691335200689, guid: ac8c267d093b36b4a9e8297cb61bad64, type: 3}
+    - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
+      propertyPath: arenaPrefabs.Array.data[4]
+      value: 
       objectReference: {fileID: 5765129691335200689, guid: c0cd128ecc6c8c741b879ae0f3be5169, type: 3}
+    - target: {fileID: 6159846997282154272, guid: a57b5b83da7ff3543b419ff45eee0e55, type: 3}
+      propertyPath: arenaPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 5765129691335200689, guid: 17d80bf719c937c4eb2de3b0e3c6510f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -12,17 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662403548de64f44784a376b9b198783, type: 3}
   m_Name: Colosseum
   m_EditorClassIdentifier: 
-  height: 14
-  width: 14
-  collisionRadius: 4.9497
+  height: 10
+  width: 10
+  collisionRadius: 3.5355
   isBossArena: 1
   doorLocations:
-  - {x: 0, y: -3}
-  - {x: -3, y: 0}
-  - {x: 0, y: 3}
-  - {x: 3, y: 0}
+  - {x: 0, y: -2}
+  - {x: -2, y: 0}
+  - {x: 0, y: 2}
+  - {x: 2, y: 0}
   enemyPrefabNames:
   - Skeleton_Enemy
-  maxNumEnemies: 1
-  powerupPrefabNames: []
-  charPrefabNames: []
+  charPrefabName: 

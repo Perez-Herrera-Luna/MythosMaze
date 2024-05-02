@@ -10,12 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 662403548de64f44784a376b9b198783, type: 3}
-  m_Name: Marsh
+  m_Name: Barracks1
   m_EditorClassIdentifier: 
-  height: 0
-  width: 0
-  collisionRadius: 0
+  height: 8
+  width: 6
+  collisionRadius: 2.5
   isBossArena: 0
-  doorLocations: []
-  enemyPrefabNames: []
-  charPrefabName: []
+  doorLocations:
+  - {x: 0, y: 1}
+  - {x: 1, y: -1}
+  - {x: -1, y: 0}
+  enemyPrefabNames:
+  - Spartan_Enemy
+  charPrefabName: 
