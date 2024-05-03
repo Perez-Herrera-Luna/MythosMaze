@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3.38
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53bb72e0fb7324049a53bb848b9c7e11, type: 3}
       propertyPath: m_LocalPosition.z
@@ -354,6 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 11400000, guid: 227f6d8c6e4d6df41bf3923c4c078a77, type: 2}
+  arena: {fileID: 0}
   player: {fileID: 0}
   orientation: {fileID: 0}
   enemyHeight: 2

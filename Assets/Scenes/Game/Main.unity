@@ -1671,7 +1671,7 @@ MonoBehaviour:
   knifeZOffset: 0
   knifeSpawnPoint: {fileID: 1656451451}
   arrowFirePoint: {fileID: 1682187149}
-  knifePrefab: {fileID: 0}
+  knifePrefab: {fileID: 2715959806479996454, guid: faf4b9849d728b544b25c6f90cc7fbe3, type: 3}
   knifeSpeed: 20
   daggerCoolDown: 0.25
   weaponCooldown: 2
