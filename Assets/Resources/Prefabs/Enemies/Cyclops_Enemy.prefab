@@ -573,6 +573,7 @@ MonoBehaviour:
   rockPrefab: {fileID: 7073038822477793607}
   spearFirePoint: {fileID: 0}
   spearPrefab: {fileID: 0}
+  hitEffect: {fileID: 3335971092557525901, guid: 3f7f08293a723f946988506ac73b9e25, type: 3}
   invulnerable: 0
 --- !u!111 &3997561212086347933
 Animation:

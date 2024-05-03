@@ -357,18 +357,21 @@ public class UserInterfaceManager : MonoBehaviour
     public void DisplayWeaponBuff(float amount)
     {
         // TODO : implement visual display of weapon speed/cooldown powerup
-        Debug.Log("UI Mgr Weapon Buff");
+        // Debug.Log("UI Mgr Weapon Buff");
+        string buffText = "Weapon Buff: +" + (amount * 100) + "%";
 
-        buffIndicatorText.text = "Weapon Buff: " + amount;
+        buffIndicatorText.text = buffText;
         StartCoroutine(BuffIndicator(2));
     }
 
     public void DisplayWeaponDamageBuff(float amount)
     {
         // TODO : implement visual display of weapon damage powerup
-        Debug.Log("UI Mgr Weapon Damage Buff");
+        // Debug.Log("UI Mgr Weapon Damage Buff");
+        string buffText = "Weapon Damage Buff: +" + (amount * 100) + "%";
 
-        buffIndicatorText.text = "Weapon Damage Buff: " + amount;
+
+        buffIndicatorText.text = buffText;
         StartCoroutine(BuffIndicator(2));
     }
 
@@ -376,7 +379,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         // TODO : implement visual display of max health increase
 
-        buffIndicatorText.text = "Max Health Buff: " + maxHealth;
+        buffIndicatorText.text = "Max Health Buff: +" + (maxHealth * 10);
         StartCoroutine(BuffIndicator(2));
     }
 
@@ -389,7 +392,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         // TODO : implement visual display of absolute defense powerup
 
-        buffIndicatorText.text = "Defense Buff: " + amount;
+        buffIndicatorText.text = "Defense Buff: +" + (amount * 100) + "%";
         StartCoroutine(BuffIndicator(2));
     }
 
@@ -397,7 +400,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         // TODO : implement visual display of move speed powerup
 
-        buffIndicatorText.text = "Speed Buff: " + amount;
+        buffIndicatorText.text = "Speed Buff: +" + (amount * 100) + "%";
         StartCoroutine(BuffIndicator(2));
     }
 
@@ -405,7 +408,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         // TODO : implement visual display of dash cooldown powerup
 
-        buffIndicatorText.text = "Dash Buff: " + amount;
+        buffIndicatorText.text = "Dash Buff: +" + (amount * 100) + "%";
         StartCoroutine(BuffIndicator(2));
     }
 
@@ -413,7 +416,7 @@ public class UserInterfaceManager : MonoBehaviour
     {
         // TODO : implement visual display of jump force powerup
 
-        buffIndicatorText.text = "Jump Buff: " + amount;
+        buffIndicatorText.text = "Jump Buff: +" + (amount * 100) + "%";
         StartCoroutine(BuffIndicator(2));
     }
 

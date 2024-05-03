@@ -42,6 +42,8 @@ public class Enemy : MonoBehaviour
     public Transform spearFirePoint;
     public GameObject spearPrefab;
 
+    [Header("Particle Effects")]
+    public GameObject hitEffect;
 
     //wandering
     private Vector3 moveDirection;
@@ -58,6 +60,7 @@ public class Enemy : MonoBehaviour
     private bool triggerDeath = false;
 
     //player attacking
+    [Header("Other")]
     public bool invulnerable = false;
 
     //animation
@@ -525,6 +528,11 @@ public class Enemy : MonoBehaviour
         {
             invulnerable = true;
             health -= damage;
+            // Calculate instantiate position
+            Vector3 hitPos = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+            // Calculate instantiate rotation
+            Quaternion hitRot = Quaternion.Euler(-90, 0, 0);
+            Instantiate(hitEffect, hitPos, hitRot); // Instantiate hit effect
             Debug.Log("Enemy Health: " + health);
             StartCoroutine(hitDelay());
         }
