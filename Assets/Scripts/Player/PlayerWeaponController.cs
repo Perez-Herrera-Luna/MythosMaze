@@ -86,7 +86,7 @@ public class PlayerWeaponController : MonoBehaviour
         switch(weaponSelect)
         {
             case 1:
-                // Debug.Log("weapon 1 selected");
+                //Debug.Log("weapon 1 selected");
                 if(!playerAttacking && !moveScript.isMoving)
                 {
                     daggerAnim.SetBool("isWalking", false);   
@@ -215,6 +215,11 @@ public class PlayerWeaponController : MonoBehaviour
         }
     }
 
+    public void throwKnife()
+    {
+
+    }
+
     // Weapon Powerup Function
     public void buffWeapons(float amount)
     {
@@ -242,7 +247,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     void fireArrow()
     {
-        
+        float arrowMultiplier;
         // Adjust arrow velocity based on chargeTime
 
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -252,10 +257,12 @@ public class PlayerWeaponController : MonoBehaviour
         if(Physics.Raycast(ray, out hit))
         {
             targetPoint = hit.point;
+            arrowMultiplier = 2.0f;
         }
         else
         {
             targetPoint = ray.GetPoint(75);
+            arrowMultiplier = 1.0f;
         }
 
         Vector3 direction = (targetPoint - arrowFirePoint.position)/20;
@@ -264,13 +271,13 @@ public class PlayerWeaponController : MonoBehaviour
         GameObject arrow = Instantiate(arrowPrefab, arrowFirePoint.position, arrowFirePoint.rotation);
         Rigidbody rb = arrow.GetComponent<Rigidbody>();
 
-        Vector3 arrowVelocity = direction * 2 * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
+        Vector3 arrowVelocity = direction * (bowData.minArrowSpeed + (bowData.maxArrowSpeed - bowData.minArrowSpeed) * (bowChargeTime / bowData.maxChargeTime));
 
         // Adjust arrow rotation to align with game world's forward direction
-        //arrow.transform.forward = arrowVelocity.normalized;
+        arrow.transform.forward = direction;
 
         // Apply velocity to the arrow
-        rb.velocity = arrowVelocity;
+        rb.velocity = arrowVelocity * arrowMultiplier;
 
         // Rotate the arrow to align with its velocity
         if (rb.velocity != Vector3.zero)

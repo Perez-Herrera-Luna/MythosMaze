@@ -31,6 +31,6 @@ MonoBehaviour:
   turnSpeed: 2
   groundDrag: 1
   airMultiplier: 0
-  roamRange: 30
+  roamRange: 5
   flyingHeightMax: 0
   canFly: 0
