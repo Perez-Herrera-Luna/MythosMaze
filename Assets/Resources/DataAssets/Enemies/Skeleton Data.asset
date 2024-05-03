@@ -15,8 +15,8 @@ MonoBehaviour:
   name: Skeleton
   health: 0
   maxHealth: 10
-  minNumPerArena: 1
-  maxNumPerArena: 1
+  minNumPerArena: 6
+  maxNumPerArena: 8
   canDropPowerup: 0
   attackDamage: 0
   maxAttackDamage: 2.5
