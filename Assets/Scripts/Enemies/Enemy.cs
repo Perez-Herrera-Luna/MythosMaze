@@ -484,13 +484,15 @@ public class Enemy : MonoBehaviour
                         
                     case 2:
                         //throwing knife
-                        StartCoroutine(OnHit(playerMgr.WeaponDamage));
+                        //StartCoroutine(OnHit(playerMgr.WeaponDamage));
+                        StartCoroutine(OnHit(2.0f));
                         Object.Destroy(other);
                         break;
 
                     case 3:
                         //bow and arrow
-                        StartCoroutine(OnHit(playerMgr.WeaponDamage));
+                        //StartCoroutine(OnHit(playerMgr.WeaponDamage));
+                        StartCoroutine(OnHit(5.0f));
                         Object.Destroy(other);
                         break;
 
@@ -503,8 +505,9 @@ public class Enemy : MonoBehaviour
             {
                 if(playerMgr.ActiveWeapon == 3)
                 {
-                    StartCoroutine(OnHit(playerMgr.WeaponDamage));
-                    Object.Destroy(other.gameObject);
+                    //StartCoroutine(OnHit(playerMgr.WeaponDamage));
+                    StartCoroutine(OnHit(5.0f));
+                    //Object.Destroy(other.gameObject);
                 }
             }
             
@@ -574,7 +577,8 @@ public class Enemy : MonoBehaviour
         enemyActive = false;
         //animate("dead");
         Debug.Log("ENEMY DIED");
-        yield return new WaitForSeconds(0.5f);
+        
+        yield return new WaitForSeconds(1.5f);
         arena.EnemyDeath(hasPowerup, gameObject.transform.localPosition, powerup);
         animate("delete");
         Object.Destroy(this.gameObject);

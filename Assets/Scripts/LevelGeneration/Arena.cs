@@ -370,13 +370,12 @@ public class Arena : MonoBehaviour
                 if (!enemiesCount.ContainsKey(currEnemy))
                     enemiesCount.Add(currEnemy, 0);
 
-
-                EnemyData currEnemyData;
-
-                if (!isBossArena)
-                    currEnemyData = currEnemy.GetComponent<Enemy>().enemy;
-                else
-                    currEnemyData = currEnemy.GetComponent<Minotaur>().enemy;
+                EnemyData currEnemyData = currEnemy.GetComponent<Enemy>().enemy;
+                if(isBossArena)
+                {
+                    Debug.Log("BOSS ARENA");
+                    Debug.Log("Arena current enemy: " + currEnemy);
+                }
 
                 if (enemiesCount[currEnemy] < currEnemyData.maxNumPerArena)
                 {
