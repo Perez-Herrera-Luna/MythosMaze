@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool IsAttacking => playerMov.isAttacking;
     public int ActiveWeapon => playerMov.weaponSelected;
-    public float WeaponDamage => playerWeapons.weaponDamage[ActiveWeapon - 1];
+    public float WeaponDamage => playerWeapons.weaponDamage[ActiveWeapon];
 
     private float maxHealth = 10;
     private float health;

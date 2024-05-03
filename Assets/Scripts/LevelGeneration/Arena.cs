@@ -360,6 +360,11 @@ public class Arena : MonoBehaviour
                     enemiesCount.Add(currEnemy, 0);
 
                 EnemyData currEnemyData = currEnemy.GetComponent<Enemy>().enemy;
+                if(isBossArena)
+                {
+                    Debug.Log("BOSS ARENA");
+                    Debug.Log("Arena current enemy: " + currEnemy);
+                }
 
                 if (enemiesCount[currEnemy] < currEnemyData.maxNumPerArena)
                 {

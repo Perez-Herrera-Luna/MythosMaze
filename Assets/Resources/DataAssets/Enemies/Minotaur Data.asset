@@ -15,8 +15,8 @@ MonoBehaviour:
   name: Minotaur
   health: 0
   maxHealth: 0
-  minNumPerArena: 0
-  maxNumPerArena: 0
+  minNumPerArena: 1
+  maxNumPerArena: 1
   canDropPowerup: 0
   attackDamage: 0
   maxAttackDamage: 0
