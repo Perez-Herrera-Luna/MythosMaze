@@ -160,10 +160,7 @@ public class ProceduralLevel : MonoBehaviour
                 numTriesLoc = 0;
                 validLoc = false;
                 do{
-                    if (levelGraph.NumArenasAdded < arenasData.Count + 1)
-                        randomArenaIndex = levelGraph.NumArenasAdded - 1;
-                    else
-                        randomArenaIndex = ThreadSafeRandom.GetRandom(0, arenasData.Count);
+                    randomArenaIndex = ThreadSafeRandom.GetRandom(0, arenasData.Count);
 
                     arenaLocation = levelGrid.GenerateArenaLocation(arenasData[randomArenaIndex]);
 
@@ -205,8 +202,16 @@ public class ProceduralLevel : MonoBehaviour
 
             if (generateArenasSuccess)
             {
-                generateArenasSuccess = levelGrid.UpdateArena(levelGraph.GeneratedArenas[srcIndex].GridLocation, srcIndex, srcArenaData, arenasData[previousPrefabIndex]);
-                levelGraph.UpdateSourceArena(srcArenaData, levelGrid.PathWidth);
+                if(previousPrefabIndex > 2)
+                {
+                    Debug.Log("trying to update source arena w/ previous index: " + previousPrefabIndex);
+                    generateArenasSuccess = levelGrid.UpdateArena(levelGraph.GeneratedArenas[srcIndex].GridLocation, srcIndex, srcArenaData, arenasData[previousPrefabIndex]);
+                    levelGraph.UpdateSourceArena(srcArenaData, levelGrid.PathWidth);
+                }
+                else
+                {
+                    Debug.Log("no need to update source arena. previous index: " + previousPrefabIndex);
+                }    
             }
 
         } while (!generateArenasSuccess & (numTries++ < maxTries));
@@ -358,7 +363,7 @@ public class ProceduralLevel : MonoBehaviour
     // called by SceneManager.cs
     public void LoadLevel()
     {
-        // levelGrid.PrintGrid();
+        levelGrid.PrintGrid();
         
         LoadArenas();
 
@@ -383,19 +388,16 @@ public class ProceduralLevel : MonoBehaviour
             if (i == 0) {
                 arenaPrefab = bossArenaPrefab;
                 rotation.eulerAngles = new Vector3(0, levelGraph.GeneratedArenas[i].GetRotation(bossArenaData.doorLocations), 0);
-            }
-            else if (i == levelGraph.SrcArenaIndex) {
-                arenaPrefab = srcArenaPrefab;
-                sourceArena = true;
             }else {
                 arenaPrefab = arenaPrefabs[levelGraph.GeneratedArenas[i].ArenaPrefabIndex];
             }
                
             arenaInstance = Instantiate(arenaPrefab, arenaLocation, rotation, gameObject.transform);
 
-            if (sourceArena)
+            if (i == levelGraph.SrcArenaIndex)
             {
                 SetupPlayer();
+                sourceArena = true;
             }
 
             arenaScript = arenaInstance.gameObject.GetComponent<Arena>();

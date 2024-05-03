@@ -86,7 +86,7 @@ public class PlayerWeaponController : MonoBehaviour
         switch(weaponSelect)
         {
             case 1:
-                Debug.Log("weapon 1 selected");
+                // Debug.Log("weapon 1 selected");
                 if(!playerAttacking && !moveScript.isMoving)
                 {
                     daggerAnim.SetBool("isWalking", false);   

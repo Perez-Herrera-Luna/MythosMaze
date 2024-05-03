@@ -9,7 +9,7 @@ public class QuestCharacter : MonoBehaviour
     private Transform player;
     private Arena currArena;
 
-    private float awarenessRadius = 6;
+    private float awarenessRadius = 10;
 
     // Start is called before the first frame update
     void Start()

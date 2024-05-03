@@ -191,7 +191,7 @@ public class LevelGraph
 
     public void UpdateSourceArena(ArenaData newArena, int pathWidth)
     {
-        generatedArenas[srcArenaIndex].UpdateArenaDataValue(0, newArena, pathWidth);
+        generatedArenas[srcArenaIndex].UpdateArenaDataValue(1, newArena, pathWidth);
     }
 
     // public function called by proceduralLevel to generate shortest path

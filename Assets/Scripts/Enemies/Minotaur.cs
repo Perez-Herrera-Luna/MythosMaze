@@ -72,7 +72,7 @@ public class Minotaur : MonoBehaviour
         float distance = Vector3.Distance (transform.position, player.position);
         if(!enemyDead)
         {
-            animate(animType);
+            // animate(animType);
 
             if(distance < attackRange)
             {

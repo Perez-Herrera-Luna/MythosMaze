@@ -10,7 +10,7 @@ public class Arena : MonoBehaviour
     public ArenaData arenaData;
 
     [Header("Arena Attributes")]
-    private bool isBossArena;    // designates if combatArena is boss level or not
+    private bool isBossArena = false;    // designates if combatArena is boss level or not
     private bool isSourceArena;
 
     private bool arenaActive = false;    // arena is active when player enters, inactive when player elsewhere in level
@@ -54,9 +54,16 @@ public class Arena : MonoBehaviour
     public void SetInitialValues(bool isSrcArena, LevelData currLevel, List<Vector2Int> availableDoorLocs)
     {
         if (arenaData.isBossArena)
+        {
             isBossArena = true;
+            Debug.Log("setting up boss arena");
+        }
+        else
+        {
+            Debug.Log("setting up non-boss arena");
+        }
 
-        if (isSrcArena && characterLoc != null)
+        if (characterLoc != null)
             hasCharacter = true;
 
         isSourceArena = isSrcArena;
@@ -88,7 +95,7 @@ public class Arena : MonoBehaviour
                 return AddActivePowerup(powerup.powerupName, 1);
         }else if (powerup.generationLocation == "arena_complete")
         {
-            if (!hasCharacter)
+            if (!isSourceArena)
             {
                 if (firstRound)
                     return AddCompletePowerup(powerup.powerupName, powerup.generationProbability);
@@ -233,7 +240,7 @@ public class Arena : MonoBehaviour
 
         DeactivatePowerups();
 
-        if (hasCharacter)
+        if (isSourceArena && hasCharacter)
             SetupCharacter();
 
         yield return new WaitForSeconds(0.5f);
@@ -284,7 +291,7 @@ public class Arena : MonoBehaviour
 
         if (arenaCompleted)
         {
-            if (!hasCharacter)
+            if (!isSourceArena)
             {
                 ActivatePowerups();
                 OpenDoors();
@@ -359,7 +366,13 @@ public class Arena : MonoBehaviour
                 if (!enemiesCount.ContainsKey(currEnemy))
                     enemiesCount.Add(currEnemy, 0);
 
-                EnemyData currEnemyData = currEnemy.GetComponent<Enemy>().enemy;
+
+                EnemyData currEnemyData;
+
+                if (!isBossArena)
+                    currEnemyData = currEnemy.GetComponent<Enemy>().enemy;
+                else
+                    currEnemyData = currEnemy.GetComponent<Minotaur>().enemy;
 
                 if (enemiesCount[currEnemy] < currEnemyData.maxNumPerArena)
                 {
@@ -388,7 +401,8 @@ public class Arena : MonoBehaviour
                         }
 
                         enemies.Add(newEnemy);
-                        newEnemy.GetComponent<Enemy>().SetArenaAndPowerup(this, hasPowerup, powerupIndex);
+                        if(!isBossArena)
+                            newEnemy.GetComponent<Enemy>().SetArenaAndPowerup(this, hasPowerup, powerupIndex);
                         enemyLocs.RemoveAt(randLoc);
                         enemiesCount[currEnemy] += 1;
                         numEnemies++;
@@ -404,7 +418,13 @@ public class Arena : MonoBehaviour
 
             foreach (KeyValuePair<GameObject, int> currEnemy in enemiesCount)
             {
-                EnemyData currEnemyData = currEnemy.Key.GetComponent<Enemy>().enemy;
+                EnemyData currEnemyData;
+
+                if (!isBossArena)
+                    currEnemyData = currEnemy.Key.GetComponent<Enemy>().enemy;
+                else
+                    currEnemyData = currEnemy.Key.GetComponent<Minotaur>().enemy;
+
                 if (currEnemy.Value < currEnemyData.minNumPerArena)
                     allEnemiesLoaded = false;
             }
