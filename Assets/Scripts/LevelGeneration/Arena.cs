@@ -191,6 +191,10 @@ public class Arena : MonoBehaviour
         if (numEnemies == 0)
         {
             arenaCompleted = true;
+
+            if (isBossArena)
+                GameManager.inst.GameWon();
+
             StartCoroutine(CompleteArena());
         }
         else if (numEnemies < 0)
@@ -401,8 +405,10 @@ public class Arena : MonoBehaviour
                         }
 
                         enemies.Add(newEnemy);
-                        if(!isBossArena)
+                        if (!isBossArena)
                             newEnemy.GetComponent<Enemy>().SetArenaAndPowerup(this, hasPowerup, powerupIndex);
+                        else
+                            newEnemy.GetComponent<Minotaur>().SetArena(this);
                         enemyLocs.RemoveAt(randLoc);
                         enemiesCount[currEnemy] += 1;
                         numEnemies++;

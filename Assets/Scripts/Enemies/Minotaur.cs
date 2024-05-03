@@ -5,6 +5,7 @@ using UnityEngine;
 public class Minotaur : MonoBehaviour
 {
     public EnemyData enemy;
+    public Arena arena;
     
     [Header("Transforms")]
     public Transform player;
@@ -111,6 +112,12 @@ public class Minotaur : MonoBehaviour
         {
             moveEnemy(transform.position, 2);
         }
+    }
+
+    // helper function to set arena connection and powerup (for enemy death)
+    public void SetArena(Arena a)
+    {
+        arena = a;
     }
 
     private void moveEnemy(Vector3 target, int mode)
