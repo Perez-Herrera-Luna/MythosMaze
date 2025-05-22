@@ -119,7 +119,7 @@ public class PlayerWeaponController : MonoBehaviour
                 throwingKnifeObject.SetActive(false);
                 bowAndArrowObject.SetActive(false);
                 arrowPrefab.SetActive(false);
-     
+
                 break;
             
             case 2:
@@ -172,14 +172,14 @@ public class PlayerWeaponController : MonoBehaviour
                 }
                 
                 //detect key down
-                if(Input.GetMouseButtonDown(0) && bowEnabled)
+                if(InputManager.instance.AttackWasPressed && bowEnabled)
                 {
                     bowData.charging = true;
                     bowChargeTime = 0f;
 
                     bowAnim.SetBool("isCharging", true);
                 }
-                else if(Input.GetMouseButtonUp(0) && bowData.charging && bowEnabled) //arrow launched
+                else if(InputManager.instance.AttackWasReleased && bowData.charging && bowEnabled) //arrow launched
                 { 
                     bowData.charging = false;
                     bowAnim.SetBool("isCharging", false);

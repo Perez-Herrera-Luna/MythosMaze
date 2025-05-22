@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour
     public bool SlidePressed { get; private set; }
     public bool SlideReleased { get; private set; }
     public bool AttackInput { get; private set; }
+    public bool AttackWasPressed { get; private set; }
+    public bool AttackWasReleased { get; private set; }
     public bool Weapon1Input { get; private set; }
     public bool Weapon2Input { get; private set; }
     public bool Weapon3Input { get; private set; }
@@ -40,7 +42,7 @@ public class InputManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
         playerInput = GetComponent<PlayerInput>();
 
         SetupInputActions();
@@ -77,6 +79,8 @@ public class InputManager : MonoBehaviour
         SlideReleased = slideAction.WasReleasedThisFrame();
 
         AttackInput = attackAction.triggered; // attackAction.IsPressed();
+        AttackWasPressed = attackAction.WasPressedThisFrame();
+        AttackWasReleased = attackAction.WasReleasedThisFrame();
 
         Weapon1Input = weapon1.triggered; // weapon1.IsPressed();
         Weapon2Input = weapon2.triggered; // weapon2.IsPressed();
